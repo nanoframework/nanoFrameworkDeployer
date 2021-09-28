@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>nanoFrameworkDeployer</id>
+    <version>$version$</version>
+    <title>nanoFrameworkDeployerc</title>
+    <authors>nanoFramework project contributors</authors>
+    <owners>nanoFramework project contributors</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <releaseNotes>
+    </releaseNotes>
+    <developmentDependency>false</developmentDependency>
+    <projectUrl>https://github.com/nanoframework/nanoFrameworkDeployerc</projectUrl>
+    <iconUrl>https://secure.gravatar.com/avatar/97d0e092247f0716db6d4b47b7d1d1ad</iconUrl>
+    <repository type="git" url="https://github.com/nanoframework/nanoFrameworkDeployer" commit="$commit$" />
+    <copyright>Copyright (c) .NET Foundation and Contributors</copyright>
+    <description>This package includes the nanoFrameworkDeployer assembly for nanoFramework C# projects.
+This package requires a target with nanoFrameworkDeployer v$nativeVersion$ (checksum $checksum$).</description>
+    <summary>nanoFrameworkDeployer assembly for .NET nanoFramework C# projects</summary>
+    <tags>nanoFramework C# csharp netmf netnf nanoFrameworkDeployer</tags>
+    <dependencies>
+      <dependency id="nanoFramework.CoreLibrary" version="1.10.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="nanoFrameworkDeployer\bin\Release\nanoFrameworkDeployer.dll" target="lib\nanoFrameworkDeployer.dll" />
+    <file src="nanoFrameworkDeployer\bin\Release\nanoFrameworkDeployer.pdb" target="lib\nanoFrameworkDeployer.pdb" />
+    <file src="nanoFrameworkDeployer\bin\Release\nanoFrameworkDeployer.pdbx" target="lib\nanoFrameworkDeployer.pdbx" />
+    <file src="nanoFrameworkDeployer\bin\Release\nanoFrameworkDeployer.pe" target="lib\nanoFrameworkDeployer.pe" />
+    <file src="nanoFrameworkDeployer\bin\Release\nanoFrameworkDeployer.xml" target="lib\nanoFrameworkDeployer.xml" />
+    <!-- readme -->
+    <file src=".\config\readme.txt" target="readme.txt" />
+  </files>
+</package>
