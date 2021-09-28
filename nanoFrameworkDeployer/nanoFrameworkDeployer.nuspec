@@ -32,8 +32,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\nanoFrameworkDeployer.exe" target="lib\net472\nanoFrameworkDeployer.exe" />
-    <file src="bin\Release\nanoFrameworkDeployer.pdb" target="lib\net472\nanoFrameworkDeployer.pdb" />
+    <file src="bin\Release\nanoFrameworkDeployer.exe" target="content\nanoFrameworkDeployer.exe" />
+    <file src="bin\Release\nanoFrameworkDeployer.pdb" target="content\nanoFrameworkDeployer.pdb" />
     <!-- readme -->
     <file src="..\assets\readme.txt" target="readme.txt" />
     <file src="..\assets\nf-logo.png" target="images" />
