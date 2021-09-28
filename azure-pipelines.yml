@@ -154,7 +154,7 @@ steps:
 
 - pwsh: |
     .\SignClient "Sign" `
-    --baseDirectory "$(Build.Repository.LocalPath)\build\bin\Release" `
+    --baseDirectory "$(Build.Repository.LocalPath)\bin\Release" `
     --input "**/nanoFrameworkDeployer.exe" `
     --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
     --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
