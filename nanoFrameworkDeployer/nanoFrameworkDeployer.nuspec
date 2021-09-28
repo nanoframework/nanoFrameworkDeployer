@@ -24,7 +24,7 @@
       <dependency id="Fody" version="4.2.1" />
       <dependency id="nanoFramework.Tools.Debugger.Net" version="2.0.0-preview.38" />
       <dependency id="Polly" version="7.2.1" />
-      <dependency id="Polly.Contrib.WaitAndRetry" />
+      <dependency id="Polly.Contrib.WaitAndRetry" version="1.1.1"/>
       <dependency id="PropertyChanged.Fody" version="2.6.1" />
       <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.5.3" />
       <dependency id="System.Threading.Tasks.Extensions" />
