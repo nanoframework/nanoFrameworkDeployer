@@ -353,7 +353,7 @@ steps:
     tag: v$(MY_NUGET_VERSION)
     title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
     releaseNotesSource: inline
-    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
     assets: |
       '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
       '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
@@ -371,7 +371,7 @@ steps:
     tag: v$(MY_NUGET_VERSION)
     title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
     releaseNotesSource: inline
-    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
     assets: |
       '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
       '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
