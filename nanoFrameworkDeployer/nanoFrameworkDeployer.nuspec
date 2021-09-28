@@ -37,6 +37,6 @@
     <!-- readme -->
     <file src="..\assets\readme.txt" target="readme.txt" />
     <file src="..\assets\nf-logo.png" target="images" />
-    <file src="..\LICENSE" target="" />
+    <file src="..\LICENSE" target="LICENSE" />
   </files>
 </package>
