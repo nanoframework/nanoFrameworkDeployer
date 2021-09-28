@@ -151,19 +151,19 @@ steps:
     arguments: install --tool-path . SignClient
 
 - pwsh: |
-      .\SignClient "Sign" `
-      --baseDirectory "$(Build.Repository.LocalPath)\build\bin\Release" `
-      --input "**/nanoFrameworkDeployer.exe" `
-      --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
-      --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
-      --user "$(SignClientUser)" `
-      --secret '$(SignClientSecret)' `
-      --name "nanoFrameworkDeployer" `
-      --description "nanoFrameworkDeployer" `
-      --descriptionUrl "https://github.com/$env:Build_Repository_Name"
-    displayName: Sign nanoFrameworkDeployer.exe
-    continueOnError: true
-    condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], '') )
+    .\SignClient "Sign" `
+    --baseDirectory "$(Build.Repository.LocalPath)\build\bin\Release" `
+    --input "**/nanoFrameworkDeployer.exe" `
+    --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
+    --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
+    --user "$(SignClientUser)" `
+    --secret '$(SignClientSecret)' `
+    --name "nanoFrameworkDeployer" `
+    --description "nanoFrameworkDeployer" `
+    --descriptionUrl "https://github.com/$env:Build_Repository_Name"
+  displayName: Sign nanoFrameworkDeployer.exe
+  continueOnError: true
+  condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], '') )
 
 - task: PowerShell@2
   condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
