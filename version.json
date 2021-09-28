@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
-  "version": "1.0.1-preview.{height}",
+  "version": "1.0",
   "assemblyVersion": {
-    "precision": "revision"
+    "precision": "minor"
   },
   "semVer1NumericIdentifierPadding": 3,
   "nugetPackageVersion": {
@@ -14,12 +14,13 @@
     "^refs/heads/v\\d+(?:\\.\\d+)?$"
   ],
   "cloudBuild": {
-    "setVersionVariables": true,
-    "setAllVariables": true
+    "setAllVariables": true,
+    "buildNumber": {
+      "enabled": true,
+      "includeCommitId": { "when": "always" }
+    }
   },
   "release": {
-    "branchName": "release-v{version}",
-    "firstUnstableTag": "preview",
-    "versionIncrement": "build"
+    "branchName": "release-v{version}"
   }
 }
