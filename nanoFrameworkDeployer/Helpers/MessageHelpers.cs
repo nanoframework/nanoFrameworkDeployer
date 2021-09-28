@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace nanoFrameworkFlasher.Helpers
 {
@@ -47,7 +47,6 @@ namespace nanoFrameworkFlasher.Helpers
         /// Helper method for warning messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "We want same access for all methods.")]
         public void Warning(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -59,7 +58,6 @@ namespace nanoFrameworkFlasher.Helpers
         /// Helper method for error messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "We want same access for all methods.")]
         public void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;

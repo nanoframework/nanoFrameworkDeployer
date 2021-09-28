@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using nanoFramework.Tools.Debugger;
 using System.IO;
 using nanoFrameworkFlasher.Helpers;
@@ -10,10 +13,8 @@ using System.Linq;
 
 namespace nanoFrameworkFlasher
 {
-    class Program
+    internal class Program
     {
-        private static int _numberOfRetries;
-
         private static CommandlineOptions _options;
         private static MessageHelper _message;
         private static int _returnvalue;
@@ -55,6 +56,7 @@ namespace nanoFrameworkFlasher
 
         private static void RunLogic(CommandlineOptions o)
         {
+            int numberOfRetries;
             _options = o;
             _message = new MessageHelper(_options);
             string[] peFiles;
@@ -82,9 +84,9 @@ namespace nanoFrameworkFlasher
             }
 
             // Now we will check if there is any exclude file, open it and get the ports
-            if(!string.IsNullOrEmpty(_options.PortException))
+            if (!string.IsNullOrEmpty(_options.PortException))
             {
-                if(File.Exists(_options.PortException))
+                if (File.Exists(_options.PortException))
                 {
                     var ports = File.ReadAllLines(_options.PortException);
                     if (ports.Length > 0)
@@ -103,7 +105,7 @@ namespace nanoFrameworkFlasher
 
             List<byte[]> assemblies = new List<byte[]>();
             int retryCount = 0;
-            _numberOfRetries = 10;
+            numberOfRetries = 10;
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
 
         retryConnection:
@@ -116,7 +118,7 @@ namespace nanoFrameworkFlasher
 
             if (_serialDebugClient.NanoFrameworkDevices.Count == 0)
             {
-                if (retryCount > _numberOfRetries)
+                if (retryCount > numberOfRetries)
                 {
                     _message.Error("Error too many retries");
                     _returnvalue = 1;
@@ -155,11 +157,11 @@ namespace nanoFrameworkFlasher
 
         retryDebug:
             bool connectResult = _device.DebugEngine.Connect(5000, true, true);
-            _message.Output($"Device connect result is {connectResult}. Attempt {retryCount}/{_numberOfRetries}");
+            _message.Output($"Device connect result is {connectResult}. Attempt {retryCount}/{numberOfRetries}");
 
             if (!connectResult)
             {
-                if (retryCount < _numberOfRetries)
+                if (retryCount < numberOfRetries)
                 {
                     // Give it a bit of time
                     Thread.Sleep(100);
@@ -176,7 +178,7 @@ namespace nanoFrameworkFlasher
 
         retryErase:
             // erase the device
-            _message.Output($"Erase deployment block storage. Attempt {retryCount}/{_numberOfRetries}.");
+            _message.Output($"Erase deployment block storage. Attempt {retryCount}/{numberOfRetries}.");
 
             var eraseResult = _device.Erase(
                     EraseOptions.Deployment,
@@ -186,7 +188,7 @@ namespace nanoFrameworkFlasher
             _message.Verbose($"Erase result is {eraseResult}.");
             if (!eraseResult)
             {
-                if (retryCount < _numberOfRetries)
+                if (retryCount < numberOfRetries)
                 {
                     // Give it a bit of time
                     Thread.Sleep(400);
@@ -199,16 +201,13 @@ namespace nanoFrameworkFlasher
                 }
             }
 
-            // build a list with the full path for each DLL, referenced DLL and EXE
-            List<String> assemblyList = new List<String>();
-
             _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
             // Keep track of total assembly size
             long totalSizeOfAssemblies = 0;
 
             // now we will deploy all system assemblies
-            foreach (String peItem in peFiles)
+            foreach (string peItem in peFiles)
             {
                 // append to the deploy blob the assembly
                 using (FileStream fs = File.Open(peItem, FileMode.Open, FileAccess.Read))
@@ -242,7 +241,6 @@ namespace nanoFrameworkFlasher
             {
                 _message.Error("Write failed.");
                 _returnvalue = 1;
-                return;
             }
             else
             {
