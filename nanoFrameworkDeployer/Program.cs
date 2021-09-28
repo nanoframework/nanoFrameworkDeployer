@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace nanoFrameworkFlasher
 {
+    /// <summary>
+    /// This is the main program
+    /// </summary>
     internal class Program
     {
         private static CommandlineOptions _options;
@@ -21,6 +24,11 @@ namespace nanoFrameworkFlasher
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
 
+        /// <summary>
+        /// Main entry point
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         internal static int Main(string[] args)
         {
             try
