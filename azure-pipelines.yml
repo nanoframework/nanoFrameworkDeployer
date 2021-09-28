@@ -52,9 +52,11 @@ steps:
         # build NOT from PR
         Write-Host "Build NOT from PR, commit ID: $env:Build_SourceVersion"
     
+        $auth = "basic $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("nfbot:$(GitHubToken)"))))"
+
         # get PR associate with commit
         $prUrl = "https://api.github.com/repos/$env:Build_Repository_Name/commits/$env:Build_SourceVersion/pulls"
-        $commit = Invoke-RestMethod -Uri $prUrl -ContentType "application/json" -Headers @{"Accept"="application/vnd.github.groot-preview+json"} -Method GET
+        $commit = Invoke-RestMethod -Uri $prUrl -ContentType "application/json" -Headers @{Accept = "application/vnd.github.groot-preview+json"; Authorization = "$auth"} -Method GET
 
         if($commit -ne $null)
         {
@@ -72,7 +74,7 @@ steps:
   displayName: Check PR labels
 
 - task: DotNetCoreCLI@2  
-  condition: or( eq( variables['StartReleaseCandidate'], true ), ne(variables['system.pullrequest.isfork'], true) )
+  condition: and( succeeded(), or( eq( variables['StartReleaseCandidate'], true ), ne(variables['system.pullrequest.isfork'], true) ))
   displayName: Install NBGV tool
   inputs:
     command: custom
@@ -118,7 +120,7 @@ steps:
   displayName: NBGV prepare release
 
 - task: SonarCloudPrepare@1
-  condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
   displayName: 'Prepare analysis on SonarCloud'
   inputs:
     SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
@@ -135,7 +137,7 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
-  condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
@@ -166,7 +168,7 @@ steps:
   condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], '') )
 
 - task: PowerShell@2
-  condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
   displayName: Get NuGet build number
   inputs:
     targetType: 'inline'
