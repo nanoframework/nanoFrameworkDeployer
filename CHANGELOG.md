@@ -1,5 +1,17 @@
 # Changelog
 
+## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.9...HEAD)
+
+**Fixed bugs:**
+
+- Fixing nuget url in github release [\#2](https://github.com/nanoframework/nanoFrameworkDeployer/pull/2)
+
+## [v1.0.9](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.9) (2021-09-28)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.7...v1.0.9)
+
 ## [v1.0.7](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.7) (2021-09-28)
 
 [Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.5...v1.0.7)
