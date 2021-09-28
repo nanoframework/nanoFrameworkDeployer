@@ -23,7 +23,7 @@ pool:
 
 variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  solution: '**/nanoFrameworkDeployer.sln'
+  solution: 'nanoFrameworkDeployer.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -42,7 +42,7 @@ steps:
     # default to false
     $update = $false
 
-    if($env:Build_Reason -eq 'PullRequest')
+    if($env:System_PullRequest_PullRequestId -ne $null)
     {
         # PR build, nothing interesting in commit message
         Write-Host "Build from PR"
@@ -151,7 +151,7 @@ steps:
       $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
 
       # replace preview with alpha if this is a PR build
-      if($env:Build_Reason -eq 'PullRequest')
+      if($env:System_PullRequest_PullRequestId -ne $null)
       {
           $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
       }
@@ -165,7 +165,7 @@ steps:
 
       Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
 
-# update could build number (only possible if this is not a PR from a fork)
+# update cloud build number (only possible if this is not a PR from a fork)
 - task: PowerShell@2
   condition: and( succeeded(), ne(variables['system.pullrequest.isfork'], true), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
   displayName: Update cloud build number
@@ -326,44 +326,36 @@ steps:
     MY_GITHUB_TOKEN: $(GitHubToken)
 
 # create or update GitHub release ON tags from release or main branches
-- task: GitHubReleasePublish@1
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
-  displayName: Create/Update GitHub PREVIEW release 
+- task: GithubRelease@1
+  condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], ''), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  displayName: Create/Update GitHub PREVIEW release
   inputs:
-    githubEndpoint: 'nanoframework'
-    githubOwner: 'nanoframework'
-    githubRepositoryName: 'nanoFrameworkDeployer'
-    githubTag: v$(MY_NUGET_VERSION)
-    githubReleaseTitle: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
-    githubReleaseNotes: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
-    githubTargetCommitsh: $(Build.SourceVersion)
-    githubReleaseDraft: false
-    githubReleasePrerelease: true
-    githubReuseDraftOnly: false
-    githubReuseRelease: true
-    githubEditRelease: true
-    githubDeleteEmptyTag: true
-    githubReleaseAsset: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    gitHubConnection: 'github.com_nano-$(System.TeamProject)'
+    tagSource: userSpecifiedTag
+    tag: v$(MY_NUGET_VERSION)
+    title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
+    releaseNotesSource: inline
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    assets: '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
+    assetUploadMode: replace
+    isPreRelease: true
+    addChangeLog: false
 
 # create or update GitHub release ON tags from release or main branches
-- task: GitHubReleasePublish@1
+- task: GithubRelease@1
   condition: and( succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), not(contains(variables['Build.SourceBranch'], 'preview') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
-  displayName: Create/Update GitHub release
+  displayName: Create/Update GitHub stable release
   inputs:
-    githubEndpoint: 'nanoframework'
-    githubOwner: 'nanoframework'
-    githubRepositoryName: 'nanoFrameworkDeployer'
-    githubTag: v$(MY_NUGET_VERSION)
-    githubReleaseTitle: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
-    githubReleaseNotes: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
-    githubTargetCommitsh: $(Build.SourceVersion)
-    githubReleaseDraft: false
-    githubReleasePrerelease: false
-    githubReuseDraftOnly: false
-    githubReuseRelease: false
-    githubEditRelease: false
-    githubDeleteEmptyTag: true
-    githubReleaseAsset: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    gitHubConnection: 'github.com_nano-$(System.TeamProject)'
+    tagSource: userSpecifiedTag
+    tag: v$(MY_NUGET_VERSION)
+    title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
+    releaseNotesSource: inline
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer.Net/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    assets: '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
+    assetUploadMode: replace
+    isPreRelease: true
+    addChangeLog: false
 
 # step from template @ nf-tools repo
 # report error
