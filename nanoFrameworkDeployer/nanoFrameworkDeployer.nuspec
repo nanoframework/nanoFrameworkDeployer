@@ -32,7 +32,7 @@ This package requires a target with nanoFrameworkDeployer v$nativeVersion$ (chec
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\nanoFrameworkDeployer.dll" target="lib\net472\nanoFrameworkDeployer.dll" />
+    <file src="bin\Release\nanoFrameworkDeployer.exe" target="lib\net472\nanoFrameworkDeployer.exe" />
     <file src="bin\Release\nanoFrameworkDeployer.pdb" target="lib\net472\nanoFrameworkDeployer.pdb" />
     <!-- readme -->
     <file src="..\assets\readme.txt" target="readme.txt" />
