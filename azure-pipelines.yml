@@ -142,6 +142,29 @@ steps:
     msbuildArgs: '/p:PublicRelease=true'
     configuration: '$(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: Install SignTool tool
+  condition: and( succeeded(), eq( variables['StartReleaseCandidate'], false ), eq(variables['System.PullRequest.PullRequestId'], '') )
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . SignClient
+
+- pwsh: |
+      .\SignClient "Sign" `
+      --baseDirectory "$(Build.Repository.LocalPath)\build\bin\Release" `
+      --input "**/nanoFrameworkDeployer.exe" `
+      --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
+      --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
+      --user "$(SignClientUser)" `
+      --secret '$(SignClientSecret)' `
+      --name "nanoFrameworkDeployer" `
+      --description "nanoFrameworkDeployer" `
+      --descriptionUrl "https://github.com/$env:Build_Repository_Name"
+    displayName: Sign nanoFrameworkDeployer.exe
+    continueOnError: true
+    condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], '') )
+
 - task: PowerShell@2
   condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
   displayName: Get NuGet build number
@@ -259,14 +282,6 @@ steps:
       **\nanoFrameworkDeployer.$(MY_NUGET_VERSION).snupkg
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
-
-- task: DotNetCoreCLI@2
-  displayName: Install SignTool tool
-  condition: and( succeeded(), eq( variables['StartReleaseCandidate'], false ), eq(variables['System.PullRequest.PullRequestId'], '') )
-  inputs:
-    command: custom
-    custom: tool
-    arguments: install --tool-path . SignClient
 
 - pwsh: |
     .\SignClient "Sign" `
