@@ -323,7 +323,7 @@ steps:
     githubReuseDraftOnly: true
     githubReuseRelease: true
     githubEditRelease: true
-    githubReleaseAsset: '$(Build.ArtifactStagingDirectory)/*'
+    githubReleaseAsset: '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
     condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], ''), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ) )
   displayName: Create/Update GitHub release
 
