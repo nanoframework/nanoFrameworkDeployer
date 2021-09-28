@@ -121,7 +121,7 @@ steps:
   condition: and( ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
   displayName: 'Prepare analysis on SonarCloud'
   inputs:
-    SonarCloud: 'sonarcloud-debugger'
+    SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
     organization: 'nanoframework'
     scannerMode: 'MSBuild'
     projectKey: 'nanoframework_nanoFrameworkDeployer'
@@ -300,7 +300,7 @@ steps:
     command: push
     nuGetFeedType: external
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    publishFeedCredentials: 'AzureArtifacts-debugger'
+    publishFeedCredentials: 'AzureArtifacts-nanoFrameworkDeployer'
     allowPackageConflicts: true
 
 # push NuGet class lib package to NuGet (always happens except on PR builds)
@@ -313,7 +313,7 @@ steps:
     nuGetFeedType: external
     allowPackageConflicts: true
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    publishFeedCredentials: 'NuGet-debugger'
+    publishFeedCredentials: 'NuGet-nanoFrameworkDeployer'
 
 # update dependencies
 - task: PowerShell@2
