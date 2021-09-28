@@ -3,21 +3,21 @@
   <metadata>
     <id>nanoFrameworkDeployer</id>
     <version>$version$</version>
-    <title>nanoFrameworkDeployerc</title>
+    <title>nanoFrameworkDeployer</title>
     <authors>nanoFramework project contributors</authors>
-    <owners>nanoFramework project contributors</owners>
+    <owners>nanoFramework project contributors,dotnetfoundation</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <releaseNotes>
     </releaseNotes>
     <developmentDependency>false</developmentDependency>
-    <projectUrl>https://github.com/nanoframework/nanoFrameworkDeployerc</projectUrl>
+    <projectUrl>https://github.com/nanoframework/nanoFrameworkDeployer</projectUrl>
     <iconUrl>https://secure.gravatar.com/avatar/97d0e092247f0716db6d4b47b7d1d1ad</iconUrl>
+    <icon>images\nf-logo.png</icon>
     <repository type="git" url="https://github.com/nanoframework/nanoFrameworkDeployer" commit="$commit$" />
     <copyright>Copyright (c) .NET Foundation and Contributors</copyright>
-    <description>This package includes the nanoFrameworkDeployer assembly for nanoFramework C# projects.
-This package requires a target with nanoFrameworkDeployer v$nativeVersion$ (checksum $checksum$).</description>
-    <summary>nanoFrameworkDeployer assembly for .NET nanoFramework C# projects</summary>
+    <description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</description>
+    <summary>.NET nanoFrameworkDeployer library</summary>
     <tags>nanoFramework C# csharp netmf netnf nanoFrameworkDeployer</tags>
     <dependencies>
       <dependency id="CommandLineParser" version="2.8.0" />
@@ -32,11 +32,11 @@ This package requires a target with nanoFrameworkDeployer v$nativeVersion$ (chec
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\nanoFrameworkDeployer.dll" target="lib\net472\nanoFrameworkDeployer.dll" />
-    <file src="bin\Release\nanoFrameworkDeployer.pdb" target="lib\net472\nanoFrameworkDeployer.pdb" />
+    <file src="bin\Release\nanoFrameworkDeployer.exe" target="content\nanoFrameworkDeployer.exe" />
+    <file src="bin\Release\nanoFrameworkDeployer.pdb" target="content\nanoFrameworkDeployer.pdb" />
     <!-- readme -->
     <file src="..\assets\readme.txt" target="readme.txt" />
-      <file src="..\assets\nf-logo.png" target="images" />
-      <file src="..\LICENSE.md" target="" />
+    <file src="..\assets\nf-logo.png" target="images" />
+    <file src="..\LICENSE.md" target="" />
   </files>
 </package>
