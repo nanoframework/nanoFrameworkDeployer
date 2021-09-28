@@ -27,7 +27,7 @@
       <dependency id="Polly.Contrib.WaitAndRetry" version="1.1.1"/>
       <dependency id="PropertyChanged.Fody" version="2.6.1" />
       <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.5.3" />
-      <dependency id="System.Threading.Tasks.Extensions" />
+      <dependency id="System.Threading.Tasks.Extensions" version="4.5.4"/>
       <dependency id="System.ValueTuple" version="4.5.0" />
     </dependencies>
   </metadata>
