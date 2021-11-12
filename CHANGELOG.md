@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.9...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.11...HEAD)
+
+**Fixed bugs:**
+
+- Adjusting application type [\#3](https://github.com/nanoframework/nanoFrameworkDeployer/pull/3)
+
+## [v1.0.11](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.11) (2021-09-28)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.9...v1.0.11)
 
 **Fixed bugs:**
 
@@ -22,7 +30,11 @@
 
 ## [v1.0.2](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.2) (2021-09-28)
 
-[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/676c28342af82d5c48f936f8e25f80fd6bb3db1b...v1.0.2)
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.14...v1.0.2)
+
+## [v1.0.14](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.14) (2021-09-28)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/676c28342af82d5c48f936f8e25f80fd6bb3db1b...v1.0.14)
 
 
 
