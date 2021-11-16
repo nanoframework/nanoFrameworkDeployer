@@ -95,6 +95,7 @@ namespace nanoFrameworkFlasher
 
                     deploymentFile.Close();
                     deploymentFile.Dispose();
+                    return;
                 }
             }
             else
