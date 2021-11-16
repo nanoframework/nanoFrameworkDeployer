@@ -83,6 +83,19 @@ namespace nanoFrameworkFlasher
                     _returnvalue = 1;
                     return;
                 }
+
+                if(_options.BinaryFileOnly)
+                {
+                    List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
+                    FileStream deploymentFile = File.Create(Path.Combine(workingDirectory, "deploy.bin"));
+                    foreach (var assFile in assFiles)
+                    {
+                        deploymentFile.Write(assFile.ToArray(), 0, assFile.Length);
+                    }
+
+                    deploymentFile.Close();
+                    deploymentFile.Dispose();
+                }
             }
             else
             {
@@ -212,26 +225,7 @@ namespace nanoFrameworkFlasher
 
             _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
-            // Keep track of total assembly size
-            long totalSizeOfAssemblies = 0;
-
-            // now we will deploy all system assemblies
-            foreach (string peItem in peFiles)
-            {
-                // append to the deploy blob the assembly
-                using (FileStream fs = File.Open(peItem, FileMode.Open, FileAccess.Read))
-                {
-                    long length = (fs.Length + 3) / 4 * 4;
-                    _message.Verbose($"Adding {peItem} v0 ({length} bytes) to deployment bundle");
-                    byte[] buffer = new byte[length];
-
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    assemblies.Add(buffer);
-
-                    // Increment totalizer
-                    totalSizeOfAssemblies += length;
-                }
-            }
+            assemblies = CreateBinDeploymentFile(peFiles);
 
             _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
 
@@ -255,6 +249,32 @@ namespace nanoFrameworkFlasher
             {
                 _message.Output("Write successful");
             }
+        }
+
+        private static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
+        {
+            // Keep track of total assembly size
+            long totalSizeOfAssemblies = 0;
+            List<byte[]> assemblies = new List<byte[]>();
+            // now we will deploy all system assemblies
+            foreach (string peItem in peFiles)
+            {
+                // append to the deploy blob the assembly
+                using (FileStream fs = File.Open(peItem, FileMode.Open, FileAccess.Read))
+                {
+                    long length = (fs.Length + 3) / 4 * 4;
+                    _message.Verbose($"Adding {peItem} v0 ({length} bytes) to deployment bundle");
+                    byte[] buffer = new byte[length];
+
+                    fs.Read(buffer, 0, (int)fs.Length);
+                    assemblies.Add(buffer);
+
+                    // Increment totalizer
+                    totalSizeOfAssemblies += length;
+                }
+            }
+
+            return assemblies;
         }
     }
 }

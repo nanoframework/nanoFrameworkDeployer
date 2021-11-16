@@ -35,11 +35,16 @@ namespace nanoFrameworkFlasher
         [Option('e', "exception", Required = false, HelpText = "COM Port exception file.")]
         public string PortException { get; set; }
 
-
         /// <summary>
         /// Gets or sets the rebooting behavior after flash. True to reboot the device.
         /// </summary>
         [Option('r', "reboot", Required = false, HelpText = "Reboot the device after flash.")]
         public bool RebootAfterFlash{ get; set; }
+
+        /// <summary>
+        /// Gets or sets the rebooting behavior after flash. True to reboot the device.
+        /// </summary>
+        [Option('b', "bin", Required = false, HelpText = "Creates a deployment binary file only. This is not attempting to deploy.")]
+        public bool BinaryFileOnly { get; set; }
     }
 }
