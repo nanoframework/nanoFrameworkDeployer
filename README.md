@@ -21,6 +21,7 @@ The tool provide various options:
                      valid found is used.
   -e, --exception    COM Port exception file.
   -r, --reboot       Reboot the device after flash.
+  -b, --bin          Creates a deployment binary file only. This is not attempting to deploy.
   --help             Display this help screen.
   --version          Display version information.
 ```
@@ -51,6 +52,10 @@ You can automatically ask the tool to reboot your device once flashed, used the 
 ### Selecting a specific COM port
 
 If you have multiple valid .NET nanoFramework device connected, you can select a specific COM port, just use the `-c` option for that followed by the COM port you want to use.
+
+### Creating a binary deployment file
+
+Using the --bin or -b option will create a binary deployment file. You can then use it with nanoff to flash your device. Please note that using this option will **not** flash the device. All other options except the directory one will be ignored.
 
 ## Feedback and documentation
 
