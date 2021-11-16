@@ -228,8 +228,6 @@ namespace nanoFrameworkFlasher
 
             assemblies = CreateBinDeploymentFile(peFiles);
 
-            _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
-
             // need to keep a copy of the deployment blob for the second attempt (if needed)
             var assemblyCopy = new List<byte[]>(assemblies);
 
@@ -274,6 +272,8 @@ namespace nanoFrameworkFlasher
                     totalSizeOfAssemblies += length;
                 }
             }
+
+            _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
 
             return assemblies;
         }
