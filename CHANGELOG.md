@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.11...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.16...HEAD)
+
+**Implemented enhancements:**
+
+- Adjust nugets versions [\#4](https://github.com/nanoframework/nanoFrameworkDeployer/pull/4)
+
+## [v1.0.16](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.16) (2021-11-16)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.11...v1.0.16)
 
 **Fixed bugs:**
 
