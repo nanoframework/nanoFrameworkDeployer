@@ -112,8 +112,9 @@ namespace nanoFrameworkFlasher
             _message.Verbose("Finding valid ports");
 
             List<byte[]> assemblies = new List<byte[]>();
-            int retryCount = 0;
-            numberOfRetries = 10;
+            int retryCount = 0;            
+            // Only 3 tries for a specified port
+            numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
 
         retryConnection:
