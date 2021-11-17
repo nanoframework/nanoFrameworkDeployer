@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.16...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.17...HEAD)
+
+**Implemented enhancements:**
+
+- Add bin export option [\#5](https://github.com/nanoframework/nanoFrameworkDeployer/pull/5)
+
+## [v1.0.17](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.17) (2021-11-16)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.16...v1.0.17)
 
 **Implemented enhancements:**
 
