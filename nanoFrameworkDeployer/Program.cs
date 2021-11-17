@@ -125,7 +125,6 @@ namespace nanoFrameworkFlasher
 
             _message.Verbose("Finding valid ports");
 
-            List<byte[]> assemblies = new List<byte[]>();
             int retryCount = 0;            
             // Only 3 tries for a specified port
             numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
@@ -226,7 +225,7 @@ namespace nanoFrameworkFlasher
 
             _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
-            assemblies = CreateBinDeploymentFile(peFiles);
+            List<byte[]> assemblies = CreateBinDeploymentFile(peFiles);
 
             // need to keep a copy of the deployment blob for the second attempt (if needed)
             var assemblyCopy = new List<byte[]>(assemblies);
