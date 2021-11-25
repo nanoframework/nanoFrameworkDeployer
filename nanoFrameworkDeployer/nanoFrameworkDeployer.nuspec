@@ -5,19 +5,18 @@
     <version>$version$</version>
     <title>nanoFrameworkDeployer</title>
     <authors>nanoFramework project contributors</authors>
-    <owners>nanoFramework project contributors,dotnetfoundation</owners>
+    <owners>nanoFramework,dotnetfoundation</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
+    <license type="file">LICENSE.md</license>
     <releaseNotes>
     </releaseNotes>
+    <readme>docs\README.md</readme>
     <developmentDependency>false</developmentDependency>
     <projectUrl>https://github.com/nanoframework/nanoFrameworkDeployer</projectUrl>
-    <iconUrl>https://secure.gravatar.com/avatar/97d0e092247f0716db6d4b47b7d1d1ad</iconUrl>
     <icon>images\nf-logo.png</icon>
     <repository type="git" url="https://github.com/nanoframework/nanoFrameworkDeployer" commit="$commit$" />
     <copyright>Copyright (c) .NET Foundation and Contributors</copyright>
     <description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</description>
-    <summary>.NET nanoFrameworkDeployer library</summary>
     <tags>nanoFramework C# csharp netmf netnf nanoFrameworkDeployer</tags>
     <dependencies>
       <dependency id="CommandLineParser" version="2.8.0" />
@@ -36,6 +35,7 @@
     <file src="bin\Release\nanoFrameworkDeployer.pdb" target="content\nanoFrameworkDeployer.pdb" />
     <!-- readme -->
     <file src="..\assets\readme.txt" target="readme.txt" />
+    <file src="..\README.md" target="docs\" />
     <file src="..\assets\nf-logo.png" target="images" />
     <file src="..\LICENSE.md" target="" />
   </files>
