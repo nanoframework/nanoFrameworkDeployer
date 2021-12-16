@@ -1,8 +1,8 @@
 # Changelog
 
-## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
+## [v1.0.19](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.19) (2021-11-17)
 
-[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.17...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.17...v1.0.19)
 
 **Implemented enhancements:**
 
