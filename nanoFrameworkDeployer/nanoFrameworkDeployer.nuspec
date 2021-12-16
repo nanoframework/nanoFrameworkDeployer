@@ -21,7 +21,7 @@
     <dependencies>
       <dependency id="CommandLineParser" version="2.8.0" />
       <dependency id="Fody" version="6.6.0" />
-      <dependency id="nanoFramework.Tools.Debugger.Net" version="2.0.0-preview.45" />
+      <dependency id="nanoFramework.Tools.Debugger.Net" version="2.2.0-preview.4" />
       <dependency id="Polly" version="7.2.2" />
       <dependency id="Polly.Contrib.WaitAndRetry" version="1.1.1"/>
       <dependency id="PropertyChanged.Fody" version="3.4.0" />
