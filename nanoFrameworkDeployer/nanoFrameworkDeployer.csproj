@@ -30,6 +30,37 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>nanoFrameworkDeployer</PackageId>
+    <Authors>.NET nanoFramework project contributors</Authors>
+    <Product>nanoFrameworkDeployer</Product>
+    <Authors>nanoFramework project contributors</Authors>
+    <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
+    <Company>.NET nanoFramework</Company>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/nanoframework/nanoFrameworkDeployer</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/nanoframework/nanoFrameworkDeployer</PackageProjectUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <Description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</Description>
+    <PackageTags>nanoFramework C# csharp netmf netnf nanoFrameworkDeployer</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageIcon>images\nf-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\assets\nf-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>images</PackagePath>
+    </None>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
@@ -88,6 +119,11 @@
     </PackageReference>
     <PackageReference Include="Nerdbank.GitVersioning">
       <Version>3.4.244</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="NuGet.Build.Tasks.Pack">
+      <Version>6.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

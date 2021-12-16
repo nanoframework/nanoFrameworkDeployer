@@ -163,7 +163,7 @@ steps:
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/p:PublicRelease=true'
+    msbuildArgs: '-p:PublicRelease=true -t:pack'
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
@@ -179,53 +179,6 @@ steps:
     custom: tool
     arguments: install --tool-path . SignClient
 
-- pwsh: |
-    .\SignClient "Sign" `
-    --baseDirectory "$(Build.Repository.LocalPath)\nanoFrameworkDeployer\bin\Release" `
-    --input "**/nanoFrameworkDeployer.exe" `
-    --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
-    --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
-    --user "$(SignClientUser)" `
-    --secret '$(SignClientSecret)' `
-    --name "nanoFrameworkDeployer" `
-    --description "nanoFrameworkDeployer" `
-    --descriptionUrl "https://github.com/$env:Build_Repository_Name"
-  displayName: Sign nanoFrameworkDeployer.exe
-  continueOnError: true
-  condition: >-
-    and(
-      succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], '')
-    )
-
-- task: PowerShell@2
-  condition: >-
-    and(
-      succeeded(),
-      ne(variables['StartReleaseCandidate'], true),
-      ne(variables['UPDATE_DEPENDENTS'], 'true')
-    )
-  displayName: Get NuGet build number
-  inputs:
-    targetType: 'inline'
-    script: |
-      $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
-
-      # replace preview with alpha if this is a PR build
-      if($env:System_PullRequest_PullRequestId -ne $null)
-      {
-          $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
-      }
-
-      if ($env:System_PullRequest_SourceBranch -like 'release*')
-      {
-          $MyNuGetVersion = $MyNuGetVersion + "-rc." + $env:NBGV_VersionHeight
-      }
-
-      Write-Host "NuGet build number is $MyNuGetVersion"
-
-      Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
-
 # update cloud build number (only possible if this is not a PR from a fork)
 - task: PowerShell@2
   condition: >-
@@ -239,21 +192,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host "NuGet version is $("##vso[build.updatebuildnumber]")$env:MY_NUGET_VERSION"
+      Write-Host "NuGet version is $("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
       Write-Host "Build version is $env:NBGV_AssemblyVersion"  
-
-- task: NuGetCommand@2
-  condition: >-
-    and(
-      succeeded(),
-      ne(variables['StartReleaseCandidate'], true),
-      ne(variables['UPDATE_DEPENDENTS'], 'true')
-    )
-  displayName: Pack .NET NuGet package
-  inputs:
-    command: 'custom'
-    arguments: 'pack nanoFrameworkDeployer\nanoFrameworkDeployer.nuspec -Version $(MY_NUGET_VERSION) -properties commit="$(Build.SourceVersion)"'
-    # arguments: 'pack nanoFrameworkDeployer\nanoFrameworkDeployer.nuspec -Symbols -SymbolPackageFormat snupkg -Version $(MY_NUGET_VERSION) -properties commit="$(Build.SourceVersion)"'
 
 # we don't have tests (yet)
 # - task: VSTest@2
@@ -314,7 +254,7 @@ steps:
 - powershell: |
     gem install github_changelog_generator --quiet --no-document
     # need to call it passing both cache options with full path otherwise it won't work
-    github_changelog_generator --token $(GitHubToken) --cache-log  $env:AGENT_TEMPDIRECTORY\github-changelog-logger.log --cache-file $env:AGENT_TEMPDIRECTORY\github-changelog-http-cache --future-release v$env:MY_NUGET_VERSION
+    github_changelog_generator --token $(GitHubToken) --cache-log  $env:AGENT_TEMPDIRECTORY\github-changelog-logger.log --cache-file $env:AGENT_TEMPDIRECTORY\github-changelog-http-cache --future-release v$env:NBGV_NuGetPackageVersion
   condition: >-
     and(
       succeeded(),
@@ -382,8 +322,8 @@ steps:
   inputs:
     sourceFolder: $(Build.SourcesDirectory)
     Contents: |
-      **\nanoFrameworkDeployer.$(MY_NUGET_VERSION).nupkg
-      **\nanoFrameworkDeployer.$(MY_NUGET_VERSION).snupkg
+      **\nanoFrameworkDeployer.*.nupkg
+      **\nanoFrameworkDeployer.*.snupkg
       **\nanoFrameworkDeployer.exe
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
@@ -408,12 +348,11 @@ steps:
       eq(variables['System.PullRequest.PullRequestId'], '')
     )
 
-# publish artifacts (only possible if this is not a PR originated on a fork)
+# publish artifacts
 - task: PublishBuildArtifacts@1
   condition: >-
     and(
       succeeded(),
-      ne(variables['system.pullrequest.isfork'], true),
       ne(variables['StartReleaseCandidate'], true),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
     )
@@ -428,6 +367,7 @@ steps:
   condition: >-
     and(
       succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
     )
@@ -471,12 +411,12 @@ steps:
   inputs:
     gitHubConnection: 'github.com_nano-$(System.TeamProject)'
     tagSource: userSpecifiedTag
-    tag: v$(MY_NUGET_VERSION)
-    title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
+    tag: v$(NBGV_NuGetPackageVersion)
+    title: 'nanoFramework Deployer Library v$(NBGV_NuGetPackageVersion)'
     releaseNotesSource: inline
-    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(NBGV_NuGetPackageVersion)) v$(NBGV_NuGetPackageVersion) v$(NBGV_NuGetPackageVersion)'
     assets: |
-      '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
+      '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(NBGV_NuGetPackageVersion).nupkg'
       '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
     assetUploadMode: replace
     isPreRelease: true
@@ -496,12 +436,12 @@ steps:
   inputs:
     gitHubConnection: 'github.com_nano-$(System.TeamProject)'
     tagSource: userSpecifiedTag
-    tag: v$(MY_NUGET_VERSION)
-    title: 'nanoFramework Deployer Library v$(MY_NUGET_VERSION)'
+    tag: v$(NBGV_NuGetPackageVersion)
+    title: 'nanoFramework Deployer Library v$(NBGV_NuGetPackageVersion)'
     releaseNotesSource: inline
-    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(MY_NUGET_VERSION)) v$(MY_NUGET_VERSION) v$(MY_NUGET_VERSION)'
+    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(NBGV_NuGetPackageVersion)) v$(NBGV_NuGetPackageVersion) v$(NBGV_NuGetPackageVersion)'
     assets: |
-      '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(MY_NUGET_VERSION).nupkg'
+      '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(NBGV_NuGetPackageVersion).nupkg'
       '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
     assetUploadMode: replace
     isPreRelease: true
