@@ -74,15 +74,22 @@ steps:
   displayName: Check PR labels
 
 - task: DotNetCoreCLI@2  
-  condition: and( succeeded(), or( eq( variables['StartReleaseCandidate'], true ), ne(variables['system.pullrequest.isfork'], true) ))
   displayName: Install NBGV tool
+  condition: >-
+    and(
+      succeeded(),
+      or(
+        eq(variables['StartReleaseCandidate'], true),
+        ne(variables['system.pullrequest.isfork'], true)
+      )
+    )
   inputs:
     command: custom
     custom: tool
     arguments: install -g nbgv
 
 # only required when updating dependents
-- script: nbgv cloud
+- script: nbgv cloud -a -c
   condition: eq(variables['UPDATE_DEPENDENTS'], 'true')
   displayName: Set Could Version
 
@@ -120,7 +127,12 @@ steps:
   displayName: NBGV prepare release
 
 - task: SonarCloudPrepare@1
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: 'Prepare analysis on SonarCloud'
   inputs:
     SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
@@ -131,13 +143,23 @@ steps:
 - template: azure-pipelines-templates/install-nuget.yml@templates
 
 - task: NuGetCommand@2
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: NuGet restore
   inputs:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
@@ -146,7 +168,12 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Install SignTool tool
-  condition: and( succeeded(), eq( variables['StartReleaseCandidate'], false ), eq(variables['System.PullRequest.PullRequestId'], '') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['StartReleaseCandidate'], false),
+      eq(variables['System.PullRequest.PullRequestId'], '')
+    )
   inputs:
     command: custom
     custom: tool
@@ -165,10 +192,19 @@ steps:
     --descriptionUrl "https://github.com/$env:Build_Repository_Name"
   displayName: Sign nanoFrameworkDeployer.exe
   continueOnError: true
-  condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], '') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], '')
+    )
 
 - task: PowerShell@2
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true'))
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Get NuGet build number
   inputs:
     targetType: 'inline'
@@ -192,7 +228,13 @@ steps:
 
 # update cloud build number (only possible if this is not a PR from a fork)
 - task: PowerShell@2
-  condition: and( succeeded(), ne(variables['system.pullrequest.isfork'], true), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['system.pullrequest.isfork'], true),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Update cloud build number
   inputs:
     targetType: 'inline'
@@ -201,7 +243,12 @@ steps:
       Write-Host "Build version is $env:NBGV_AssemblyVersion"  
 
 - task: NuGetCommand@2
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Pack .NET NuGet package
   inputs:
     command: 'custom'
@@ -215,16 +262,32 @@ steps:
 #     configuration: '$(buildConfiguration)'
 
 - task: SonarCloudAnalyze@1
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: 'Run Code Analysis'
 
 - task: SonarCloudPublish@1
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   inputs:
     pollingTimeoutSec: '300'
 
 - task: UseRubyVersion@0
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Setup Ruby
   inputs:
     versionSpec: '= 2.7' 
@@ -235,7 +298,16 @@ steps:
     gem install github_changelog_generator --quiet --no-document
     # need to call it passing both cache options with full path otherwise it won't work
     github_changelog_generator --token $(GitHubToken) --cache-log  $env:AGENT_TEMPDIRECTORY\github-changelog-logger.log --cache-file $env:AGENT_TEMPDIRECTORY\github-changelog-http-cache
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), not( startsWith(variables['Build.SourceBranchName'], 'main') ), not( contains(variables['Build.SourceBranchName'], 'update-dependencies') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')),
+      not(startsWith(variables['Build.SourceBranchName'], 'main')),
+      not(contains(variables['Build.SourceBranchName'], 'update-dependencies')),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Generate change log
 
 # generate change log including future version
@@ -243,12 +315,29 @@ steps:
     gem install github_changelog_generator --quiet --no-document
     # need to call it passing both cache options with full path otherwise it won't work
     github_changelog_generator --token $(GitHubToken) --cache-log  $env:AGENT_TEMPDIRECTORY\github-changelog-logger.log --cache-file $env:AGENT_TEMPDIRECTORY\github-changelog-http-cache --future-release v$env:MY_NUGET_VERSION
-  condition: and( succeeded(), and ( ne(variables['Build.Reason'], 'PullRequest'), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), startsWith(variables['Build.SourceBranchName'], 'main'), not( contains(variables['Build.SourceBranchName'], 'update-dependencies') ) ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      and(
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')),
+        startsWith(variables['Build.SourceBranchName'], 'main'),
+        not(contains(variables['Build.SourceBranchName'], 'update-dependencies'))
+      ),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Generate change log
 
 # copy change log to artifacts directory
 - task: CopyFiles@2
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Copy Changelog
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
@@ -257,7 +346,15 @@ steps:
 
 # push new changelog to GitHub repo
 - task: PowerShell@2
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), not( contains(variables['Build.SourceBranchName'], 'update-dependencies') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')),
+      not(contains(variables['Build.SourceBranchName'], 'update-dependencies')),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Push changelog to GitHub
   inputs:
     targetType: 'inline'
@@ -275,7 +372,12 @@ steps:
       git -c http.extraheader="AUTHORIZATION: $auth" push origin "HEAD:$(Build.SourceBranchName)"
 
 - task: CopyFiles@1
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Collecting deployable artifacts
   inputs:
     sourceFolder: $(Build.SourcesDirectory)
@@ -299,11 +401,22 @@ steps:
     --descriptionUrl "https://github.com/$env:Build_Repository_Name"
   displayName: Sign packages
   continueOnError: true
-  condition: and( succeeded(), eq( variables['StartReleaseCandidate'], false ), eq(variables['System.PullRequest.PullRequestId'], '') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['StartReleaseCandidate'], false),
+      eq(variables['System.PullRequest.PullRequestId'], '')
+    )
 
 # publish artifacts (only possible if this is not a PR originated on a fork)
 - task: PublishBuildArtifacts@1
-  condition: and( succeeded(), ne(variables['system.pullrequest.isfork'], true), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['system.pullrequest.isfork'], true),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Publish deployables artifacts
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -312,7 +425,12 @@ steps:
 
 # push NuGet packages to Azure Artifacts feed (always happens except on PR builds)
 - task: NuGetCommand@2
-  condition: and( succeeded(), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Push NuGet packages to Azure Artifacts
   inputs:
     command: push
@@ -323,7 +441,13 @@ steps:
 
 # push NuGet class lib package to NuGet (always happens except on PR builds)
 - task: NuGetCommand@2
-  condition: and( succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   continueOnError: true
   displayName: Push NuGet packages to NuGet
   inputs:
@@ -333,19 +457,16 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     publishFeedCredentials: 'NuGet-nanoFrameworkDeployer'
 
-# update dependencies
-- task: PowerShell@2
-  condition: and(or(eq(variables['UPDATE_DEPENDENTS'], 'true'), eq(variables['RUN_UPDATE_DEPENDENTS'], 'true') ), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ) )
-  displayName: Update dependent tools
-  inputs:
-    targetType: filePath
-    filePath: azure-pipelines/update-dependencies.ps1
-  env:
-    MY_GITHUB_TOKEN: $(GitHubToken)
-
 # create or update GitHub release ON tags from release or main branches
 - task: GithubRelease@1
-  condition: and( succeeded(), eq(variables['System.PullRequest.PullRequestId'], ''), not( startsWith(variables['Build.SourceBranch'], 'refs/tags/v') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Create/Update GitHub PREVIEW release
   inputs:
     gitHubConnection: 'github.com_nano-$(System.TeamProject)'
@@ -363,7 +484,14 @@ steps:
 
 # create or update GitHub release ON tags from release or main branches
 - task: GithubRelease@1
-  condition: and( succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), not(contains(variables['Build.SourceBranch'], 'preview') ), ne( variables['StartReleaseCandidate'], true ), ne(variables['UPDATE_DEPENDENTS'], 'true') )
+  condition: >-
+    and(
+      succeeded(),
+      startsWith(variables['Build.SourceBranch'], 'refs/tags/v'),
+      not(contains(variables['Build.SourceBranch'], 'preview')),
+      ne(variables['StartReleaseCandidate'], true),
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
+    )
   displayName: Create/Update GitHub stable release
   inputs:
     gitHubConnection: 'github.com_nano-$(System.TeamProject)'
@@ -378,6 +506,23 @@ steps:
     assetUploadMode: replace
     isPreRelease: true
     addChangeLog: false
+
+# update dependencies
+- task: PowerShell@2
+  condition: >-
+    and(
+      or(
+        eq(variables['UPDATE_DEPENDENTS'], 'true'),
+        eq(variables['RUN_UPDATE_DEPENDENTS'], 'true')
+      ),
+      not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+    )
+  displayName: Update dependent tools
+  inputs:
+    targetType: filePath
+    filePath: azure-pipelines/update-dependencies.ps1
+  env:
+    MY_GITHUB_TOKEN: $(GitHubToken)
 
 # step from template @ nf-tools repo
 # report error
