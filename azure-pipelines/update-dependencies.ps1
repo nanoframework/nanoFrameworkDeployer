@@ -38,7 +38,7 @@ git checkout --quiet develop | Out-Null
 ####################
 # VS Code extension
 
-Write-Host "Updating nanoFramework.Tools.FirmwareFlasher version in VS Code extension..."
+Write-Host "Updating nanoFrameworkDeployer version in VS Code extension..."
 
 $versionRegex = "nanoFrameworkDeployerVersion\s=\s\""v\d+.\d+.\d+\"""
 $newVersion = "nanoFrameworkDeployerVersion = ""v$packageTargetVersion"""
@@ -51,12 +51,12 @@ $buildFileContent -replace $versionRegex, $newVersion | Out-File $buildFileName 
 
 #####################
 
-"Bumping nanoFramework.Tools.FirmwareFlasher to $packageTargetVersion." | Write-Host -ForegroundColor Cyan                
+"Bumping nanoFrameworkDeployer to $packageTargetVersion." | Write-Host -ForegroundColor Cyan                
 
 # build commit message
-$commitMessage += "Bumps nanoFramework.Tools.FirmwareFlasher to $packageTargetVersion.`n"
+$commitMessage += "Bumps nanoFrameworkDeployer to $packageTargetVersion.`n"
 # build PR title
-$prTitle = "Bumps nanoFramework.Tools.FirmwareFlasher to $packageTargetVersion"
+$prTitle = "Bumps nanoFrameworkDeployer to $packageTargetVersion"
 
 # need this line so nfbot flags the PR appropriately
 $commitMessage += "`n[version update]`n`n"
