@@ -4,7 +4,7 @@
 
 # Cross-platform .NET nanoFrameworkDeployer Console Application
 
-This repo provides a .NET Console Application that can deploy your .NET **nanoFramework** projects to a **nanoFramework** supported device connected via USB. While this is already possible through the **nanoFramework** extension on Visual Studio 2019 on Windows, this repository aims to add support for deploying your projects on non-Windows based devices such as macOS and Linux.
+This repo provides a .NET Console Application that can deploy your .NET **nanoFramework** projects to a **nanoFramework** supported device connected via USB. While this is already possible through the **nanoFramework** extension on Visual Studio on Windows, this repository aims to add support for deploying your projects on non-Windows based devices such as macOS and Linux.
 
 ## Requirements
 
@@ -32,13 +32,13 @@ When running this tool on a non Windows platform, you need to use `mono`. This w
 mono nanoFrameworkDeployer -d path_to_pe_files
 ```
 
-`path_to_pe_files` is the path to the build folder where you have all the `.pe`files. Note that the tool will automatically upload all the `.pe` files.
+`path_to_pe_files` is the path to the build folder where all the `.pe` files are located. Note that the tool will automatically upload all the `.pe` files available in that folder.
 
-If you are using Windows, you don't need mono at all.
+Stressing this again: If you are on Windows, you DO **NOT** need `mono` at all.
 
 ### Excluding a COM port
 
-Some COM port can be used by your bluetooth devices. By default the tool will scan all the possible mounted COM ports to try to find a valid .NET nanoFramework board. That can disconnect temporally your connected headset or any other device using a COM port. In that case, you can create an exclusion file. Just list the COM port, one port per line. You can then use the `-e` option to pass the name of the file.
+Some virtual COM ports are provided by Bluetooth devices and other software. By default the tool will scan all the possible mounted COM ports to try to find a valid .NET nanoFramework device. That can disconnect temporally your connected headset or any other device using a COM port and may also cause lockups in the deployer tool. In that case, you can create an exclusion file. Just list the COM ports you want to exclude from the search, one port per line. You can then use the `-e` option to pass the name of the file.
 
 ```text
 /dev/tty-bluetooth
@@ -51,11 +51,11 @@ You can automatically ask the tool to reboot your device once flashed, used the 
 
 ### Selecting a specific COM port
 
-If you have multiple valid .NET nanoFramework device connected, you can select a specific COM port, just use the `-c` option for that followed by the COM port you want to use.
+If you have multiple valid .NET **nanoFramework** devices connected, you can select a specific COM port, just use the `-c` option to specify that followed by the COM port you want to use.
 
 ### Creating a binary deployment file
 
-Using the --bin or -b option will create a binary deployment file. You can then use it with nanoff to flash your device. Please note that using this option will **not** flash the device. All other options except the directory one will be ignored.
+Using the --bin or -b option will create a binary deployment file. You can then use it with `nanoff` to flash your device. Please note that using this option will **not** flash the device. All other options except the directory one will be ignored.
 
 ## Feedback and documentation
 
@@ -65,7 +65,7 @@ Join our Discord community [here](https://discord.gg/gCyBu8T).
 
 ## Credits
 
-The list of contributors to this project can be found at [CONTRIBUTORS](https://github.com/nanoframework/Home/blob/master/CONTRIBUTORS.md).
+The list of contributors to this project can be found at [CONTRIBUTORS](https://github.com/nanoframework/Home/blob/main/CONTRIBUTORS.md).
 
 ## License
 
