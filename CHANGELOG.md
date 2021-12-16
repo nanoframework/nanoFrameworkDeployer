@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.23](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.23) (2021-12-16)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.19...v1.0.23)
+
 ## [v1.0.19](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.19) (2021-11-17)
 
 [Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.17...v1.0.19)
