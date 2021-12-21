@@ -1,5 +1,17 @@
 # Changelog
 
+## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFrameworkDeployer/tree/HEAD)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.1.1...HEAD)
+
+**Documentation and other chores:**
+
+- Bumps nanoFramework.Tools.Debugger to 2.2.1-preview.4 [\#11](https://github.com/nanoframework/nanoFrameworkDeployer/pull/11)
+
+## [v1.1.1](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.1.1) (2021-12-16)
+
+[Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.23...v1.1.1)
+
 ## [v1.0.23](https://github.com/nanoframework/nanoFrameworkDeployer/tree/v1.0.23) (2021-12-16)
 
 [Full Changelog](https://github.com/nanoframework/nanoFrameworkDeployer/compare/v1.0.19...v1.0.23)
