@@ -34,7 +34,7 @@
     <PackageId>nanoFrameworkDeployer</PackageId>
     <Authors>.NET nanoFramework project contributors</Authors>
     <Product>nanoFrameworkDeployer</Product>
-    <Authors>nanoFramework project contributors</Authors>
+    <Authors>nanoframework</Authors>
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <Company>.NET nanoFramework</Company>
     <RepositoryType>git</RepositoryType>
@@ -42,7 +42,7 @@
     <PackageProjectUrl>https://github.com/nanoframework/nanoFrameworkDeployer</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
     <Description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</Description>
-    <PackageTags>nanoFramework C# csharp netmf netnf nanoFrameworkDeployer</PackageTags>
+    <PackageTags>nanoFramework C# csharp netmf netnf</PackageTags>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>images\nf-logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
