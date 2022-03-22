@@ -447,7 +447,8 @@ steps:
       '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(NBGV_NuGetPackageVersion).nupkg'
       '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
     assetUploadMode: replace
-    isPreRelease: true
+    action: edit
+    isPreRelease: false
     addChangeLog: false
 
 # update dependencies
