@@ -2,18 +2,13 @@
 
 # compute authorization header in format "AUTHORIZATION: basic 'encoded token'"
 # 'encoded token' is the Base64 of the string "nfbot:personal-token"
-$auth = "basic $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("nfbot:$env:MY_GITHUB_TOKEN"))))"
-
-# because it can take sometime for the package to become available on the NuGet providers
-# need to hang in here for 1 minute (1 * 60)
-"Waiting 1 minute to let package process flow in Azure Artifacts feed..." | Write-Host
-Start-Sleep -Seconds 60 
+$auth = "basic $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("nfbot:$env:GH_TOKEN"))))"
 
 # init/reset these
 $commitMessage = ""
 $prTitle = ""
 $newBranchName = "develop-nfbot/update-dependencies/" + [guid]::NewGuid().ToString()
-$packageTargetVersion = $env:NBGV_NuGetPackageVersion
+$packageTargetVersion = gh release view --json tagName --jq .tagName
 
 # working directory is agent temp directory
 Write-Debug "Changing working directory to $env:Agent_TempDirectory"
@@ -24,25 +19,24 @@ $repoName = 'nf-VSCodeExtension'
 # clone repo and checkout develop branch
 Write-Debug "Init and featch $repoName repo"
 
-
-git clone --depth 1 https://github.com/nanoframework/$repoName repo
+git clone --recurse-submodules --depth 1 https://github.com/nanoframework/$repoName repo 
 Set-Location repo | Out-Null
 git config --global gc.auto 0
 git config --global user.name nfbot
 git config --global user.email nanoframework@outlook.com
 git config --global core.autocrlf true
 
-Write-Host "Checkout develop branch..."
-git checkout --quiet develop | Out-Null
+Write-Host "Checkout main branch..."
+git checkout --quiet main | Out-Null
 
 ####################
 # VS Code extension
 
 Write-Host "Updating nanoFrameworkDeployer version in VS Code extension..."
 
-Set-Location nanoFrameworkDeployer | Out-Null
+git checkout --quiet tags/$packageTargetVersion
 
-git checkout tags/v$packageTargetVersion
+Set-Location .. | Out-Null
 
 #####################
 
@@ -88,10 +82,10 @@ if ($repoStatus -ne "")
     git -c http.extraheader="AUTHORIZATION: $auth" push --set-upstream origin $newBranchName > $null
 
     # start PR
-    # we are hardcoding to 'develop' branch to have a fixed one
+    # we are hardcoding to 'main' branch to have a fixed one
     # this is very important for tags (which don't have branch information)
     # considering that the base branch can be changed at the PR there is no big deal about this 
-    $prRequestBody = @{title="$prTitle";body="$commitMessage";head="$newBranchName";base="develop"} | ConvertTo-Json
+    $prRequestBody = @{title="$prTitle";body="$commitMessage";head="$newBranchName";base="main"} | ConvertTo-Json
     $githubApiEndpoint = "https://api.github.com/repos/nanoframework/$repoName/pulls"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
