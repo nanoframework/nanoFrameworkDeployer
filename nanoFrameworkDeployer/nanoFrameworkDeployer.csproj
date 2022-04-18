@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -40,7 +40,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/nanoframework/nanoFrameworkDeployer</RepositoryUrl>
     <PackageProjectUrl>https://github.com/nanoframework/nanoFrameworkDeployer</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageIconUrl>
+    </PackageIconUrl>
     <Description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</Description>
     <PackageTags>nanoFramework C# csharp netmf netnf</PackageTags>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
@@ -58,7 +59,8 @@
     </None>
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -116,17 +118,17 @@
     </PackageReference>
     <PackageReference Include="nanoFramework.Tools.Debugger.Net" Version="2.2.1-preview.14" />
     <PackageReference Include="Nerdbank.GitVersioning">
-      <Version>3.4.244</Version>
+      <Version>3.4.255</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NuGet.Build.Tasks.Pack">
-      <Version>6.0.0</Version>
+      <Version>6.1.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Polly">
-      <Version>7.2.2</Version>
+      <Version>7.2.3</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
       <Version>3.4.0</Version>
