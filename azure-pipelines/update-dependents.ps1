@@ -34,6 +34,8 @@ git checkout --quiet main | Out-Null
 
 Write-Host "Updating nanoFrameworkDeployer version in VS Code extension..."
 
+Set-Location nanoFrameworkDeployer | Out-Null
+
 git checkout --quiet tags/$packageTargetVersion
 
 Set-Location .. | Out-Null
