@@ -181,9 +181,10 @@ steps:
   condition: >-
     and(
       succeeded(),
-      eq(variables['StartReleaseCandidate'], false),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
-      eq(variables['System.PullRequest.PullRequestId'], '')
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
     )
   inputs:
     command: custom
@@ -195,7 +196,7 @@ steps:
   condition: >-
     and(
       succeeded(),
-      ne(variables['system.pullrequest.isfork'], true),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
@@ -268,9 +269,10 @@ steps:
   condition: >-
     and(
       succeeded(),
-      eq(variables['StartReleaseCandidate'], false),
+      eq(variables['System.PullRequest.PullRequestId'], ''),
+      ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
-      eq(variables['System.PullRequest.PullRequestId'], '')
+      ne(variables['UPDATE_DEPENDENTS'], 'true')
     )
 
 # publish artifacts
