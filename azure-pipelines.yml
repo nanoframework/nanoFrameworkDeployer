@@ -325,31 +325,6 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     publishFeedCredentials: 'NuGet-nanoFrameworkDeployer'
 
-# create or update GitHub release ON tags from release or main branches
-- task: GithubRelease@1
-  condition: >-
-    and(
-      succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], ''),
-      eq(variables['isTag'], 'false'),
-      ne(variables['StartReleaseCandidate'], true),
-      ne(variables['UPDATE_DEPENDENTS'], 'true')
-    )
-  displayName: Create/Update GitHub PREVIEW release
-  inputs:
-    gitHubConnection: 'github.com_nano-$(System.TeamProject)'
-    tagSource: userSpecifiedTag
-    tag: v$(NBGV_NuGetPackageVersion)
-    title: 'nanoFramework Deployer Library v$(NBGV_NuGetPackageVersion)'
-    releaseNotesSource: inline
-    releaseNotesInline: 'Check the [changelog]($(Build.Repository.Uri)/blob/$(Build.SourceBranchName)/CHANGELOG.md).<br><br><h4>Install from NuGet</h4><br>The following NuGet packages are available for download from this release:<br>:package: [.NET](https://www.nuget.org/packages/nanoFrameworkDeployer/$(NBGV_NuGetPackageVersion)) v$(NBGV_NuGetPackageVersion) v$(NBGV_NuGetPackageVersion)'
-    assets: |
-      '$(Build.ArtifactStagingDirectory)/$(nugetPackageName).$(NBGV_NuGetPackageVersion).nupkg'
-      '$(Build.ArtifactStagingDirectory)/nanoFrameworkDeployer.exe'
-    assetUploadMode: replace
-    isPreRelease: true
-    addChangeLog: false
-
 # create or update GitHub release
 - task: GithubRelease@1
   condition: >-
