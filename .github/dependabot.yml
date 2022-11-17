@@ -1,7 +1,7 @@
 version: 2
 updates:
   # Enable version updates for npm
-  - package-ecosystem: "NuGet"
+  - package-ecosystem: "nuget"
     directory: "nanoFrameworkDeployer"
     schedule:
       interval: "weekly"
