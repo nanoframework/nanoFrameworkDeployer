@@ -4,7 +4,7 @@
 
 using CommandLine;
 
-namespace nanoFrameworkFlasher
+namespace nanoFrameworkDeployer
 {
     /// <summary>
     /// Class for command line options.
