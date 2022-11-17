@@ -29,8 +29,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<RestoreLockedMode>true</RestoreLockedMode>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>nanoFrameworkDeployer</PackageId>
