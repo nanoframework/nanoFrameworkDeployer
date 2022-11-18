@@ -4,7 +4,7 @@
 
 using System;
 
-namespace nanoFrameworkFlasher.Helpers
+namespace nanoFrameworkDeployer.Helpers
 {
     /// <summary>
     /// Helper methods to write messages to the console.

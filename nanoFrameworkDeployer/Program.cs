@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Threading;
 using nanoFramework.Tools.Debugger;
 using System.IO;
-using nanoFrameworkFlasher.Helpers;
+using nanoFrameworkDeployer.Helpers;
 using CommandLine;
 using System.Linq;
 
-namespace nanoFrameworkFlasher
+namespace nanoFrameworkDeployer
 {
     /// <summary>
     /// This is the main program
