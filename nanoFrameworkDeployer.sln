@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{97576663-4E7D-4746-B3BA-39DA8A3DFE64}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
-		nanoFrameworkDeployer\nanoFrameworkDeployer.nuspec = nanoFrameworkDeployer\nanoFrameworkDeployer.nuspec
 		version.json = version.json
 	EndProjectSection
 EndProject
