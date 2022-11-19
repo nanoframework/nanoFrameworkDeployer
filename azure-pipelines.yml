@@ -333,7 +333,7 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['System.PullRequest.PullRequestId'], '')
       )
     displayName: Push nanoframeworkDeployer NuGet package to NuGet
     continueOnError: true
@@ -350,7 +350,7 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['System.PullRequest.PullRequestId'], '')
       )    
     displayName: Push library NuGet package to NuGet
     continueOnError: true
@@ -367,8 +367,7 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], ''),
-        eq(variables['UPDATE_DEPENDENTS'], 'false')
+        eq(variables['System.PullRequest.PullRequestId'], '')
       )
     displayName: Create/Update GitHub stable release
     inputs:
