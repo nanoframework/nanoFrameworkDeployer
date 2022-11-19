@@ -25,23 +25,22 @@
 		<Platforms>AnyCPU;x64</Platforms>
 		<RuntimeIdentifiers>any</RuntimeIdentifiers>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<RestoreLockedMode>true</RestoreLockedMode>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <RestoreLockedMode Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</RestoreLockedMode>
+    <!-- Generate the lock file -->
+    <RestorePackagesWithLockFile >true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
-		<TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <!-- Restore the exact packages as listed in the lock file -->
+    <RestoreLockedMode>true</RestoreLockedMode>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
 		<TargetFrameworks>net472</TargetFrameworks>
 	</PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
-		<TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <!-- order is important due to lock file generation-->
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
 	</PropertyGroup>
 
   <PropertyGroup>
