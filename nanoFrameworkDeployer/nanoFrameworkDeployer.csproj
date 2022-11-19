@@ -30,17 +30,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RestoreLockedMode Condition="'$(TF_BUILD)' == 'True' or '$(ContinuousIntegrationBuild)' == 'True'">true</RestoreLockedMode>
+    <RestoreLockedMode Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</RestoreLockedMode>
   </PropertyGroup>
 
-  <!--<PropertyGroup Condition="$(VSCodeExtensionBuild) == '' or $(VSCodeExtensionBuild) == 'False'">
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
 		<TargetFrameworks>net6.0</TargetFrameworks>
 	</PropertyGroup>
-	<PropertyGroup Condition="$(VSCodeExtensionBuild) == 'True'">
-		<TargetFrameworks>net472;net6.0</TargetFrameworks>
-	</PropertyGroup>-->
+	<PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
+		<TargetFrameworks>net472</TargetFrameworks>
+	</PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
 		<TargetFrameworks>net472;net6.0</TargetFrameworks>
 	</PropertyGroup>
 
