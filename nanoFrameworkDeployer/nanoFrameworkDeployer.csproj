@@ -27,17 +27,16 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile >true</RestorePackagesWithLockFile>
+    <!-- Restore the exact packages as listed in the lock file -->
+    <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
     <TargetFrameworks>net6.0</TargetFrameworks>
-    <!-- Restore the exact packages as listed in the lock file -->
-    <RestoreLockedMode>true</RestoreLockedMode>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
 		<TargetFrameworks>net472</TargetFrameworks>
 	</PropertyGroup>
-
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- order is important due to lock file generation-->
     <TargetFrameworks>net6.0;net472</TargetFrameworks>
