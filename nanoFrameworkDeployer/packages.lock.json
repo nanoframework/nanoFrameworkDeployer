@@ -28,15 +28,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.5.109, )",
-        "resolved": "3.5.109",
-        "contentHash": "tKA1XJ5U2Ytk+u2/5sGNa04Pw6z9noYmqbpmHpjvbwJTtIalqsQjnwT4RQKSDTTIznHBbKxzv3HVh8QD28Qk+g=="
-      },
-      "NuGet.Build.Tasks.Pack": {
-        "type": "Direct",
-        "requested": "[6.3.0, )",
-        "resolved": "6.3.0",
-        "contentHash": "JGN8WHJr/PkVX7FNn7BR++72f6erxDaEFxiBU/Or9Av+Fu8grTeYYX5zkHbjpG4+aJnag6tI51XcbIkqsVabIw=="
+        "requested": "[3.4.255, )",
+        "resolved": "3.4.255",
+        "contentHash": "7aJa6+VzdKNDVJqGIWGtvIDh2HsIx8DIDfUg4yWViXc798awhSohPMk1oiAZqSntnrKThKJtn4vAMRdsCj8dtg=="
       },
       "Polly": {
         "type": "Direct",
@@ -52,12 +46,6 @@
         "dependencies": {
           "Fody": "4.2.1"
         }
-      },
-      "System.Runtime.CompilerServices.Unsafe": {
-        "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
@@ -128,6 +116,11 @@
         "resolved": "4.5.0",
         "contentHash": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ=="
       },
+      "System.Runtime.CompilerServices.Unsafe": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
+      },
       "System.Threading.Tasks.Extensions": {
         "type": "Transitive",
         "resolved": "4.5.4",
@@ -137,21 +130,7 @@
         }
       }
     },
-    ".NETFramework,Version=v4.7.2/win": {
-      "System.IO.Ports": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dRyGI7fUESar5ZLIpiBOaaNLW7YyOBGftjj5Of+xcduC/Rjl7RjhEnWDvvNBmHuF3d0tdXoqdVI/yrVA8f00XA=="
-      }
-    },
-    ".NETFramework,Version=v4.7.2/win-x64": {
-      "System.IO.Ports": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dRyGI7fUESar5ZLIpiBOaaNLW7YyOBGftjj5Of+xcduC/Rjl7RjhEnWDvvNBmHuF3d0tdXoqdVI/yrVA8f00XA=="
-      }
-    },
-    ".NETFramework,Version=v4.7.2/win-x86": {
+    ".NETFramework,Version=v4.7.2/any": {
       "System.IO.Ports": {
         "type": "Transitive",
         "resolved": "6.0.0",

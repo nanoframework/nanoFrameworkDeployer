@@ -10,6 +10,7 @@ using System.IO;
 using nanoFrameworkDeployer.Helpers;
 using CommandLine;
 using System.Linq;
+using System.Diagnostics;
 
 namespace nanoFrameworkDeployer
 {
@@ -84,7 +85,7 @@ namespace nanoFrameworkDeployer
                     return;
                 }
 
-                if(_options.BinaryFileOnly)
+                if (_options.BinaryFileOnly)
                 {
                     List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
                     FileStream deploymentFile = File.Create(Path.Combine(workingDirectory, "deploy.bin"));
@@ -125,7 +126,7 @@ namespace nanoFrameworkDeployer
 
             _message.Verbose("Finding valid ports");
 
-            int retryCount = 0;            
+            int retryCount = 0;
             // Only 3 tries for a specified port
             numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
@@ -253,7 +254,7 @@ namespace nanoFrameworkDeployer
         {
             // Keep track of total assembly size
             long totalSizeOfAssemblies = 0;
-            List<byte[]> assemblies = new List<byte[]>();
+            List<byte[]> assemblies = new ();
             // now we will deploy all system assemblies
             foreach (string peItem in peFiles)
             {
