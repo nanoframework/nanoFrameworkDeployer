@@ -148,19 +148,19 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'nanoframework_nanoFrameworkDeployer'
 
-- template: azure-pipelines-templates/install-nuget.yml@templates
+# - template: azure-pipelines-templates/install-nuget.yml@templates
 
-- task: NuGetCommand@2
-  condition: >-
-    and(
-      succeeded(),
-      ne(variables['StartReleaseCandidate'], true),
-      eq(variables['isTag'], 'false'),
-      ne(variables['UPDATE_DEPENDENTS'], 'true')
-    )
-  displayName: NuGet restore
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   condition: >-
+#     and(
+#       succeeded(),
+#       ne(variables['StartReleaseCandidate'], true),
+#       eq(variables['isTag'], 'false'),
+#       ne(variables['UPDATE_DEPENDENTS'], 'true')
+#     )
+#   displayName: NuGet restore
+#   inputs:
+#     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
   condition: >-
