@@ -309,8 +309,8 @@ jobs:
       --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
       --user "$(SignClientUser)" `
       --secret '$(SignClientSecret)' `
-    --name ".NET nanoFramework Deployer" `
-    --description ".NET nanoFramework Deployer" `
+      --name ".NET nanoFramework Deployer" `
+      --description ".NET nanoFramework Deployer" `
       --descriptionUrl "https://github.com/$env:Build_Repository_Name"
     displayName: Sign packages
     continueOnError: true
