@@ -173,7 +173,7 @@ steps:
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '-p:PublicRelease=true -t:pack'
+    msbuildArgs: '-p:PublicRelease=true -p:ContinuousIntegrationBuild=true -t:pack'
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
