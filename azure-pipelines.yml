@@ -226,6 +226,19 @@ jobs:
     displayName: Build NuGet package
     condition: succeeded()
 
+  - task: SonarCloudPrepare@1
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['System.PullRequest.PullRequestId'], '')
+      )
+    displayName: 'Prepare analysis on SonarCloud'
+    inputs:
+      SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
+      organization: 'nanoframework'
+      scannerMode: 'MSBuild'
+      projectKey: 'nanoframework_nanoFrameworkDeployer'
+
   - task: PowerShell@2
     condition: succeeded()
     displayName: Get NuGet build number
