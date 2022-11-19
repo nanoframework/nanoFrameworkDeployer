@@ -172,11 +172,11 @@ jobs:
     vmImage: 'windows-latest'
 
   variables:
-    DOTNET_NOLOGO: true
     toolname: 'nanoFrameworkDeployer'
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
     isTag: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
+    ContinuousIntegrationBuild: true
 
   steps:
 
@@ -216,13 +216,13 @@ jobs:
     condition: succeeded()
     inputs:
       command: restore
-      restoreArguments: '--locked-mode'
+      restoreArguments: ' --locked-mode --force-evaluate '
       verbosityRestore: minimal
       projects: '$(toolname).sln'
       feedsToUse: config
       nugetConfigPath: NuGet.Config
 
-  - script: dotnet build -c $(BuildConfiguration) /p:PublicRelease=true --no-restore /t:build,pack
+  - script: dotnet build -c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack
     displayName: Build NuGet package
     condition: succeeded()
 
