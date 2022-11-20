@@ -167,6 +167,7 @@ jobs:
   condition: succeeded()
   dependsOn:
   - Check_Build_Options
+  timeoutInMinutes: 30
 
   pool:
     vmImage: 'windows-latest'
@@ -218,13 +219,15 @@ jobs:
       feedsToUse: config
       nugetConfigPath: NuGet.Config
 
+  # only run sonar if a PR?!
   - task: SonarCloudPrepare@1
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        ne(variables['System.PullRequest.PullRequestId'], '')
       )
-    displayName: 'Prepare analysis on SonarCloud'
+    timeoutInMinutes: 10
+    displayName: 'Run static analysis on SonarCloud'
     inputs:
       SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
       organization: 'nanoframework'
@@ -258,7 +261,7 @@ jobs:
 
           Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
 
-  # update could build number (only possible if this is not a PR from a fork)
+  # update cloud build number (only possible if this is not a PR and not from a fork)
   - task: PowerShell@2
     condition: >-
       and(
@@ -425,7 +428,6 @@ jobs:
     vmImage: 'windows-latest'
 
   steps:
-
   - checkout: self
 
   # step from template @ nf-tools repo

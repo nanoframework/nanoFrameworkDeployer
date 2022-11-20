@@ -98,9 +98,9 @@
     </PackageReference>
   </ItemGroup>
 
-	<PropertyGroup>
-		<!-- set this to 'net6.0\' to package contents in this TFM folder  -->
-		<PackageTfmSubFolder>net6.0\</PackageTfmSubFolder>
-	</PropertyGroup>
+  <PropertyGroup>
+    <!-- set this to 'net6.0\' to package contents in this TFM folder  -->
+    <PackageTfmSubFolder>net6.0\</PackageTfmSubFolder>
+  </PropertyGroup>
 
 </Project>

@@ -10,7 +10,6 @@ using System.IO;
 using nanoFrameworkDeployer.Helpers;
 using CommandLine;
 using System.Linq;
-using System.Diagnostics;
 
 namespace nanoFrameworkDeployer
 {
