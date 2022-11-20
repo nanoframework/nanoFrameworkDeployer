@@ -220,14 +220,14 @@ jobs:
       feedsToUse: config
       nugetConfigPath: NuGet.Config
 
-  # only run sonar if a PR?!
+  # only setup sonar if a PR
   - task: SonarCloudPrepare@1
     condition: >-
       and(
         succeeded(),
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
-    displayName: 'Prepare static analysis on SonarCloud'
+    displayName: 'Prepare SonarCloud'
     inputs:
       SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
       organization: 'nanoframework'
@@ -242,6 +242,7 @@ jobs:
       projects: '$(toolname).sln'
       arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
 
+  # only run sonar if a PR
   - task: SonarCloudAnalyze@1
     displayName: 'Run static analysis on SonarCloud'
     condition: >-
@@ -250,6 +251,7 @@ jobs:
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
 
+  # only publish sonar if a PR
   - task: SonarCloudPublish@1
     displayName: 'Publish static analysis from SonarCloud'
     condition: >-
@@ -291,7 +293,7 @@ jobs:
         script: Write-Host "$("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
 
   - task: powershell@2
-    displayName: set release type
+    displayName: Set release type
     condition: succeeded()
     inputs:
       targetType: 'inline'
