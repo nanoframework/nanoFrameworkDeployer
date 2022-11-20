@@ -271,9 +271,10 @@ jobs:
         script: Write-Host "$("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
 
   - task: powershell@2
-    displayName: set release draft var
+    displayName: set release type
     condition: succeeded()
     inputs:
+      targetType: 'inline'
       script: |
         # get subject and commit message for commit
         $commitMessage = git log --format='%B' -1
@@ -324,7 +325,8 @@ jobs:
         succeeded(),
         eq(variables['System.PullRequest.PullRequestId'], '')
       )
-    inputs:  
+    inputs:
+      targetType: 'inline'
       script: |
         .\SignClient "Sign" `
         --baseDirectory "$(Build.ArtifactStagingDirectory)" `
