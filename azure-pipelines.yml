@@ -236,9 +236,9 @@ jobs:
     displayName: Build NuGet package
     condition: succeeded()
     inputs:
-    command: 'build'
-    projects: '$(toolname).sln'
-    arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
+      command: 'build'
+      projects: '$(toolname).sln'
+      arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
 
   - task: PowerShell@2
     condition: succeeded()
