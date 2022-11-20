@@ -198,10 +198,6 @@ jobs:
       packageType: sdk
       version: 6.x
 
-  # only required when updating dependents
-  - script: nbgv cloud -a -c
-    displayName: Set Cloud Version
-
   - task: Cache@2
     displayName: Cache NuGet packages
     inputs:
@@ -222,10 +218,6 @@ jobs:
       feedsToUse: config
       nugetConfigPath: NuGet.Config
 
-  - script: dotnet build -c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack
-    displayName: Build NuGet package
-    condition: succeeded()
-
   - task: SonarCloudPrepare@1
     condition: >-
       and(
@@ -238,6 +230,15 @@ jobs:
       organization: 'nanoframework'
       scannerMode: 'MSBuild'
       projectKey: 'nanoframework_nanoFrameworkDeployer'
+
+
+  - task: DotNetCoreCLI@2
+    displayName: Build NuGet package
+    condition: succeeded()
+    inputs:
+    command: 'build'
+    projects: '$(toolname).sln'
+    arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
 
   - task: PowerShell@2
     condition: succeeded()
@@ -269,7 +270,10 @@ jobs:
         targetType: 'inline'
         script: Write-Host "$("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
 
-  - powershell: |
+  - task: powershell@2
+    displayName: set release draft var
+    condition: succeeded()
+    script: |
       # get subject and commit message for commit
       $commitMessage = git log --format='%B' -1
 
@@ -288,9 +292,6 @@ jobs:
         Write-Host "$("##vso[task.setvariable variable=RELEASE_DRAFT]")true"
         Write-Host "Release draft: TRUE"
       }
-
-    displayName: set release draft var
-    condition: succeeded()
 
   - task: CopyFiles@1
     condition: succeeded()
@@ -332,6 +333,7 @@ jobs:
         succeeded(),
         eq(variables['System.PullRequest.PullRequestId'], '')
       )
+  
   # publish artifacts
   - task: PublishBuildArtifacts@1
     condition: succeeded()
