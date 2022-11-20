@@ -244,19 +244,19 @@ jobs:
     condition: succeeded()
     displayName: Get NuGet build number
     inputs:
-        targetType: 'inline'
-        script: |
-            $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
+      targetType: 'inline'
+      script: |
+          $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
 
-            # replace preview with alpha if this is a PR build
-            if($env:System_PullRequest_PullRequestId -ne $null)
-            {
-              $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
-            }
+          # replace preview with alpha if this is a PR build
+          if($env:System_PullRequest_PullRequestId -ne $null)
+          {
+            $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
+          }
 
-            Write-Host "NuGet build number is $MyNuGetVersion"
+          Write-Host "NuGet build number is $MyNuGetVersion"
 
-            Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
+          Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
 
   # update could build number (only possible if this is not a PR from a fork)
   - task: PowerShell@2
@@ -273,25 +273,26 @@ jobs:
   - task: powershell@2
     displayName: set release draft var
     condition: succeeded()
-    script: |
-      # get subject and commit message for commit
-      $commitMessage = git log --format='%B' -1
+    inputs:
+      script: |
+        # get subject and commit message for commit
+        $commitMessage = git log --format='%B' -1
 
-      # need to flatten message by removing new lines
-      $commitMessage = $commitMessage -replace "`r`n", " "
+        # need to flatten message by removing new lines
+        $commitMessage = $commitMessage -replace "`r`n", " "
 
-      if($commitMessage -like "***PUBLISH_RELEASE***")
-      {
-        # set variable
-        Write-Host "$("##vso[task.setvariable variable=RELEASE_DRAFT]")false"
-        Write-Host "Release draft: FALSE"
-      }
-      else
-      {
-        # set variable
-        Write-Host "$("##vso[task.setvariable variable=RELEASE_DRAFT]")true"
-        Write-Host "Release draft: TRUE"
-      }
+        if($commitMessage -like "***PUBLISH_RELEASE***")
+        {
+          # set variable
+          Write-Host "$("##vso[task.setvariable variable=RELEASE_DRAFT]")false"
+          Write-Host "Release draft: FALSE"
+        }
+        else
+        {
+          # set variable
+          Write-Host "$("##vso[task.setvariable variable=RELEASE_DRAFT]")true"
+          Write-Host "Release draft: TRUE"
+        }
 
   - task: CopyFiles@1
     condition: succeeded()
@@ -315,17 +316,7 @@ jobs:
       custom: tool
       arguments: install --tool-path . SignClient
   
-  - pwsh: |
-      .\SignClient "Sign" `
-      --baseDirectory "$(Build.ArtifactStagingDirectory)" `
-      --input "**/*.nupkg" `
-      --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
-      --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
-      --user "$(SignClientUser)" `
-      --secret '$(SignClientSecret)' `
-      --name ".NET nanoFramework Deployer" `
-      --description ".NET nanoFramework Deployer" `
-      --descriptionUrl "https://github.com/$env:Build_Repository_Name"
+  - task: powershell@2
     displayName: Sign packages
     continueOnError: true
     condition: >-
@@ -333,6 +324,18 @@ jobs:
         succeeded(),
         eq(variables['System.PullRequest.PullRequestId'], '')
       )
+    inputs:  
+      script: |
+        .\SignClient "Sign" `
+        --baseDirectory "$(Build.ArtifactStagingDirectory)" `
+        --input "**/*.nupkg" `
+        --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
+        --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
+        --user "$(SignClientUser)" `
+        --secret '$(SignClientSecret)' `
+        --name ".NET nanoFramework Deployer" `
+        --description ".NET nanoFramework Deployer" `
+        --descriptionUrl "https://github.com/$env:Build_Repository_Name"
   
   # publish artifacts
   - task: PublishBuildArtifacts@1
