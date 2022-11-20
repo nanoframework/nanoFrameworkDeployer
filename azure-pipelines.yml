@@ -178,6 +178,7 @@ jobs:
     buildConfiguration: 'Release'
     isTag: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
     ContinuousIntegrationBuild: true
+    GH_TOKEN: $(GitHubToken)
 
   steps:
 
@@ -234,6 +235,22 @@ jobs:
       scannerMode: 'MSBuild'
       projectKey: 'nanoframework_nanoFrameworkDeployer'
 
+  - task: SonarCloudAnalyze@1
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    displayName: 'Run Code Analysis'
+
+  - task: SonarCloudPublish@1
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      pollingTimeoutSec: '300'  
 
   - task: DotNetCoreCLI@2
     displayName: Build NuGet package
