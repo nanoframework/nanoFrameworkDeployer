@@ -227,30 +227,12 @@ jobs:
         succeeded(),
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
-    timeoutInMinutes: 10
-    displayName: 'Run static analysis on SonarCloud'
+    displayName: 'Prepare static analysis on SonarCloud'
     inputs:
       SonarCloud: 'sonarcloud-nanoFrameworkDeployer'
       organization: 'nanoframework'
       scannerMode: 'MSBuild'
       projectKey: 'nanoframework_nanoFrameworkDeployer'
-
-  - task: SonarCloudAnalyze@1
-    condition: >-
-      and(
-        succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
-      )
-    displayName: 'Run Code Analysis'
-
-  - task: SonarCloudPublish@1
-    condition: >-
-      and(
-        succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
-      )
-    inputs:
-      pollingTimeoutSec: '300'  
 
   - task: DotNetCoreCLI@2
     displayName: Build NuGet package
@@ -259,6 +241,24 @@ jobs:
       command: 'build'
       projects: '$(toolname).sln'
       arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
+
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run static analysis on SonarCloud'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+
+  - task: SonarCloudPublish@1
+    displayName: 'Publish static analysis from SonarCloud'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      pollingTimeoutSec: '300'  
 
   - task: PowerShell@2
     condition: succeeded()
