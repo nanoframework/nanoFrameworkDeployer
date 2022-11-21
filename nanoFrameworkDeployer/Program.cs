@@ -11,6 +11,7 @@ using nanoFrameworkDeployer.Helpers;
 using CommandLine;
 using System.Linq;
 using System.IO.Abstractions;
+using System.Diagnostics;
 
 namespace nanoFrameworkDeployer
 {
@@ -25,12 +26,18 @@ namespace nanoFrameworkDeployer
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
 
+        /// <summary>
+        /// This allows overriding the default `System.IO` implementation, so we can override it for tests.
+        /// </summary>
         internal static IFileSystem fileSystem = new FileSystem(); // for ability to test.
 
 
         /// <summary>
-        /// Create Program with the given fileSystem implementation
+        /// Create Program with the given fileSystem implementation.
         /// </summary>
+        /// <remarks>
+        /// This is required for running mock filesystem tests.
+        /// </remarks>
         internal Program(IFileSystem mockFileSystem)
         {
             fileSystem = mockFileSystem;
@@ -40,22 +47,23 @@ namespace nanoFrameworkDeployer
         /// Main entry point
         /// </summary>
         /// <param name="args"></param>
-        /// <returns></returns>
+        /// <returns>return code</returns>
         internal static int Main(string[] args)
         {
-            try
-            {
-                Parser.Default.ParseArguments<CommandlineOptions>(args)
-                                   .WithParsed<CommandlineOptions>(RunLogic)
-                                   .WithNotParsed(HandleErrors);
-            }
-            catch (Exception ex)
-            {
-                _message.Error($"ERROR: Parsing arguments threw an exception with message `{ex.Message}`");
-                _returnvalue = 1;
-            }
 
-            _message.Verbose($"Exit with return code {_returnvalue}");
+            Parser.Default.ParseArguments<CommandlineOptions>(args)
+                .WithParsed(RunOptionLogic)
+                .WithNotParsed(HandleParseErrors);
+
+            if ((_options != null && _options.Verbose == true) || Debugger.IsAttached)
+            {
+                _message.Verbose($"Program exited with return code: {_returnvalue}");
+
+                if (Debugger.IsAttached) // for checking output before console closes
+                {
+                    Thread.Sleep(5000);
+                }
+            }
 
             // Force clean
             _serialDebugClient?.StopDeviceWatchers();
@@ -69,15 +77,21 @@ namespace nanoFrameworkDeployer
         /// On parameter errors, we set the returnvalue to 1 to indicated an error.
         /// </summary>
         /// <param name="errors">List or errors (ignored).</param>
-        private static void HandleErrors(IEnumerable<Error> errors)
+        private static void HandleParseErrors(IEnumerable<Error> errors)
         {
+            foreach (var error in errors)
+            {
+                _message.Error($"Found command parse error: {error}");
+            }
+            _message.Verbose($"Perhaps provide an argument?!");
+
             _returnvalue = 1;
         }
 
-        private static void RunLogic(CommandlineOptions o)
+        private static void RunOptionLogic(CommandlineOptions opts)
         {
             int numberOfRetries;
-            _options = o;
+            _options = opts;
             string[] peFiles;
             string workingDirectory;
             List<string> excludedPorts = null;
@@ -262,6 +276,7 @@ namespace nanoFrameworkDeployer
 
         private static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
         {
+            _message.Verbose("Creating Deployment files...");
             // Keep track of total assembly size
             long totalSizeOfAssemblies = 0;
             List<byte[]> assemblies = new List<byte[]>();
@@ -283,6 +298,8 @@ namespace nanoFrameworkDeployer
                 }
             }
 
+            // TODO: we should definitly return a verbose message here... as the deployment does not happen in this function!
+            // Perhaps return Tuple.
             _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
 
             return assemblies;
