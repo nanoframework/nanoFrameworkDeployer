@@ -44,51 +44,39 @@ jobs:
   - checkout: self
 
   # get commit message
-  - powershell: |
-
-      # default to false
-      $update = $false
-
-      if($env:System_PullRequest_PullRequestId -ne $null)
-      {
-          # PR build, nothing interesting in commit message
-          Write-Host "Build from PR"
-      }
-      else
-      {
-          if($env:StartReleaseCandidate -like "true")
-          {
-              # this is a release prep so NO build
-              echo "##vso[task.setvariable variable=SKIP_BUILD;isOutput=true]true"
-              
-              Write-Host "Release preparation, skipping build."
-          }
-          else
-          {
-              # build NOT from PR
-              Write-Host "Build NOT from PR, commit ID: $env:Build_SourceVersion"
-          
-              # get PR associated with commit
-              $prUrl = "https://api.github.com/repos/$env:Build_Repository_Name/commits/$env:Build_SourceVersion/pulls"
-              $commit = Invoke-RestMethod -Uri $prUrl -ContentType "application/json" -Headers @{"Accept"="application/vnd.github.groot-preview+json"} -Method GET
-      
-              if($commit -ne $null)
-              {
-                  # there is a PR, check labels
-                  $updateDependents = $commit.labels | where {$_.Name -eq 'CI: Update Dependents'}
-                  if($updateDependents -ne $null)
-                  {
-                      $update = $true
-                  }
-              }
-          }
-      }
-  
-      # set variable to foward to jobs
-      echo "##vso[task.setvariable variable=RUN_UPDATE_DEPENDENTS;isOutput=true]$update"
-  
+  - task: PowerShell@2
     name: BuildOptions
     displayName: Evaluate build options
+    inputs:
+      targetType: 'inline'
+      script: |
+        # default to false
+        $update = $false
+
+        if($env:System_PullRequest_PullRequestId -ne $null)
+        {
+            # PR build, nothing interesting in commit message
+            Write-Host "Build from PR"
+        }
+        else
+        {
+            if($env:StartReleaseCandidate -like "true")
+            {
+                # this is a release prep so NO build
+                echo "##vso[task.setvariable variable=SKIP_BUILD;isOutput=true]true"
+                Write-Host "Release preparation, skipping build."
+            }
+            else
+            {
+                # build NOT from PR
+                Write-Host "Build NOT from PR, commit ID: $env:Build_SourceVersion"
+                # get PR associated with commit
+                $prUrl = "https://api.github.com/repos/$env:Build_Repository_Name/commits/$env:Build_SourceVersion/pulls"
+                $commit = Invoke-RestMethod -Uri $prUrl -ContentType "application/json" -Headers @{"Accept"="application/vnd.github.groot-preview+json"} -Method GET
+            }
+        }
+    
+    
 
   - task: PowerShell@2
     condition: eq( variables['StartReleaseCandidate'], true)
@@ -260,7 +248,47 @@ jobs:
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
     inputs:
-      pollingTimeoutSec: '300'  
+      pollingTimeoutSec: '300'
+
+
+##################################################
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet test'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      command: test
+      projects: |
+        ./nanoFirmwareFlasher.Tests/nanoFrameworkDeployer.Tests.csproj
+      arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage"'
+
+  # First install the tool on the machine, then run it
+  - script: |
+      dotnet tool install -g dotnet-reportgenerator-globaltool
+      reportgenerator -reports:$(Agent.WorkFolder)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+    displayName: 'Create code coverage report'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+     
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage results'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
+
+##################################################
 
   - task: PowerShell@2
     condition: succeeded()
@@ -427,7 +455,6 @@ jobs:
           { "label" : "Type: bug", "displayName" : "Bugs fixed", "state" : "closed" },
           { "label" : "Type: enhancement", "displayName" : "Enhancements and new features", "state" : "closed" },
           { "label" : "Breaking-Change", "displayName" : "Breaking Changes", "state" : "closed" }
-          { "label" : "Type: dependencies", "displayName" : "Dependencies updated", "state" : "closed" },
           { "label" : "Type: documentation", "displayName" : "Documentation", "state" : "closed" }
         ]
 

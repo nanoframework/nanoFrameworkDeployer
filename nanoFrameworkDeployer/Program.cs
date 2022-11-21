@@ -39,11 +39,11 @@ namespace nanoFrameworkDeployer
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR: Parsing arguments threw an exception with message `{ex.Message}`");
+                _message.Error($"ERROR: Parsing arguments threw an exception with message `{ex.Message}`");
                 _returnvalue = 1;
             }
 
-            Console.WriteLine($"Exit with return code {_returnvalue}");
+            _message.Verbose($"Exit with return code {_returnvalue}");
 
             // Force clean
             _serialDebugClient?.StopDeviceWatchers();
@@ -79,7 +79,7 @@ namespace nanoFrameworkDeployer
                 peFiles = Directory.GetFiles(workingDirectory, "*.pe");
                 if (peFiles.Length == 0)
                 {
-                    _message.Error("The target directory does not contain any PE file.");
+                    _message.Error("ERROR: The target directory does not contain any PE files.");
                     _returnvalue = 1;
                     return;
                 }
@@ -100,7 +100,7 @@ namespace nanoFrameworkDeployer
             }
             else
             {
-                _message.Error("The target directory is not a valid one.");
+                _message.Error("ERROR: The target directory does not exist.");
                 _returnvalue = 1;
                 return;
             }
@@ -119,11 +119,11 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("Exclusion file doesn't exist. Continuing as this error is not critical.");
+                    _message.Error("ERROR: Exclusion file doesn't exist. Continuing as this error is not critical.");
                 }
             }
 
-            _message.Verbose("Finding valid ports");
+            _message.Verbose("Finding valid serial ports");
 
             int retryCount = 0;
             // Only 3 tries for a specified port
@@ -142,7 +142,7 @@ namespace nanoFrameworkDeployer
             {
                 if (retryCount > numberOfRetries)
                 {
-                    _message.Error("Error too many retries");
+                    _message.Error("ERROR: too many retries");
                     _returnvalue = 1;
                     return;
                 }
@@ -179,7 +179,7 @@ namespace nanoFrameworkDeployer
 
         retryDebug:
             bool connectResult = _device.DebugEngine.Connect(5000, true, true);
-            _message.Output($"Device connect result is {connectResult}. Attempt {retryCount}/{numberOfRetries}");
+            _message.Output($"Device connection result is: {connectResult}. Attempt {retryCount}/{numberOfRetries}");
 
             if (!connectResult)
             {
@@ -192,7 +192,7 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("Error too many retries");
+                    _message.Error("ERROR: too many retries");
                 }
             }
 
@@ -200,14 +200,14 @@ namespace nanoFrameworkDeployer
 
         retryErase:
             // erase the device
-            _message.Output($"Erase deployment block storage. Attempt {retryCount}/{numberOfRetries}.");
+            _message.Output($"Erase deployment block storage. Attempt: {retryCount}/{numberOfRetries}.");
 
             var eraseResult = _device.Erase(
                     EraseOptions.Deployment,
                     null,
                     null);
 
-            _message.Verbose($"Erase result is {eraseResult}.");
+            _message.Verbose($"Erase result is: {eraseResult}.");
             if (!eraseResult)
             {
                 if (retryCount < numberOfRetries)
@@ -219,7 +219,7 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("Couldn't erase. Too many retries");
+                    _message.Error("ERROR: Could not erase, too many retries");
                 }
             }
 
@@ -240,7 +240,7 @@ namespace nanoFrameworkDeployer
                 null,
                 deploymentLogger))
             {
-                _message.Error("Write failed.");
+                _message.Error("ERROR: Write failed.");
                 _returnvalue = 1;
             }
             else
@@ -253,7 +253,7 @@ namespace nanoFrameworkDeployer
         {
             // Keep track of total assembly size
             long totalSizeOfAssemblies = 0;
-            List<byte[]> assemblies = new ();
+            List<byte[]> assemblies = new List<byte[]>();
             // now we will deploy all system assemblies
             foreach (string peItem in peFiles)
             {
