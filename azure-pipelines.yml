@@ -254,7 +254,7 @@ jobs:
 ##################################################
 
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet test'
+    displayName: 'Run Unit Tests'
     condition: >-
       and(
         succeeded(),
@@ -263,7 +263,7 @@ jobs:
     inputs:
       command: test
       projects: |
-        ./nanoFirmwareFlasher.Tests/nanoFrameworkDeployer.Tests.csproj
+        ./$(toolname).Tests/$(toolname).Tests.csproj
       arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage"'
 
   # First install the tool on the machine, then run it
