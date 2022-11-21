@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <ToolCommandName>nanoFrameworkDeployer</ToolCommandName>
-		<PackageOutputPath>../</PackageOutputPath>
+    <PackageOutputPath>../</PackageOutputPath>
     <PackageId>nanoFrameworkDeployer</PackageId>
     <RootNamespace>nanoFrameworkDeployer</RootNamespace>
     <AssemblyName>nanoFrameworkDeployer</AssemblyName>
@@ -19,12 +19,12 @@
     <PackageIconUrl></PackageIconUrl>
     <Description>This package includes the .NET nanoFrameworkDeployer library that allows developing applications that deploy .NET nanoFramework assemblies.</Description>
     <!-- need this to allow async Main() -->
-		<LangVersion>latest</LangVersion>
-		<PackAsTool>true</PackAsTool>
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<Platforms>AnyCPU;x64</Platforms>
-		<RuntimeIdentifiers>any</RuntimeIdentifiers>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <PackAsTool>true</PackAsTool>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+    <RuntimeIdentifiers>any</RuntimeIdentifiers>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile >true</RestorePackagesWithLockFile>
     <!-- Restore the exact packages as listed in the lock file -->
@@ -33,35 +33,35 @@
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
     <TargetFrameworks>net6.0</TargetFrameworks>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
-		<TargetFrameworks>net472</TargetFrameworks>
-	</PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- order is important due to lock file generation-->
     <TargetFrameworks>net6.0;net472</TargetFrameworks>
-	</PropertyGroup>
+  </PropertyGroup>
 
   <PropertyGroup>
-		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-		<PackageIcon>images\nf-logo.png</PackageIcon>
-		<PackageTags>nanoFramework, nano Framework, NETNF, NETMF, Micro Framework, .net</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageIcon>images\nf-logo.png</PackageIcon>
+    <PackageTags>nanoFramework, nano Framework, NETNF, NETMF, Micro Framework, .net</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
 
   <ItemGroup>
-	<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\assets\nf-logo.png">
-			<Pack>True</Pack>
-			<PackagePath>images</PackagePath>
-		</None>
-		<None Include="..\LICENSE.md">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
+  <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\assets\nf-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>images</PackagePath>
+    </None>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
