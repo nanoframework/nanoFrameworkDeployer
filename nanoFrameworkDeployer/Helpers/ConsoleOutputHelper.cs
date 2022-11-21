@@ -9,18 +9,8 @@ namespace nanoFrameworkDeployer.Helpers
     /// <summary>
     /// Helper methods to write messages to the console.
     /// </summary>
-    public class MessageHelper
+    public class ConsoleOutputHelper
     {
-        private readonly CommandlineOptions options;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageHelper"/> class.
-        /// </summary>
-        /// <param name="options">Command line options.</param>
-        public MessageHelper(CommandlineOptions options)
-        {
-            this.options = options;
-        }
 
         /// <summary>
         /// Helper method for verbose messages.
@@ -37,10 +27,10 @@ namespace nanoFrameworkDeployer.Helpers
         /// <param name="message">Message to show in verbose mode.</param>
         public void Verbose(string message)
         {
-            if (this.options == null || this.options.Verbose)
-            {
-                Console.WriteLine(message);
-            }
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(message);
+            Console.ResetColor();
+
         }
 
         /// <summary>

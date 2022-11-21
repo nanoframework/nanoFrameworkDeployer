@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <!-- Generate the lock file -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Restore the exact packages as listed in the lock file -->
+    <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +18,10 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nanoFrameworkDeployer\nanoFrameworkDeployer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,7 @@ using System.IO;
 using nanoFrameworkDeployer.Helpers;
 using CommandLine;
 using System.Linq;
+using System.IO.Abstractions;
 
 namespace nanoFrameworkDeployer
 {
@@ -19,10 +20,21 @@ namespace nanoFrameworkDeployer
     internal class Program
     {
         private static CommandlineOptions _options;
-        private static MessageHelper _message;
+        private static readonly ConsoleOutputHelper _message = new ConsoleOutputHelper();
         private static int _returnvalue;
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
+
+        internal static IFileSystem fileSystem = new FileSystem(); // for ability to test.
+
+
+        /// <summary>
+        /// Create Program with the given fileSystem implementation
+        /// </summary>
+        internal Program(IFileSystem mockFileSystem)
+        {
+            fileSystem = mockFileSystem;
+        }
 
         /// <summary>
         /// Main entry point
@@ -66,17 +78,16 @@ namespace nanoFrameworkDeployer
         {
             int numberOfRetries;
             _options = o;
-            _message = new MessageHelper(_options);
             string[] peFiles;
             string workingDirectory;
             List<string> excludedPorts = null;
 
             // Let's first validate that the directory exist and contains PE files
-            _options.PeDirectory = $"{_options.PeDirectory}{Path.DirectorySeparatorChar}";
-            if (Directory.Exists(_options.PeDirectory))
+            _options.PeDirectory = $"{_options.PeDirectory}{fileSystem.Path.DirectorySeparatorChar}";
+            if (fileSystem.Directory.Exists(_options.PeDirectory))
             {
-                workingDirectory = Path.GetDirectoryName(Path.Combine(_options.PeDirectory));
-                peFiles = Directory.GetFiles(workingDirectory, "*.pe");
+                workingDirectory = fileSystem.Path.GetDirectoryName(fileSystem.Path.Combine(_options.PeDirectory));
+                peFiles = fileSystem.Directory.GetFiles(workingDirectory, "*.pe");
                 if (peFiles.Length == 0)
                 {
                     _message.Error("ERROR: The target directory does not contain any PE files.");
@@ -87,7 +98,7 @@ namespace nanoFrameworkDeployer
                 if (_options.BinaryFileOnly)
                 {
                     List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
-                    FileStream deploymentFile = File.Create(Path.Combine(workingDirectory, "deploy.bin"));
+                    var deploymentFile = fileSystem.File.Create(fileSystem.Path.Combine(workingDirectory, "deploy.bin"));
                     foreach (var assFile in assFiles)
                     {
                         deploymentFile.Write(assFile.ToArray(), 0, assFile.Length);
@@ -108,9 +119,9 @@ namespace nanoFrameworkDeployer
             // Now we will check if there is any exclude file, open it and get the ports
             if (!string.IsNullOrEmpty(_options.PortException))
             {
-                if (File.Exists(_options.PortException))
+                if (fileSystem.File.Exists(_options.PortException))
                 {
-                    var ports = File.ReadAllLines(_options.PortException);
+                    var ports = fileSystem.File.ReadAllLines(_options.PortException);
                     if (ports.Length > 0)
                     {
                         excludedPorts = new List<string>();
@@ -258,7 +269,7 @@ namespace nanoFrameworkDeployer
             foreach (string peItem in peFiles)
             {
                 // append to the deploy blob the assembly
-                using (FileStream fs = File.Open(peItem, FileMode.Open, FileAccess.Read))
+                using (FileSystemStream fs = fileSystem.File.Open(peItem, FileMode.Open, FileAccess.Read))
                 {
                     long length = (fs.Length + 3) / 4 * 4;
                     _message.Verbose($"Adding {peItem} v0 ({length} bytes) to deployment bundle");
