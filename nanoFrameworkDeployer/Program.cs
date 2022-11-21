@@ -39,11 +39,11 @@ namespace nanoFrameworkDeployer
             }
             catch (Exception ex)
             {
-                _message.Error($"ERROR: Parsing arguments threw an exception with message `{ex.Message}`");
+                Console.WriteLine($"ERROR: Parsing arguments threw an exception with message `{ex.Message}`");
                 _returnvalue = 1;
             }
 
-            _message.Verbose($"Exit with return code {_returnvalue}");
+            Console.WriteLine($"Exit with return code {_returnvalue}");
 
             // Force clean
             _serialDebugClient?.StopDeviceWatchers();
