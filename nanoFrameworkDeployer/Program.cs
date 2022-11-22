@@ -190,7 +190,7 @@ namespace nanoFrameworkDeployer
             // In case we have multiple ones, we will go for the one passed if the argument is valid
             if ((_serialDebugClient.NanoFrameworkDevices.Count > 1) && (!string.IsNullOrEmpty(_options.ComPort)))
             {
-                _device = _serialDebugClient.NanoFrameworkDevices.Where(m => m.SerialNumber == _options.ComPort).First();
+                _device = _serialDebugClient.NanoFrameworkDevices.First(m => m.SerialNumber == _options.ComPort);
             }
             else
             {
