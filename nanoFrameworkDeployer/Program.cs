@@ -139,12 +139,7 @@ namespace nanoFrameworkDeployer
             {
                 if (fileSystem.File.Exists(_options.PortException))
                 {
-                    var ports = fileSystem.File.ReadAllLines(_options.PortException);
-                    if (ports.Length > 0)
-                    {
-                        excludedPorts = new List<string>();
-                        excludedPorts.AddRange(ports);
-                    }
+                    AddSerialPortExclusions(ref excludedPorts);
                 }
                 else
                 {
@@ -255,6 +250,16 @@ namespace nanoFrameworkDeployer
             _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
             DeployAssembiliesToDevice(peFiles);
+        }
+
+        private static void AddSerialPortExclusions(ref List<string> excludedPorts)
+        {
+            var ports = fileSystem.File.ReadAllLines(_options.PortException);
+            if (ports.Length > 0)
+            {
+                excludedPorts = new List<string>();
+                excludedPorts.AddRange(ports);
+            }
         }
 
         private static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
