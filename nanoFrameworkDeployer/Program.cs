@@ -72,13 +72,18 @@ namespace nanoFrameworkDeployer
                 }
             }
 
+            ObjectDispose();
+
+            return _returnvalue;
+        }
+
+        private static void ObjectDispose()
+        {
             // Force clean
             // TODO: should be dispose?!
             _serialDebugClient?.StopDeviceWatchers();
             _device?.Disconnect(true);
             _device = null;
-
-            return _returnvalue;
         }
 
         /// <summary>
