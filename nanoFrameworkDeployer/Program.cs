@@ -16,20 +16,27 @@ using System.Diagnostics;
 namespace nanoFrameworkDeployer
 {
     /// <summary>
-    /// This is the main program
+    /// This is the main program class
     /// </summary>
     internal class Program
     {
+        const int RETURN_CODE_SUCCESS = 0;
+        const int RETURN_CODE_ERROR = 1;
+
         private static CommandlineOptions _options;
         private static readonly ConsoleOutputHelper _message = new ConsoleOutputHelper();
-        private static int _returnvalue;
+        private static int _returnvalue = RETURN_CODE_SUCCESS;
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
 
         /// <summary>
-        /// This allows overriding the default `System.IO` implementation, so we can override it for tests.
+        /// This allows overriding the default `System.IO` implementation using `System.IO.Abstractions`, 
+        /// so we can override it for tests.
         /// </summary>
-        internal static IFileSystem fileSystem = new FileSystem(); // for ability to test.
+        /// <remarks>
+        /// Usual filesystem operations start with `fileSystem` rather than just calling them directly.
+        /// </remarks>
+        internal static IFileSystem fileSystem = new FileSystem();
 
 
         /// <summary>
@@ -38,7 +45,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// This is required for running mock filesystem tests.
         /// </remarks>
-        internal Program(IFileSystem mockFileSystem)
+        internal Program(IFileSystem mockFileSystem) //TODO: handle args.
         {
             fileSystem = mockFileSystem;
         }
@@ -66,6 +73,7 @@ namespace nanoFrameworkDeployer
             }
 
             // Force clean
+            // TODO: should be dispose?!
             _serialDebugClient?.StopDeviceWatchers();
             _device?.Disconnect(true);
             _device = null;
@@ -85,7 +93,7 @@ namespace nanoFrameworkDeployer
             }
             _message.Verbose($"Perhaps provide an argument?!");
 
-            _returnvalue = 1;
+            _returnvalue = RETURN_CODE_ERROR;
         }
 
         private static void RunOptionLogic(CommandlineOptions opts)
@@ -97,36 +105,32 @@ namespace nanoFrameworkDeployer
             List<string> excludedPorts = null;
 
             // Let's first validate that the directory exist and contains PE files
-            _options.PeDirectory = $"{_options.PeDirectory}{fileSystem.Path.DirectorySeparatorChar}";
-            if (fileSystem.Directory.Exists(_options.PeDirectory))
+            // We don't need to check if it is null as it is a required option.
+            if (!CheckPeDirExists())
             {
-                workingDirectory = fileSystem.Path.GetDirectoryName(fileSystem.Path.Combine(_options.PeDirectory));
-                peFiles = fileSystem.Directory.GetFiles(workingDirectory, "*.pe");
-                if (peFiles.Length == 0)
-                {
-                    _message.Error("ERROR: The target directory does not contain any PE files.");
-                    _returnvalue = 1;
-                    return;
-                }
-
-                if (_options.BinaryFileOnly)
-                {
-                    List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
-                    var deploymentFile = fileSystem.File.Create(fileSystem.Path.Combine(workingDirectory, "deploy.bin"));
-                    foreach (var assFile in assFiles)
-                    {
-                        deploymentFile.Write(assFile.ToArray(), 0, assFile.Length);
-                    }
-
-                    deploymentFile.Close();
-                    deploymentFile.Dispose();
-                    return;
-                }
+                return;
             }
-            else
+
+            workingDirectory = fileSystem.Path.GetDirectoryName(fileSystem.Path.Combine(_options.PeDirectory));
+            peFiles = fileSystem.Directory.GetFiles(workingDirectory, "*.pe");
+            if (peFiles.Length == 0)
             {
-                _message.Error("ERROR: The target directory does not exist.");
-                _returnvalue = 1;
+                _message.Error("ERROR: The target directory does not contain any PE files.");
+                _returnvalue = RETURN_CODE_ERROR;
+                return;
+            }
+
+            if (_options.BinaryFileOnly)
+            {
+                List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
+                var deploymentFile = fileSystem.File.Create(fileSystem.Path.Combine(workingDirectory, "deploy.bin"));
+                foreach (var assFile in assFiles)
+                {
+                    deploymentFile.Write(assFile.ToArray(), 0, assFile.Length);
+                }
+
+                deploymentFile.Close();
+                deploymentFile.Dispose();
                 return;
             }
 
@@ -168,7 +172,7 @@ namespace nanoFrameworkDeployer
                 if (retryCount > numberOfRetries)
                 {
                     _message.Error("ERROR: too many retries");
-                    _returnvalue = 1;
+                    _returnvalue = RETURN_CODE_ERROR;
                     return;
                 }
                 else
@@ -250,28 +254,7 @@ namespace nanoFrameworkDeployer
 
             _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
-            List<byte[]> assemblies = CreateBinDeploymentFile(peFiles);
-
-            // need to keep a copy of the deployment blob for the second attempt (if needed)
-            var assemblyCopy = new List<byte[]>(assemblies);
-
-            var deploymentLogger = new Progress<string>((m) => _message.Output(m));
-            // Seems to be needed for slow devices
-            Thread.Sleep(200);
-            if (!_device.DebugEngine.DeploymentExecute(
-                assemblyCopy,
-                _options.RebootAfterFlash,
-                false,
-                null,
-                deploymentLogger))
-            {
-                _message.Error("ERROR: Write failed.");
-                _returnvalue = 1;
-            }
-            else
-            {
-                _message.Output("Write successful");
-            }
+            DeployAssembiliesToDevice(peFiles);
         }
 
         private static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
@@ -303,6 +286,49 @@ namespace nanoFrameworkDeployer
             _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
 
             return assemblies;
+        }
+
+        internal static bool CheckPeDirExists()
+        {
+            //TODO: a good reason for tests on multiple platforms...
+            // add end char for linux folder?!
+            _options.PeDirectory = $"{_options.PeDirectory}{fileSystem.Path.DirectorySeparatorChar}";
+            if (fileSystem.Directory.Exists(_options.PeDirectory))
+            {
+                return true;
+            }
+            else
+            {
+                _message.Error("ERROR: The target directory does not exist.");
+                _returnvalue = RETURN_CODE_ERROR;
+                return false;
+            }
+        }
+
+        internal static void DeployAssembiliesToDevice(string[] peFiles)
+        {
+            List<byte[]> assemblies = CreateBinDeploymentFile(peFiles);
+
+            // need to keep a copy of the deployment blob for the second attempt (if needed)
+            var assemblyCopy = new List<byte[]>(assemblies);
+
+            var deploymentLogger = new Progress<string>((m) => _message.Output(m));
+            // Seems to be needed for slow devices
+            Thread.Sleep(200);
+            if (!_device.DebugEngine.DeploymentExecute(
+                assemblyCopy,
+                _options.RebootAfterFlash,
+                false,
+                null,
+                deploymentLogger))
+            {
+                _message.Error("ERROR: Write failed.");
+                _returnvalue = RETURN_CODE_ERROR;
+            }
+            else
+            {
+                _message.Output("Write successful");
+            }
         }
     }
 }
