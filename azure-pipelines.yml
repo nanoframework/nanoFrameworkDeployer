@@ -181,6 +181,13 @@ jobs:
 
   - template: azure-pipelines-templates/install-nuget.yml@templates
 
+  - task: UseDotNet@2
+    displayName: Install .NET SDK
+    condition: succeeded()
+    inputs:
+      packageType: sdk
+      version: 6.x
+
   - task: Cache@2
     displayName: Cache NuGet packages
     inputs:
@@ -189,13 +196,6 @@ jobs:
           nuget | "$(Agent.OS)"
           nuget
       path: $(UserProfile)/.nuget/packages
-
-  - task: UseDotNet@2
-    displayName: Install .NET SDK
-    condition: succeeded()
-    inputs:
-      packageType: sdk
-      version: 6.x
 
   - task: DotNetCoreCLI@2
     displayName: Restore NuGet packages
