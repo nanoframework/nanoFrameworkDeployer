@@ -1,4 +1,6 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Abstractions.TestingHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace nanoFrameworkDeployer.Tests
@@ -29,31 +31,31 @@ namespace nanoFrameworkDeployer.Tests
 
 
         //https://github.com/reductech/TesseractConnector/blob/60203bc75b1b4f194ff6295d2ecaca6e287deeb4/Tesseract.Tests/TesseractOCRTests.cs
-        //[TestMethod]
-        //public void Program_Validate_ExcludingPortFileIsAwsome()
-        //{
-        //    // Arrange
-        //    var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        //     {
-        //         { @"c:\portExclusions.txt", new MockFileData("Testing is meh.") },
-        //     });
-        //    var component = new nanoFrameworkDeployer.Program.Program(fileSystem);
-        //    List<string> excludedPorts = null;
+        [TestMethod]
+        public void Program_Validate_ExcludingPortFileIsAwsome()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\portExclusions.txt", new MockFileData("Testing is meh.") },
+             });
+            var component = new nanoFrameworkDeployer.Program.Program(fileSystem);
+            List<string> excludedPorts = null;
 
-        //    try
-        //    {
-        //        // Act
-        //        component.AddSerialPortExclusions(ref List<string> excludedPorts, "c:\\portExclusions.txt");
-        //    }
-        //    catch (NotSupportedException ex)
-        //    {
-        //        // Assert
-        //        Assert.AreEqual("We can't go on together. It's not me, it's you.", ex.Message);
-        //        return;
-        //    }
+            try
+            {
+                // Act
+                component.AddSerialPortExclusions(ref excludedPorts, "c:\\portExclusions.txt");
+            }
+            catch (NotSupportedException ex)
+            {
+                // Assert
+                Assert.AreEqual("We can't go on together. It's not me, it's you.", ex.Message);
+                return;
+            }
 
-        //    Assert.Fail("The expected exception was not thrown.");
-        //}
+            Assert.Fail("The expected exception was not thrown.");
+        }
 
     }
 }
