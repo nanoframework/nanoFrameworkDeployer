@@ -25,12 +25,13 @@
     <Platforms>AnyCPU;x64</Platforms>
     <RuntimeIdentifiers>any</RuntimeIdentifiers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- Restore the exact packages as listed in the lock file -->
-    <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
     <TargetFrameworks>net6.0</TargetFrameworks>
+    <!-- Restore the exact packages as listed in the lock file -->
+    <RestoreLockedMode>true</RestoreLockedMode>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
     <TargetFrameworks>net472</TargetFrameworks>
