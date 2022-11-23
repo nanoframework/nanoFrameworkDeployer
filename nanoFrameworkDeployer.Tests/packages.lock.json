@@ -38,6 +38,15 @@
           "System.Diagnostics.TextWriterTraceListener": "4.3.0"
         }
       },
+      "System.IO.Abstractions.TestingHelpers": {
+        "type": "Direct",
+        "requested": "[17.2.26, )",
+        "resolved": "17.2.26",
+        "contentHash": "idInRmbmAlVpWrSvEWJLOAo4HZUYQeKCNHTih3f0PXkeGvuZ/kDxMciHvQ8kzgaWVZ68dBz6V1O/gCBV2NOHdQ==",
+        "dependencies": {
+          "System.IO.Abstractions": "17.2.26"
+        }
+      },
       "CommandLineParser": {
         "type": "Transitive",
         "resolved": "2.9.1",
@@ -587,6 +596,15 @@
           "System.Runtime": "4.3.0",
           "System.Text.Encoding": "4.3.0",
           "System.Threading.Tasks": "4.3.0"
+        }
+      },
+      "System.IO.Abstractions": {
+        "type": "Transitive",
+        "resolved": "17.2.26",
+        "contentHash": "6hhbvnD2IkWUjto4IIN0pZhZP7G4EBmFxx380CvGJO/1yI+GLmVq/rvl3gbDtR1UJBeGXosEopK0O4rO47p4ag==",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "17.2.26",
+          "TestableIO.System.IO.Abstractions.Wrappers": "17.2.26"
         }
       },
       "System.IO.Compression": {

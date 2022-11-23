@@ -51,6 +51,13 @@ namespace nanoFrameworkDeployer
         }
 
         /// <summary>
+        /// Required for tests
+        /// </summary>
+        internal Program()
+        {
+        }
+
+        /// <summary>
         /// Main entry point
         /// </summary>
         /// <param name="args"></param>
@@ -90,7 +97,7 @@ namespace nanoFrameworkDeployer
         /// On parameter errors, we set the returnvalue to 1 to indicated an error.
         /// </summary>
         /// <param name="errors">List or errors (ignored).</param>
-        private static void HandleParseErrors(IEnumerable<Error> errors)
+        internal static void HandleParseErrors(IEnumerable<Error> errors)
         {
             foreach (var error in errors)
             {
@@ -101,7 +108,7 @@ namespace nanoFrameworkDeployer
             _returnvalue = RETURN_CODE_ERROR;
         }
 
-        private static void RunOptionLogic(CommandlineOptions opts)
+        internal static void RunOptionLogic(CommandlineOptions opts)
         {
             int numberOfRetries;
             _options = opts;
@@ -144,7 +151,7 @@ namespace nanoFrameworkDeployer
             {
                 if (fileSystem.File.Exists(_options.PortException))
                 {
-                    AddSerialPortExclusions(ref excludedPorts);
+                    AddSerialPortExclusions(ref excludedPorts, _options.PortException);
                 }
                 else
                 {
@@ -257,9 +264,11 @@ namespace nanoFrameworkDeployer
             DeployAssembiliesToDevice(peFiles);
         }
 
-        private static void AddSerialPortExclusions(ref List<string> excludedPorts)
+        internal static void AddSerialPortExclusions(ref List<string> excludedPorts, string portExceptionFilePath)
         {
-            var ports = fileSystem.File.ReadAllLines(_options.PortException);
+            //TODO: check file exists?!
+            //TODO: check file is formatted correctly?!
+            var ports = fileSystem.File.ReadAllLines(portExceptionFilePath);
             if (ports.Length > 0)
             {
                 excludedPorts = new List<string>();
@@ -267,7 +276,7 @@ namespace nanoFrameworkDeployer
             }
         }
 
-        private static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
+        internal static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
         {
             _message.Verbose("Creating Deployment files...");
             // Keep track of total assembly size
