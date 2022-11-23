@@ -117,7 +117,7 @@ steps:
     git config --global core.autocrlf true
     git -c http.extraheader="AUTHORIZATION: $auth" fetch --progress origin
     
-    git checkout develop
+    git checkout main
 
     nbgv prepare-release
  
