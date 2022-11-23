@@ -264,10 +264,10 @@ namespace nanoFrameworkDeployer
                     // we add 3 bytes, and then make sure it is aligned to 4 (for alignment).
                     long bytesToRead = (fs.Length + 3) / 4 * 4;
                     _message.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
-                    byte[] peFileBytes = new byte[bytesToRead];
+                    byte[] peFileBuffer = new byte[bytesToRead];
 
-                    fs.Read(peFileBytes, 0, (int)fs.Length);
-                    deploymentFileBytes.Add(peFileBytes);
+                    fs.Read(peFileBuffer, 0, (int)fs.Length);
+                    deploymentFileBytes.Add(peFileBuffer);
 
                     // Increment totalizer
                     deploymentFileSizeInBytes += bytesToRead;
