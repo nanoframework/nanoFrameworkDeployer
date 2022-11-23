@@ -309,33 +309,31 @@ namespace nanoFrameworkDeployer
 
         internal static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
         {
-            _message.Verbose("Creating Deployment files...");
-            // Keep track of total assembly size
-            long totalSizeOfAssemblies = 0;
-            List<byte[]> assemblies = new List<byte[]>();
-            // now we will deploy all system assemblies
-            foreach (string peItem in peFiles)
+            _message.Verbose("Merging PE assembilies to create single deployment file...");
+            // Keep track of total file binary size
+            long deploymentFileSizeInBytes = 0;
+            List<byte[]> deploymentFileBytes = new List<byte[]>();
+            // now we will add all pe files to create a deployable file
+            foreach (var peFile in peFiles)
             {
-                // append to the deploy blob the assembly
-                using (FileSystemStream fs = fileSystem.File.Open(peItem, FileMode.Open, FileAccess.Read))
+                // append to the pe blob to the deployment bundle
+                using (FileSystemStream fs = fileSystem.File.Open(peFile, FileMode.Open, FileAccess.Read))
                 {
-                    long length = (fs.Length + 3) / 4 * 4;
-                    _message.Verbose($"Adding {peItem} v0 ({length} bytes) to deployment bundle");
-                    byte[] buffer = new byte[length];
+                    long bytesToRead = (fs.Length + 3) / 4 * 4; // we add 3 bytes, and then make sure it is aligned to 4?! (for alignment)
+                    _message.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
+                    byte[] peFileBytes = new byte[bytesToRead];
 
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    assemblies.Add(buffer);
+                    fs.Read(peFileBytes, 0, (int)fs.Length);
+                    deploymentFileBytes.Add(peFileBytes);
 
                     // Increment totalizer
-                    totalSizeOfAssemblies += length;
+                    deploymentFileSizeInBytes += bytesToRead;
                 }
             }
 
-            // TODO: we should definitly return a verbose message here... as the deployment does not happen in this function!
-            // Perhaps return Tuple.
-            _message.Output($"Deploying {peFiles.Length:N0} assemblies to device... Total size in bytes is {totalSizeOfAssemblies}.");
+            _message.Output($"Merged {peFiles.Length:N0} assemblies for deployment... Total size in bytes is {deploymentFileSizeInBytes}.");
 
-            return assemblies;
+            return deploymentFileBytes;
         }
 
         internal static bool CheckPeDirExists()

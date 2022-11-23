@@ -1,4 +1,5 @@
 ﻿//using nanoFrameworkDeployer.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace nanoFrameworkDeployer.Tests
 {

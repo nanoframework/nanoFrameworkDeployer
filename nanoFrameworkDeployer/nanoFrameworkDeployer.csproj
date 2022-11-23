@@ -40,7 +40,8 @@
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <!-- order is important due to lock file generation-->
-    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <!--<TargetFrameworks>net6.0;net472</TargetFrameworks>-->
+    <TargetFrameworks>net472</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -73,6 +74,7 @@
     </PackageReference>
     <PackageReference Include="nanoFramework.Tools.Debugger.Net" Version="2.4.1" />
     <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="TestableIO.System.IO.Abstractions" Version="17.2.26" />
     <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="17.2.26" />
   </ItemGroup>
@@ -100,10 +102,5 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
-  <PropertyGroup>
-    <!-- set this to 'net6.0\' to package contents in this TFM folder  -->
-    <PackageTfmSubFolder>net6.0\</PackageTfmSubFolder>
-  </PropertyGroup>
 
 </Project>

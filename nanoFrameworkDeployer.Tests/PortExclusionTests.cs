@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace nanoFrameworkDeployer.Tests
 {
