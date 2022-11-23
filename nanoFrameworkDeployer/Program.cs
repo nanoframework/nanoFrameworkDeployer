@@ -254,7 +254,7 @@ namespace nanoFrameworkDeployer
             _message.Verbose("Merging PE assembilies to create single deployment file...");
             // Keep track of total file binary size
             long deploymentFileSizeInBytes = 0;
-            List<byte[]> deploymentFileBytes = new ();
+            List<byte[]> deploymentFileBytes = new List<byte[]>();
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {
