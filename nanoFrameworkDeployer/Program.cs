@@ -166,29 +166,9 @@ namespace nanoFrameworkDeployer
             numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
 
-        retryConnection:
-            while (!_serialDebugClient.IsDevicesEnumerationComplete)
+            if (!ConnectToDevice(ref retryCount, ref numberOfRetries))
             {
-                Thread.Sleep(1);
-            }
-
-            _message.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
-
-            if (_serialDebugClient.NanoFrameworkDevices.Count == 0)
-            {
-                if (retryCount > numberOfRetries)
-                {
-                    _message.Error("ERROR: too many retries");
-                    _returnvalue = RETURN_CODE_ERROR;
-                    return;
-                }
-                else
-                {
-                    retryCount++;
-                    _message.Verbose($"Finding devices, attempt {retryCount}");
-                    _serialDebugClient.ReScanDevices();
-                    goto retryConnection;
-                }
+                return;
             }
 
             retryCount = 0;
@@ -213,28 +193,53 @@ namespace nanoFrameworkDeployer
                 _message.Verbose($"Debug engine created.");
             }
 
-        retryDebug:
-            bool connectResult = _device.DebugEngine.Connect(5000, true, true);
-            _message.Output($"Device connection result is: {connectResult}. Attempt {retryCount}/{numberOfRetries}");
-
-            if (!connectResult)
-            {
-                if (retryCount < numberOfRetries)
-                {
-                    // Give it a bit of time
-                    Thread.Sleep(100);
-                    retryCount++;
-                    goto retryDebug;
-                }
-                else
-                {
-                    _message.Error("ERROR: too many retries");
-                }
-            }
+            ConnectDebugEngine(ref retryCount, ref numberOfRetries);
 
             retryCount = 0;
 
-        retryErase:
+            EraseDevice(ref retryCount, ref numberOfRetries);
+
+
+            _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
+
+            DeployAssembiliesToDevice(peFiles);
+        }
+
+        internal static bool ConnectToDevice(ref int retryCount, ref int numberOfRetries)
+        {
+            //TODO: use a while loop
+        //retryConnection:
+            while (!_serialDebugClient.IsDevicesEnumerationComplete)
+            {
+                Thread.Sleep(1);
+            }
+
+            _message.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
+
+            if (_serialDebugClient.NanoFrameworkDevices.Count == 0)
+            {
+                if (retryCount > numberOfRetries)
+                {
+                    _message.Error("ERROR: too many retries");
+                    _returnvalue = RETURN_CODE_ERROR;
+                    return false;
+                }
+                else
+                {
+                    retryCount++;
+                    _message.Verbose($"Finding devices, attempt {retryCount}");
+                    _serialDebugClient.ReScanDevices();
+                    //goto retryConnection;
+                    ConnectToDevice(ref retryCount, ref numberOfRetries);
+                }
+            }
+            return true;
+        }
+
+        internal static bool EraseDevice(ref int retryCount, ref int numberOfRetries)
+        {
+            //TODO: use a while loop
+        //retryErase:
             // erase the device
             _message.Output($"Erase deployment block storage. Attempt: {retryCount}/{numberOfRetries}.");
 
@@ -251,17 +256,43 @@ namespace nanoFrameworkDeployer
                     // Give it a bit of time
                     Thread.Sleep(400);
                     retryCount++;
-                    goto retryErase;
+                    //goto retryErase;
+                    EraseDevice(ref retryCount, ref numberOfRetries);
+
                 }
                 else
                 {
                     _message.Error("ERROR: Could not erase, too many retries");
+                    return false;
                 }
             }
+            return true;
+        }
 
-            _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
+        internal static bool ConnectDebugEngine(ref int retryCount, ref int numberOfRetries)
+        {
+            //TODO: use a while loop!
+        //retryDebug:
+            bool connectResult = _device.DebugEngine.Connect(5000, true, true);
+            _message.Output($"Device connection result is: {connectResult}. Attempt {retryCount}/{numberOfRetries}");
 
-            DeployAssembiliesToDevice(peFiles);
+            if (!connectResult)
+            {
+                if (retryCount < numberOfRetries)
+                {
+                    // Give it a bit of time
+                    Thread.Sleep(100);
+                    retryCount++;
+                    //goto retryDebug;
+                    ConnectDebugEngine(ref retryCount, ref numberOfRetries);
+                }
+                else
+                {
+                    _message.Error("ERROR: too many retries");
+                    return false;
+                }
+            }
+            return true;
         }
 
         internal static void AddSerialPortExclusions(ref List<string> excludedPorts, string portExceptionFilePath)
