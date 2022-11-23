@@ -259,7 +259,7 @@ namespace nanoFrameworkDeployer
             foreach (var peFile in peFiles)
             {
                 // append to the pe blob to the deployment bundle
-                using (FileStream fs = fileSystem.File.Open(peFile, FileMode.Open, FileAccess.Read))
+                using (FileStream fs = File.Open(peFile, FileMode.Open, FileAccess.Read))
                 {
                     // we add 3 bytes, and then make sure it is aligned to 4 (for alignment).
                     long bytesToRead = (fs.Length + 3) / 4 * 4;
