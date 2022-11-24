@@ -75,8 +75,10 @@ jobs:
                 $commit = Invoke-RestMethod -Uri $prUrl -ContentType "application/json" -Headers @{"Accept"="application/vnd.github.groot-preview+json"} -Method GET
             }
         }
-    
-    
+  
+        # set variable to foward to jobs
+        echo "##vso[task.setvariable variable=RUN_UPDATE_DEPENDENTS;isOutput=true]$update"
+
 
   - task: PowerShell@2
     condition: eq( variables['StartReleaseCandidate'], true)
@@ -152,7 +154,11 @@ jobs:
 ###########################################################
 # build tool
 - job: Build_tool
-  condition: succeeded()
+  condition: >-
+    and(
+      succeeded(),
+      ne(dependencies.Check_Build_Options.outputs['BuildOptions.SKIP_BUILD'], true)
+    )
   dependsOn:
   - Check_Build_Options
   timeoutInMinutes: 30
@@ -166,6 +172,7 @@ jobs:
     buildConfiguration: 'Release'
     isTag: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
     ContinuousIntegrationBuild: true
+    run_update_dependents: $[dependencies.Check_Build_Options.outputs['BuildOptions.RUN_UPDATE_DEPENDENTS']]
     GH_TOKEN: $(GitHubToken)
 
   steps:
@@ -192,14 +199,30 @@ jobs:
 
   - task: UseDotNet@2
     displayName: Install .NET SDK
-    condition: succeeded()
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     inputs:
       packageType: sdk
       version: 6.x
 
+  # Set CI build version
+  # See: https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md
+  # Generally only used to update dependents (such as changelog)
+  - script: nbgv cloud -a -c
+    condition: >-
+        eq(variables['UPDATE_DEPENDENTS'], 'true')
+    displayName: Set CI build Version
+
   - task: DotNetCoreCLI@2
     displayName: Restore NuGet packages
-    condition: succeeded()
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     inputs:
       command: restore
       restoreArguments: ' --locked-mode --force-evaluate '
@@ -223,12 +246,16 @@ jobs:
       projectKey: 'nanoframework_nanoFrameworkDeployer'
 
   - task: DotNetCoreCLI@2
-    displayName: Build NuGet package
-    condition: succeeded()
+    displayName: Build Solution
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     inputs:
-      command: 'build'
-      projects: '$(toolname).sln'
-      arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
+    command: 'build'
+    projects: '$(toolname).sln'
+    arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
 
   # only run sonar if a PR
   - task: SonarCloudAnalyze@1
@@ -291,38 +318,49 @@ jobs:
 ##################################################
 
   - task: PowerShell@2
-    condition: succeeded()
-    displayName: Get NuGet build number
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
+    displayName: Check/Set NuGet build number
     inputs:
       targetType: 'inline'
       script: |
-          $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
+        $MyNuGetVersion = $env:NBGV_NuGetPackageVersion -replace "\-g$env:NBGV_GitCommitIdShort", ""
 
-          # replace preview with alpha if this is a PR build
-          if($env:System_PullRequest_PullRequestId -ne $null)
-          {
-            $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
-          }
+        # replace preview with alpha if this is a PR build
+        if($env:System_PullRequest_PullRequestId -ne $null)
+        {
+          $MyNuGetVersion = $MyNuGetVersion -replace "preview", "alpha"
+        }
 
-          Write-Host "NuGet build number is $MyNuGetVersion"
+        Write-Host "NuGet build number is $MyNuGetVersion"
 
-          Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
+        Write-Host "$("##vso[task.setvariable variable=MY_NUGET_VERSION]")$MyNuGetVersion"
 
-  # update cloud build number (only possible if this is not a PR and not from a fork)
+  # update CI build number (only possible if this is not a PR from a fork)
+  # if changed after thee previous task?!
   - task: PowerShell@2
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
-    displayName: Update cloud build number
+    displayName: Update build number
     inputs:
         targetType: 'inline'
-        script: Write-Host "$("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
+        script: |
+          Write-Host "$("##vso[build.updatebuildnumber]")$env:NBGV_NuGetPackageVersion"
 
   - task: powershell@2
     displayName: Set release type
-    condition: succeeded()
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     inputs:
       targetType: 'inline'
       script: |
@@ -346,7 +384,11 @@ jobs:
         }
 
   - task: CopyFiles@1
-    condition: succeeded()
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     displayName: Collecting deployable artifacts
     inputs:
       sourceFolder: $(Agent.BuildDirectory)
@@ -360,20 +402,22 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
     inputs:
       command: custom
       custom: tool
       arguments: install --tool-path . SignClient
-  
+
   - task: powershell@2
     displayName: Sign packages
     continueOnError: true
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
     inputs:
       targetType: 'inline'
@@ -391,7 +435,11 @@ jobs:
   
   # publish artifacts
   - task: PublishBuildArtifacts@1
-    condition: succeeded()
+    condition: >-
+      and(
+        succeeded(),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
+      )
     displayName: Publish deployables artifacts
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -403,7 +451,8 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
     displayName: Push nanoframeworkDeployer NuGet package to NuGet
     continueOnError: true
@@ -420,7 +469,8 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )    
     displayName: Push library NuGet package to NuGet
     continueOnError: true
@@ -437,7 +487,8 @@ jobs:
     condition: >-
       and(
         succeeded(),
-        eq(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['System.PullRequest.PullRequestId'], ''),
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
     displayName: Create/Update GitHub stable release
     inputs:
@@ -455,8 +506,24 @@ jobs:
           { "label" : "Type: bug", "displayName" : "Bugs fixed", "state" : "closed" },
           { "label" : "Type: enhancement", "displayName" : "Enhancements and new features", "state" : "closed" },
           { "label" : "Breaking-Change", "displayName" : "Breaking Changes", "state" : "closed" }
+          { "label" : "Type: dependencies", "displayName" : "Dependencies updated", "state" : "closed" },
           { "label" : "Type: documentation", "displayName" : "Documentation", "state" : "closed" }
         ]
+
+##################################
+  # update dependents
+  - task: PowerShell@2
+    condition: >-
+      or(
+        eq(variables['UPDATE_DEPENDENTS'], 'true'),
+        eq(variables['run_update_dependents'], 'true')
+      )
+    displayName: Update dependent tools
+    inputs:
+      targetType: filePath
+      filePath: azure-pipelines/update-dependents.ps1
+    env:
+      GH_TOKEN: $(GitHubToken)
 
 ##################################
 # report build failure to Discord
