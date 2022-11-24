@@ -18,7 +18,7 @@ namespace nanoFrameworkDeployer
     /// <summary>
     /// This is the main program class
     /// </summary>
-    internal class Program
+    public class Program
     {
         const int RETURN_CODE_SUCCESS = 0;
         const int RETURN_CODE_ERROR = 1;
@@ -45,7 +45,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// This is required for running mock filesystem tests.
         /// </remarks>
-        internal Program(IFileSystem mockFileSystem) //TODO: handle args.
+        public Program(IFileSystem mockFileSystem) //TODO: handle args.
         {
             fileSystem = mockFileSystem;
         }

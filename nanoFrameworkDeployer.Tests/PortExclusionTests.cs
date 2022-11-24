@@ -39,13 +39,14 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\portExclusions.txt", new MockFileData("Testing is meh.") },
              });
-            var component = new nanoFrameworkDeployer.Program.Program(fileSystem);
+            var component = new Program(fileSystem);
             List<string> excludedPorts = null;
+            var exclusionFilePath = "c:\\portExclusions.txt";
 
             try
             {
                 // Act
-                component.AddSerialPortExclusions(ref excludedPorts, "c:\\portExclusions.txt");
+                Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
             }
             catch (NotSupportedException ex)
             {
