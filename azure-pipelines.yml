@@ -253,9 +253,9 @@ jobs:
         eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
     inputs:
-    command: 'build'
-    projects: '$(toolname).sln'
-    arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
+      command: 'build'
+      projects: '$(toolname).sln'
+      arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
 
   # only run sonar if a PR
   - task: SonarCloudAnalyze@1
