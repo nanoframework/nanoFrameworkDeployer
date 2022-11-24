@@ -45,8 +45,8 @@ jobs:
 
   # get commit message
   - task: PowerShell@2
-    name: BuildOptions
-    displayName: Evaluate build options
+    name: EvaluateBuildOptions
+    displayName: Evaluate CI build type
     inputs:
       targetType: 'inline'
       script: |
@@ -157,7 +157,7 @@ jobs:
   condition: >-
     and(
       succeeded(),
-      ne(dependencies.Check_Build_Options.outputs['BuildOptions.SKIP_BUILD'], true)
+      ne(dependencies.Check_Build_Options.outputs['EvaluateBuildOptions.SKIP_BUILD'], true)
     )
   dependsOn:
   - Check_Build_Options
@@ -172,7 +172,7 @@ jobs:
     buildConfiguration: 'Release'
     isTag: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
     ContinuousIntegrationBuild: true
-    run_update_dependents: $[dependencies.Check_Build_Options.outputs['BuildOptions.RUN_UPDATE_DEPENDENTS']]
+    run_update_dependents: $[dependencies.Check_Build_Options.outputs['EvaluateBuildOptions.RUN_UPDATE_DEPENDENTS']]
     GH_TOKEN: $(GitHubToken)
 
   steps:

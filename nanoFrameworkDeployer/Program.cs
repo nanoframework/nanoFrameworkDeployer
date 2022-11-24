@@ -316,15 +316,16 @@ namespace nanoFrameworkDeployer
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {
-                // append to the pe blob to the deployment bundle
-                using (FileSystemStream fs = fileSystem.File.Open(peFile, FileMode.Open, FileAccess.Read))
+                // append the PE file to the deployment bundle
+                using (FileStream fs = File.Open(peFile, FileMode.Open, FileAccess.Read))
                 {
-                    long bytesToRead = (fs.Length + 3) / 4 * 4; // we add 3 bytes, and then make sure it is aligned to 4?! (for alignment)
+                    // we add 3 bytes, and then make sure it is aligned to 4 (for alignment).
+                    long bytesToRead = (fs.Length + 3) / 4 * 4;
                     _message.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
-                    byte[] peFileBytes = new byte[bytesToRead];
+                    byte[] peFileBuffer = new byte[bytesToRead];
 
-                    fs.Read(peFileBytes, 0, (int)fs.Length);
-                    deploymentFileBytes.Add(peFileBytes);
+                    fs.Read(peFileBuffer, 0, (int)fs.Length);
+                    deploymentFileBytes.Add(peFileBuffer);
 
                     // Increment totalizer
                     deploymentFileSizeInBytes += bytesToRead;
