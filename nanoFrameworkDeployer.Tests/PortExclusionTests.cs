@@ -15,7 +15,7 @@ namespace nanoFrameworkDeployer.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
              {
-                 { @"c:\portExclusions.txt", new MockFileData("Testing is meh.") },
+                 { @"c:\portExclusions.txt", new MockFileData("COMXX") },
              });
             var component = new Program(fileSystem);
             List<string> excludedPorts = null;
@@ -26,7 +26,7 @@ namespace nanoFrameworkDeployer.Tests
 
 
             // Assert
-            Assert.AreEqual("Testing is meh.", excludedPorts.First());
+            Assert.AreEqual("COMXX", excludedPorts.First());
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace nanoFrameworkDeployer.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
              {
-                 { @"c:\portExclusions.txt", new MockFileData("Testing is meh."+ Environment.NewLine + "line 2") },
+                 { @"c:\portExclusions.txt", new MockFileData("COMXX"+ Environment.NewLine + "COMYY") },
              });
             var component = new Program(fileSystem);
             List<string> excludedPorts = null;
@@ -47,7 +47,7 @@ namespace nanoFrameworkDeployer.Tests
             var portlist = string.Join(Environment.NewLine, excludedPorts);
             // Assert
             // need to be a sting array to pass!
-            Assert.AreEqual("Testing is meh." + Environment.NewLine + "line 2", portlist);
+            Assert.AreEqual("COMXX" + Environment.NewLine + "COMYY", portlist);
         }
 
         [TestMethod]
@@ -95,13 +95,28 @@ namespace nanoFrameworkDeployer.Tests
         public void CheckPortExclusionWhenFileDoesNotExist()
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-             {
-                 { @"c:\portExclusions.txt", new MockFileData("") },
-             });
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             var component = new Program(fileSystem);
             List<string> excludedPorts = null;
             var exclusionFilePath = "c:\\portExclusions1.txt"; // invalid on purpose!
+
+            //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
+            // Act
+            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+
+
+            // Assert
+            Assert.AreEqual("", excludedPorts.First());
+        }
+
+        [TestMethod]
+        public void CheckPortExclusionWhenFileIsNotSpecified()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var component = new Program(fileSystem);
+            List<string> excludedPorts = null;
+            var exclusionFilePath = ""; // empty on purpose!
 
             //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
             // Act

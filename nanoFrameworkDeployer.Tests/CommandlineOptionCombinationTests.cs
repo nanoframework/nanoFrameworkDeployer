@@ -9,19 +9,25 @@ namespace nanoFrameworkDeployer.Tests
         [TestMethod]
         public void CheckOptionVerboseValid()
         {
-            Assert.IsTrue(true);
+            CommandlineOptions options = new CommandlineOptions();
+            options.Verbose = true;
+            Assert.IsTrue(options.Verbose);
         }
 
         [TestMethod]
         public void CheckOptionPortValid()
         {
-            Assert.IsTrue(true);
+            CommandlineOptions options = new CommandlineOptions();
+            options.ComPort = "";
+            Assert.AreEqual("", options.ComPort);
         }
 
         [TestMethod]
         public void CheckPeDirectoryValid()
         {
-            Assert.IsTrue(true);
+            CommandlineOptions options = new CommandlineOptions();
+            options.PeDirectory = "";
+            Assert.AreEqual("", options.PeDirectory);
         }
 
     }

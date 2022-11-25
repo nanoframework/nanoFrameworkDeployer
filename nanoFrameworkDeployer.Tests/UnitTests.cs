@@ -1,4 +1,9 @@
+//helpful resource
+//https://github.com/reductech/TesseractConnector/blob/60203bc75b1b4f194ff6295d2ecaca6e287deeb4/Tesseract.Tests/TesseractOCRTests.cs
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace nanoFrameworkDeployer.Tests
 {
@@ -8,51 +13,45 @@ namespace nanoFrameworkDeployer.Tests
         [TestMethod]
         public void CheckDirectoryContainsPeFiles()
         {
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\pedir\mypefile.pe", new MockFileData("Testing is meh.") },
+             });
+            var component = new Program(fileSystem);
+           
+            // Act
+            var result = Program.CheckPeDirExists();
+
+
+            // Assert
+            Assert.IsTrue(result);
         }
 
-        [TestMethod]
-        public void CheckPortExclusionFileWorks()
-        {
-            // False set until test is written
-            Assert.IsTrue(true);
-        }
-
+        // TODO: we are only checking one of many scenarios here, add some more, like invalid paths and alignment etc.
+        // But need to get this one working first!
         [TestMethod]
         public void CheckCreateDeploymentFile()
         {
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\pedir\mypefile.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) },
+                 { @"c:\pedir\mypefile2.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) }
+             });
+            var expectedResult = new List<byte[]> { 
+                new byte[] { 0x12, 0x34, 0x56, 0xd2 }, 
+                new byte[] { 0x12, 0x34, 0x56, 0xd2 }
+            };
+            var component = new Program(fileSystem);
+
+            // Act
+            var result = Program.CreateBinDeploymentFile(new string[] { "c:\\pedir\\mypefile.pe", "c:\\pedir\\mypefile2.pe" });
+
+
+            // Assert
+            CollectionAssert.AreEqual(result, expectedResult);
         }
-
-        //https://github.com/reductech/TesseractConnector/blob/60203bc75b1b4f194ff6295d2ecaca6e287deeb4/Tesseract.Tests/TesseractOCRTests.cs
-        // [TestMethod]
-        // public void Program_Validate_ShouldThrowNotSupportedExceptionIfTestingIsNotAwesome()
-        // {
-        //     // Arrange
-        //     var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        //     {
-        //         { @"c:\myfile.txt", new MockFileData("Testing is meh.") },
-        //         { @"c:\demo\jQuery.js", new MockFileData("some js") },
-        //         { @"c:\demo\image.gif", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) }
-        //     });
-        //     var component = new Program(fileSystem);
-
-        //     try
-        //     {
-        //         // Act
-        //         component.Validate();
-        //     }
-        //     catch (NotSupportedException ex)
-        //     {
-        //         // Assert
-        //         Assert.AreEqual("We can't go on together. It's not me, it's you.", ex.Message);
-        //         return;
-        //     }
-
-        //     Assert.Fail("The expected exception was not thrown.");
-        // }
 
     }
 }

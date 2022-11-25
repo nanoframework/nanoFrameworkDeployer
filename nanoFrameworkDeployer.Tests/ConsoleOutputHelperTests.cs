@@ -1,5 +1,7 @@
-﻿//using nanoFrameworkDeployer.Helpers;
+﻿using nanoFrameworkDeployer.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System;
 
 namespace nanoFrameworkDeployer.Tests
 {
@@ -9,32 +11,70 @@ namespace nanoFrameworkDeployer.Tests
         [TestMethod]
         public void CheckOutputMessageValid()
         {
-            //var testOutputStr = "Hello";
-            //ConsoleOutputHelper message = new ConsoleOutputHelper();
-            //message.Output(testOutputStr);
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var writer = new StringWriter();
+            Console.SetOut(writer);
+
+            // Act
+            var testOutputStr = "Hello Output";
+            ConsoleOutputHelper message = new ConsoleOutputHelper();
+            message.Output(testOutputStr);
+
+            // Assert
+            var sb = writer.GetStringBuilder();
+            Assert.AreEqual("Hello Output", sb.ToString().Trim());
+
         }
 
         [TestMethod]
         public void CheckVerboseMessageValid()
         {
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var writer = new StringWriter();
+            Console.SetOut(writer);
+
+            // Act
+            var testOutputStr = "Hello Output";
+            ConsoleOutputHelper message = new ConsoleOutputHelper();
+            message.Verbose(testOutputStr);
+
+            // Assert
+            var sb = writer.GetStringBuilder();
+            Assert.AreEqual("Hello Output", sb.ToString().Trim());
         }
 
         [TestMethod]
         public void CheckWarningMessageValid()
         {
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var writer = new StringWriter();
+            Console.SetOut(writer);
+
+            // Act
+            var testOutputStr = "Hello Output";
+            ConsoleOutputHelper message = new ConsoleOutputHelper();
+            message.Warning(testOutputStr);
+
+            // Assert
+            var sb = writer.GetStringBuilder();
+            Assert.AreEqual("Hello Output", sb.ToString().Trim());
         }
 
         [TestMethod]
         public void CheckErrorMessageValid()
         {
-            // False set until test is written
-            Assert.IsTrue(true);
+            // Arrange
+            var writer = new StringWriter();
+            Console.SetOut(writer);
+
+            // Act
+            var testOutputStr = "Hello Output";
+            ConsoleOutputHelper message = new ConsoleOutputHelper();
+            message.Error(testOutputStr);
+
+            // Assert
+            var sb = writer.GetStringBuilder();
+            Assert.AreEqual("Hello Output", sb.ToString().Trim());
         }
 
     }
