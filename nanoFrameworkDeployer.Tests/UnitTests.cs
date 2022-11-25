@@ -21,7 +21,7 @@ namespace nanoFrameworkDeployer.Tests
             var component = new Program(fileSystem);
            
             // Act
-            var result = Program.CheckPeDirExists();
+            var result = Program.DirectoryIsValid("c:\\pedir\\");
 
 
             // Assert
@@ -31,7 +31,7 @@ namespace nanoFrameworkDeployer.Tests
         // TODO: we are only checking one of many scenarios here, add some more, like invalid paths and alignment etc.
         // But need to get this one working first!
         [TestMethod]
-        public void CheckCreateDeploymentFile()
+        public void CheckCreateDeploymentBlob()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -39,18 +39,19 @@ namespace nanoFrameworkDeployer.Tests
                  { @"c:\pedir\mypefile.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) },
                  { @"c:\pedir\mypefile2.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) }
              });
-            var expectedResult = new List<byte[]> { 
+            var expectedResult = new List<byte[]>() { 
                 new byte[] { 0x12, 0x34, 0x56, 0xd2 }, 
                 new byte[] { 0x12, 0x34, 0x56, 0xd2 }
             };
             var component = new Program(fileSystem);
 
             // Act
-            var result = Program.CreateBinDeploymentFile(new string[] { "c:\\pedir\\mypefile.pe", "c:\\pedir\\mypefile2.pe" });
+            var result = Program.CreateBinDeploymentBlob(new string[] { "c:\\pedir\\mypefile.pe", "c:\\pedir\\mypefile2.pe" });
 
 
             // Assert
-            CollectionAssert.AreEqual(result, expectedResult);
+            //TODO: should be AreSame
+            CollectionAssert.AreEquivalent(expectedResult, result);
         }
 
     }

@@ -22,7 +22,7 @@ namespace nanoFrameworkDeployer.Tests
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -42,7 +42,7 @@ namespace nanoFrameworkDeployer.Tests
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
             var portlist = string.Join(Environment.NewLine, excludedPorts);
             // Assert
@@ -63,7 +63,7 @@ namespace nanoFrameworkDeployer.Tests
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -83,12 +83,12 @@ namespace nanoFrameworkDeployer.Tests
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             //TODO: The program does not try and catch this, so we also dont...  value WILL BE NULL since we never set it!
             // Assert
-            Assert.AreEqual("", excludedPorts.First());
+            Assert.IsNull(excludedPorts);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace nanoFrameworkDeployer.Tests
 
             //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -120,11 +120,11 @@ namespace nanoFrameworkDeployer.Tests
 
             //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
             // Act
-            Program.AddSerialPortExclusions(ref excludedPorts, exclusionFilePath);
+            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
-            Assert.AreEqual("", excludedPorts.First());
+            Assert.IsNull(excludedPorts);
         }
 
     }

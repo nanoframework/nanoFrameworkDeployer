@@ -45,7 +45,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// This is required for running mock filesystem tests.
         /// </remarks>
-        public Program(IFileSystem mockFileSystem) //TODO: handle args.
+        internal Program(IFileSystem mockFileSystem) //TODO: handle args.
         {
             fileSystem = mockFileSystem;
         }
@@ -118,7 +118,9 @@ namespace nanoFrameworkDeployer
 
             // Let's first validate that the directory exist and contains PE files
             // We don't need to check if it is null as it is a required option.
-            if (!CheckPeDirExists())
+            // add end char for linux folder?!
+            _options.PeDirectory = $"{_options.PeDirectory}{fileSystem.Path.DirectorySeparatorChar}";
+            if (!DirectoryIsValid(_options.PeDirectory))
             {
                 return;
             }
@@ -134,7 +136,7 @@ namespace nanoFrameworkDeployer
 
             if (_options.BinaryFileOnly)
             {
-                List<byte[]> assFiles = CreateBinDeploymentFile(peFiles);
+                List<byte[]> assFiles = CreateBinDeploymentBlob(peFiles);
                 var deploymentFile = fileSystem.File.Create(fileSystem.Path.Combine(workingDirectory, "deploy.bin"));
                 foreach (var assFile in assFiles)
                 {
@@ -151,7 +153,7 @@ namespace nanoFrameworkDeployer
             {
                 if (fileSystem.File.Exists(_options.PortException))
                 {
-                    AddSerialPortExclusions(ref excludedPorts, _options.PortException);
+                    excludedPorts = AddSerialPortExclusions(_options.PortException);
                 }
                 else
                 {
@@ -184,7 +186,7 @@ namespace nanoFrameworkDeployer
                 _device = _serialDebugClient.NanoFrameworkDevices[0];
             }
 
-            _message.Output($"Deploying on {_device.Description}");
+            _message.Output($"Deploying to: {_device.Description}");
 
             // check if debugger engine exists
             if (_device.DebugEngine == null)
@@ -295,24 +297,26 @@ namespace nanoFrameworkDeployer
             return true;
         }
 
-        internal static void AddSerialPortExclusions(ref List<string> excludedPorts, string portExceptionFilePath)
+        internal static List<string> AddSerialPortExclusions(string portExceptionFilePath)
         {
             //TODO: check file exists?!
             //TODO: check file is formatted correctly?!
             var ports = fileSystem.File.ReadAllLines(portExceptionFilePath);
             if (ports.Length > 0)
             {
-                excludedPorts = new List<string>();
+                var excludedPorts = new List<string>();
                 excludedPorts.AddRange(ports);
+                return excludedPorts;
             }
+            return null;
         }
 
-        internal static List<byte[]> CreateBinDeploymentFile(string[] peFiles)
+        internal static List<byte[]> CreateBinDeploymentBlob(string[] peFiles)
         {
-            _message.Verbose("Merging PE assembilies to create single deployment file...");
+            _message.Verbose("Merging PE assembilies to create single deployment blob...");
             // Keep track of total file binary size
-            long deploymentFileSizeInBytes = 0;
-            List<byte[]> deploymentFileBytes = new List<byte[]>();
+            long deploymentBlobSizeInBytes = 0;
+            List<byte[]> deploymentBlob = new List<byte[]>();
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {
@@ -325,24 +329,29 @@ namespace nanoFrameworkDeployer
                     byte[] peFileBuffer = new byte[bytesToRead];
 
                     fs.Read(peFileBuffer, 0, (int)fs.Length);
-                    deploymentFileBytes.Add(peFileBuffer);
+                    deploymentBlob.Add(peFileBuffer);
 
                     // Increment totalizer
-                    deploymentFileSizeInBytes += bytesToRead;
+                    deploymentBlobSizeInBytes += bytesToRead;
                 }
             }
 
-            _message.Output($"Merged {peFiles.Length:N0} assemblies for deployment... Total size in bytes is {deploymentFileSizeInBytes}.");
+            _message.Output($"Merged {peFiles.Length:N0} assemblies for deployment... Total size in bytes is {deploymentBlobSizeInBytes}.");
 
-            return deploymentFileBytes;
+            return deploymentBlob;
         }
 
-        internal static bool CheckPeDirExists()
+        internal static bool DirectoryIsValid(string path)
         {
-            //TODO: a good reason for tests on multiple platforms...
-            // add end char for linux folder?!
-            _options.PeDirectory = $"{_options.PeDirectory}{fileSystem.Path.DirectorySeparatorChar}";
-            if (fileSystem.Directory.Exists(_options.PeDirectory))
+            //TODO: we should also be validating the string...
+            //if(!Uri.IsWellFormedUriString(path, UriKind.RelativeOrAbsolute))
+            //{
+            //    _message.Error("ERROR: The target directory path was not valid.");
+            //    _returnvalue = RETURN_CODE_ERROR;
+            //    return false;
+            //}
+
+            if (fileSystem.Directory.Exists(path))
             {
                 return true;
             }
@@ -356,7 +365,7 @@ namespace nanoFrameworkDeployer
 
         internal static void DeployAssembiliesToDevice(string[] peFiles)
         {
-            List<byte[]> assemblies = CreateBinDeploymentFile(peFiles);
+            List<byte[]> assemblies = CreateBinDeploymentBlob(peFiles);
 
             // need to keep a copy of the deployment blob for the second attempt (if needed)
             var assemblyCopy = new List<byte[]>(assemblies);
