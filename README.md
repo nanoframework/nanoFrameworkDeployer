@@ -8,7 +8,9 @@ This repo provides a .NET Console Application that can deploy your .NET **nanoFr
 
 ## Requirements
 
+
 ### Windows
+
 .NET 4.7.2
 
 ### Linux / macOS
