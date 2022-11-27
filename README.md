@@ -35,7 +35,7 @@ The tool provide various options:
 
 
 > **NOTE**: When running this tool in a **NON** Windows environment, you need to use `mono`.
-**If you are using Windows 7 or above, you ***DO NOT*** need `mono` **
+> If you are using Windows 7 or above, you ***DO NOT*** need `mono` .
 
 You can then use commands like:
 
