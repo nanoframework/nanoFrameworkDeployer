@@ -433,6 +433,18 @@ jobs:
         --description ".NET nanoFramework Deployer" `
         --descriptionUrl "https://github.com/$env:Build_Repository_Name"
   
+
+  ## pack artifacts
+  ## Pack the solution with the --no-build argument.
+  ## You may need to pass additional parameters here, such as /p:PackageVersion="$(PackageVersion)".
+  #- task: DotNetCoreCLI@2
+  #  displayName: 'dotnet pack'
+  #  inputs:
+  #    command: custom
+  #    projects: '$(toolname).sln'
+  #    custom: pack
+  #    arguments: '--configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/$(toolname)" --no-build --verbosity normal'
+  
   # publish artifacts
   - task: PublishBuildArtifacts@1
     condition: >-
