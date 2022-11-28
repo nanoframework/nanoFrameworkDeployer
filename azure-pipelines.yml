@@ -216,20 +216,20 @@ jobs:
         eq(variables['UPDATE_DEPENDENTS'], 'true')
     displayName: Set CI build Version
 
-  - task: DotNetCoreCLI@2
-    displayName: Restore NuGet packages
-    condition: >-
-      and(
-        succeeded(),
-        eq(variables['UPDATE_DEPENDENTS'], 'false')
-      )
-    inputs:
-      command: restore
-      restoreArguments: ' --locked-mode --force-evaluate '
-      verbosityRestore: minimal
-      projects: '$(toolname).sln'
-      feedsToUse: config
-      nugetConfigPath: NuGet.Config
+  #- task: DotNetCoreCLI@2
+  #  displayName: Restore NuGet packages
+  #  condition: >-
+  #    and(
+  #      succeeded(),
+  #      eq(variables['UPDATE_DEPENDENTS'], 'false')
+  #    )
+  #  inputs:
+  #    command: restore
+  #    restoreArguments: ' --locked-mode --force-evaluate '
+  #    verbosityRestore: minimal
+  #    projects: '$(toolname).sln'
+  #    feedsToUse: config
+  #    nugetConfigPath: NuGet.Config
 
   # only setup sonar if a PR
   - task: SonarCloudPrepare@1
@@ -472,7 +472,7 @@ jobs:
         eq(variables['System.PullRequest.PullRequestId'], ''),
         eq(variables['UPDATE_DEPENDENTS'], 'false')
       )    
-    displayName: Push library NuGet package to NuGet
+    displayName: Push library NuGet package to Azure Artifacts
     continueOnError: true
     inputs:
       command: push
@@ -480,7 +480,7 @@ jobs:
       nuGetFeedType: external
       allowPackageConflicts: true
       packagesToPush: '$(Build.ArtifactStagingDirectory)\$(toolname).$(NBGV_NuGetPackageVersion).nupkg'
-      publishFeedCredentials: 'NuGet-nanoFrameworkDeployer'
+      publishFeedCredentials: 'AzureArtifacts-nanoFrameworkDeployer'
 
   # create or update GitHub release
   - task: GithubRelease@1

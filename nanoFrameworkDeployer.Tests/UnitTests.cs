@@ -39,10 +39,12 @@ namespace nanoFrameworkDeployer.Tests
                  { @"c:\pedir\mypefile.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) },
                  { @"c:\pedir\mypefile2.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) }
              });
-            var expectedResult = new List<byte[]>() { 
-                new byte[] { 0x12, 0x34, 0x56, 0xd2 }, 
-                new byte[] { 0x12, 0x34, 0x56, 0xd2 }
-            };
+            var expectedResult = new List<byte[]>(); //{ //TODO: why List<byte[][] >
+            //    new byte[] { 0x12, 0x34, 0x56, 0xd2 }, // for some reason, this has a null 
+            //    new byte[] { 0x12, 0x34, 0x56, 0xd2 }  // for some reason, this has a null 
+            //};
+            expectedResult.Add(new byte[] { 0x12, 0x34, 0x56, 0xd2 });
+            expectedResult.Add(new byte[] { 0x12, 0x34, 0x56, 0xd2 });
             var component = new Program(fileSystem);
 
             // Act
@@ -50,7 +52,7 @@ namespace nanoFrameworkDeployer.Tests
 
 
             // Assert
-            //TODO: should be AreSame
+            //TODO: should be AreEqual
             CollectionAssert.AreEquivalent(expectedResult, result);
         }
 
