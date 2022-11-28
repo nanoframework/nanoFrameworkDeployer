@@ -49,7 +49,7 @@
     <PackageIcon>images\nf-logo.png</PackageIcon>
     <PackageTags>nanoFramework, nano Framework, NETNF, NETMF, Micro Framework, .net</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <TargetFrameworks>net472;net48</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
