@@ -166,6 +166,7 @@ namespace nanoFrameworkDeployer
             int retryCount = 0;
             // Only 3 tries for a specified port
             numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
+            //TODO: we may have created an empty list of strings for excluded ports... Is it a problem?!
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
 
             if (!ConnectToDevice(ref retryCount, ref numberOfRetries))
@@ -308,7 +309,7 @@ namespace nanoFrameworkDeployer
                 excludedPorts.AddRange(ports);
                 return excludedPorts;
             }
-            return null;
+            return new List<string>();
         }
 
         internal static List<byte[]> CreateBinDeploymentBlob(string[] peFiles)

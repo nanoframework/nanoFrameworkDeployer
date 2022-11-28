@@ -92,11 +92,6 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
-      "Mono.Cecil": {
-        "type": "Transitive",
-        "resolved": "0.11.4",
-        "contentHash": "IC1h5g0NeJGHIUgzM1P82ld57knhP0IcQfrYITDPXlNpMYGUrsG5TxuaWTjaeqDNQMBDNZkB8L0rBnwsY6JHuQ=="
-      },
       "nanoFramework.Tools.Debugger.Net": {
         "type": "Transitive",
         "resolved": "2.4.1",
@@ -177,7 +172,6 @@
         "type": "Project",
         "dependencies": {
           "CommandLineParser": "[2.9.1, )",
-          "Mono.Cecil": "[0.11.4, )",
           "Polly": "[7.2.3, )",
           "System.Runtime.CompilerServices.Unsafe": "[6.0.0, )",
           "TestableIO.System.IO.Abstractions": "[17.2.26, )",
