@@ -4,11 +4,18 @@
 
 # Cross-platform .NET nanoFrameworkDeployer Console Application
 
-This repo provides a .NET Console Application that can deploy your .NET **nanoFramework** projects to a **nanoFramework** supported device connected via USB. While this is already possible through the **nanoFramework** extension on Visual Studio on Windows, this repository aims to add support for deploying your projects on non-Windows based devices such as macOS and Linux.
+This repo provides a .NET Console Application that can deploy your .NET **nanoFramework** projects to a **nanoFramework** supported device connected via USB. While this is already possible through the **nanoFramework** extension in Visual Studio for Windows, this repository aims to add support for deploying your projects on non-Windows based devices such as macOS and Linux.
 
 ## Requirements
 
-- mono-complete on non Windows platforms, you can find how to install mono [here](https://www.mono-project.com/docs/getting-started/install/). The reason why you need mono is because the tool is a .NET 4.7.2 application. This tool can't be build using .NET 5.0 or .NET Core because some of the dependencies are those used by the Visual Studio extension. The other reason why you need mono is to build your project. As for the same reason.
+
+### Windows
+
+- .NET 4.7.2. You can download from the official [Microsoft website](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472).
+
+### Linux / macOS
+
+- mono-complete on non Windows platforms, you can find out how to install mono [here](https://www.mono-project.com/docs/getting-started/install/). The reason that you need mono is because the tool requires .NET 4.7.2. This tool cannot yet be build using .NET 6.0 or .NET Core because some of the dependencies are those used by the Visual Studio extension. The other reason why you need mono is to build a nanoFramework project.
 
 ## Getting Started
 
@@ -26,15 +33,20 @@ The tool provide various options:
   --version          Display version information.
 ```
 
-When running this tool on a non Windows platform, you need to use `mono`. This will then looks like:
 
+> **NOTE**: When running this tool in a **NON** Windows environment, you need to use `mono`.
+> If you are using Windows 7 or above, you ***DO NOT*** need `mono` .
+
+You can then use commands like:
+
+
+### Linux / macOS
 ```shell
 mono nanoFrameworkDeployer -d path_to_pe_files
 ```
 
 `path_to_pe_files` is the path to the build folder where all the `.pe` files are located. Note that the tool will automatically upload all the `.pe` files available in that folder.
 
-Stressing this again: If you are on Windows, you DO **NOT** need `mono` at all.
 
 ### Excluding a COM port
 
