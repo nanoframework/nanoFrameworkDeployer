@@ -8,10 +8,13 @@ This repo provides a .NET Console Application that can deploy your .NET **nanoFr
 
 ## Requirements
 
+
 ### Windows
-.NET 4.7.2
+
+- .NET 4.7.2. You can download from the official [Microsoft website](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472).
 
 ### Linux / macOS
+
 - mono-complete on non Windows platforms, you can find out how to install mono [here](https://www.mono-project.com/docs/getting-started/install/). The reason that you need mono is because the tool requires .NET 4.7.2. This tool cannot yet be build using .NET 6.0 or .NET Core because some of the dependencies are those used by the Visual Studio extension. The other reason why you need mono is to build a nanoFramework project.
 
 ## Getting Started
@@ -31,10 +34,11 @@ The tool provide various options:
 ```
 
 
-**NOTE: When running this tool in a NON Windows environment, you need to use `mono`.** 
-**If you are using Windows 7 or above, you ***DO NOT*** need `mono` **
+> **NOTE**: When running this tool in a **NON** Windows environment, you need to use `mono`.
+> If you are using Windows 7 or above, you ***DO NOT*** need `mono` .
 
 You can then use commands like:
+
 
 ### Linux / macOS
 ```shell
