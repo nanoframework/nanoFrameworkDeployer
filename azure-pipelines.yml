@@ -255,7 +255,7 @@ jobs:
     inputs:
       command: 'build'
       projects: '$(toolname).sln'
-      arguments: '-c $(BuildConfiguration) /p:PublicRelease=true /p:ContinuousIntegrationBuild=true --no-restore /t:build,pack /nr:false'
+      arguments: '--configuration $(BuildConfiguration) /p:ContinuousIntegrationBuild=true --verbosity normal'
 
   # only run sonar if a PR
   - task: SonarCloudAnalyze@1
