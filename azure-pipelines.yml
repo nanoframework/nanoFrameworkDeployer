@@ -285,9 +285,9 @@ jobs:
       targetType: 'inline'
       script: |
         dotnet tool install -g dotnet-reportgenerator-globaltool
-        reportgenerator -reports:$(Agent.WorkFolder)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+        reportgenerator -reports:$(Agent.WorkFolder)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube"
 
-  # If still an issue relate to line 303 of: https://github.com/SonarSource/sonar-dotnet/blob/master/azure-pipelines.yml
+
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage results'
     condition: >-
@@ -310,6 +310,8 @@ jobs:
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
 
+  # If still an issue relate to line 303 of: https://github.com/SonarSource/sonar-dotnet/blob/master/azure-pipelines.yml
+  # TODO: will be commented out until we can fix it! But it is actually already published already...
   # only publish sonar if a PR
   - task: SonarCloudPublish@1
     displayName: 'Publish static analysis from SonarCloud'
