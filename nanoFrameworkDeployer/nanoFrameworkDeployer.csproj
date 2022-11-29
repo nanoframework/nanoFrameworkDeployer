@@ -71,8 +71,9 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="System.IO.Ports" />
+  <ItemGroup>
+    <!-- This is to allow the .NET Framework references to be machine-indepenedent so builds can happen without installing prerequisites -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
