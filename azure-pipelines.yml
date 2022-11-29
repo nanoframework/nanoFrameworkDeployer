@@ -242,6 +242,8 @@ jobs:
       organization: 'nanoframework'
       scannerMode: 'MSBuild'
       projectKey: 'nanoframework_nanoFrameworkDeployer'
+      extraProperties: |
+          sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/*/coverage.opencover.xml
 
   - task: DotNetCoreCLI@2
     displayName: Build Solution
@@ -255,28 +257,7 @@ jobs:
       projects: '$(toolname).sln'
       arguments: '--configuration $(BuildConfiguration) /p:ContinuousIntegrationBuild=true --verbosity normal'
 
-  # only run sonar if a PR
-  - task: SonarCloudAnalyze@1
-    displayName: 'Run static analysis on SonarCloud'
-    condition: >-
-      and(
-        succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
-      )
-
-  # only publish sonar if a PR
-  - task: SonarCloudPublish@1
-    displayName: 'Publish static analysis from SonarCloud'
-    condition: >-
-      and(
-        succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
-      )
-    inputs:
-      pollingTimeoutSec: '300'
-
-
-##################################################
+  ##################################################
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
@@ -287,9 +268,10 @@ jobs:
       )
     inputs:
       command: test
-      projects: |
-        ./$(toolname).Tests/$(toolname).Tests.csproj
+      projects: ./$(toolname).Tests/$(toolname).Tests.csproj
+      nobuild: true
       arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage"'
+      publishTestResults: true
 
   # First install the tool on the machine, then run it
   - script: |
@@ -311,9 +293,33 @@ jobs:
       )
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
+      summaryFileLocation: |
+        '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+        '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
 
 ##################################################
+
+  # only run sonar if a PR
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run static analysis on SonarCloud'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+
+  # only publish sonar if a PR
+  - task: SonarCloudPublish@1
+    displayName: 'Publish static analysis from SonarCloud'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      pollingTimeoutSec: '300'
+
+####################################################
 
   - task: PowerShell@2
     condition: >-
