@@ -43,7 +43,7 @@ jobs:
   
   - checkout: self
     fetchDepth: 1
-    # clean: true
+    clean: true
 
   # get commit message
   - task: PowerShell@2
@@ -274,16 +274,18 @@ jobs:
       publishTestResults: true
 
   # First install the tool on the machine, then run it
-  - script: |
-      dotnet tool install -g dotnet-reportgenerator-globaltool
-      reportgenerator -reports:$(Agent.WorkFolder)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  - task: PowerShell@2
     displayName: 'Create code coverage report'
     condition: >-
       and(
         succeeded(),
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
-     
+    inputs:
+      targetType: 'inline'
+      script: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        reportgenerator -reports:$(Agent.WorkFolder)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
 
   # If still an issue relate to line 303 of: https://github.com/SonarSource/sonar-dotnet/blob/master/azure-pipelines.yml
   - task: PublishCodeCoverageResults@1
