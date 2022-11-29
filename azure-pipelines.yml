@@ -313,17 +313,33 @@ jobs:
   # If still an issue relate to line 303 of: https://github.com/SonarSource/sonar-dotnet/blob/master/azure-pipelines.yml
   # TODO: will be commented out until we can fix it! But it is actually already published already...
   # only publish sonar if a PR
-  - task: SonarCloudPublish@1
-    displayName: 'Publish static analysis from SonarCloud'
+  # - task: SonarCloudPublish@1
+  #   displayName: 'Publish static analysis from SonarCloud'
+  #   condition: >-
+  #     and(
+  #       succeeded(),
+  #       ne(variables['System.PullRequest.PullRequestId'], '')
+  #     )
+  #   inputs:
+  #     pollingTimeoutSec: '300'
+
+####################################################
+
+  # pack artifacts
+  # Pack the solution with the --no-build argument.
+  # You may need to pass additional parameters here, such as /p:PackageVersion="$(PackageVersion)".
+  - task: DotNetCoreCLI@2
     condition: >-
       and(
         succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
+        eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
+    displayName: 'Pack nuget'
     inputs:
-      pollingTimeoutSec: '300'
-
-####################################################
+      command: custom
+      projects: '$(toolname).sln'
+      custom: pack
+      arguments: '--configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/$(toolname)" --no-build --verbosity normal'
 
   - task: PowerShell@2
     condition: >-
@@ -440,19 +456,7 @@ jobs:
         --name ".NET nanoFramework Deployer" `
         --description ".NET nanoFramework Deployer" `
         --descriptionUrl "https://github.com/$env:Build_Repository_Name"
-  
-
-  ## pack artifacts
-  ## Pack the solution with the --no-build argument.
-  ## You may need to pass additional parameters here, such as /p:PackageVersion="$(PackageVersion)".
-  #- task: DotNetCoreCLI@2
-  #  displayName: 'dotnet pack'
-  #  inputs:
-  #    command: custom
-  #    projects: '$(toolname).sln'
-  #    custom: pack
-  #    arguments: '--configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/$(toolname)" --no-build --verbosity normal'
-  
+    
   # publish artifacts
   - task: PublishBuildArtifacts@1
     condition: >-
