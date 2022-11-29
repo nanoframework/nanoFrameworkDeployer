@@ -191,7 +191,7 @@ jobs:
     displayName: Setup git identity
 
   - task: Cache@2
-      displayName: Check dotnet SDK Cache
+    displayName: Check dotnet SDK Cache
     inputs:
       key: 'dotnet | $(Agent.OS) | $(dotnet)'
       restoreKeys: |
