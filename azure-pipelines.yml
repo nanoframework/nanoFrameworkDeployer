@@ -244,8 +244,6 @@ jobs:
       organization: 'nanoframework'
       scannerMode: 'MSBuild'
       projectKey: 'nanoframework_nanoFrameworkDeployer'
-      # extraProperties: |
-      #     sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/*/coverage.opencover.xml
 
   - task: DotNetCoreCLI@2
     displayName: Build Solution
@@ -286,6 +284,8 @@ jobs:
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
      
+
+  # If still an issue relate to line 303 of: https://github.com/SonarSource/sonar-dotnet/blob/master/azure-pipelines.yml
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage results'
     condition: >-
