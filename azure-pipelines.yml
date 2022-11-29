@@ -181,12 +181,29 @@ jobs:
 
   # need this here in order to persist GitHub credentials
   - checkout: self
+    fetchDepth: 1
+    clean: true
     persistCredentials: true
 
   - script: |
       git config --global user.email "nanoframework@outlook.com"
       git config --global user.name "nfbot"
     displayName: Setup git identity
+
+  # - task: Cache@2
+    #   displayName: Cache dotnet SDK
+  #   inputs:
+  #     key: 'dotnet | $(Agent.OS) | $(dotnet)'
+  #     restoreKeys: |
+  #       dotnet | $(Agent.OS) | $(dotnet)
+  #       dotnet $(dotnet)
+  #     path: $(Agent.ToolsDirectory)/dotnet
+
+  - task: UseDotNet@2
+    displayName: Install .NET SDK
+    inputs:
+      packageType: sdk
+      version: 6.x
 
   - task: Cache@2
     displayName: Cache NuGet packages
@@ -196,17 +213,6 @@ jobs:
           nuget | "$(Agent.OS)"
           nuget
       path: $(UserProfile)/.nuget/packages
-
-  - task: UseDotNet@2
-    displayName: Install .NET SDK
-    condition: >-
-      and(
-        succeeded(),
-        eq(variables['UPDATE_DEPENDENTS'], 'false')
-      )
-    inputs:
-      packageType: sdk
-      version: 6.x
 
   # Set CI build version
   # See: https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md
