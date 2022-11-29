@@ -42,7 +42,7 @@ jobs:
   steps:
   
   - checkout: self
-    fetchDepth: 1
+    fetchDepth: 10 # Depth requuired for versioning
     clean: true
 
   # get commit message
@@ -190,14 +190,13 @@ jobs:
       git config --global user.name "nfbot"
     displayName: Setup git identity
 
-  # - task: Cache@2
-    #   displayName: Cache dotnet SDK
-  #   inputs:
-  #     key: 'dotnet | $(Agent.OS) | $(dotnet)'
-  #     restoreKeys: |
-  #       dotnet | $(Agent.OS) | $(dotnet)
-  #       dotnet $(dotnet)
-  #     path: $(Agent.ToolsDirectory)/dotnet
+  - task: Cache@2
+      displayName: Check dotnet SDK Cache
+    inputs:
+      key: 'dotnet | $(Agent.OS) | $(dotnet)'
+      restoreKeys: |
+        dotnet | $(Agent.OS) | $(dotnet)
+      path: $(Agent.ToolsDirectory)/dotnet
 
   - task: UseDotNet@2
     displayName: Install .NET SDK
@@ -206,7 +205,7 @@ jobs:
       version: 6.x
 
   - task: Cache@2
-    displayName: Cache NuGet packages
+    displayName: Check NuGet packages Cache
     inputs:
       key: 'nuget | "$(Agent.OS)" | **/packages.lock.json, !bin/**'
       restoreKeys: |
