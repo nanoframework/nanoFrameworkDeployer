@@ -186,8 +186,6 @@ jobs:
       git config --global user.name "nfbot"
     displayName: Setup git identity
 
-#  - template: azure-pipelines-templates/install-nuget.yml@templates
-
   - task: Cache@2
     displayName: Cache NuGet packages
     inputs:
