@@ -293,9 +293,7 @@ jobs:
       )
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: |
-        '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
-        '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
+      summaryFileLocation: '$(Build.SourcesDirectory)/**/Cobertura.xml'
 
 ##################################################
 
