@@ -27,8 +27,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6'">
+    <PackAsTool>true</PackAsTool>    
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7'">
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net472;net48;net6</TargetFrameworks>
     <!-- Restore the exact packages as listed in the lock file -->
     <RestoreLockedMode>true</RestoreLockedMode>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -39,9 +47,7 @@
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <!-- order is important due to lock file generation-->
-    <!--<TargetFrameworks>net6.0;net472</TargetFrameworks>-->
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net472;net48;net6</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -49,7 +55,6 @@
     <PackageIcon>images\nf-logo.png</PackageIcon>
     <PackageTags>nanoFramework, nano Framework, NETNF, NETMF, Micro Framework, .net</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <TargetFrameworks>net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -74,9 +79,6 @@
   <ItemGroup>
     <!-- This is to allow the .NET Framework references to be machine-indepenedent so builds can happen without installing prerequisites -->
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.255">
       <PrivateAssets>all</PrivateAssets>
