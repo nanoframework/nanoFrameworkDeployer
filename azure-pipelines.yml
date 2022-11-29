@@ -42,7 +42,7 @@ jobs:
   steps:
   
   - checkout: self
-    fetchDepth: 10 # Depth requuired for versioning
+    fetchDepth: 1
     clean: true
 
   # get commit message
@@ -181,7 +181,7 @@ jobs:
 
   # need this here in order to persist GitHub credentials
   - checkout: self
-    fetchDepth: 1
+    fetchDepth: 10 # Depth requuired for versioning
     clean: true
     persistCredentials: true
 
