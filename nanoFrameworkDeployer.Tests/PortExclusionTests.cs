@@ -21,12 +21,11 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\portExclusions.txt", new MockFileData("COMXX") },
              });
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -41,12 +40,11 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\portExclusions.txt", new MockFileData("COMXX"+ Environment.NewLine + "COMYY") },
              });
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
             var portlist = string.Join(Environment.NewLine, excludedPorts);
             // Assert
@@ -62,12 +60,11 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\portExclusions.txt", new MockFileData("Testing is meh.") },
              });
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -83,12 +80,11 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\portExclusions.txt", new MockFileData("") },
              });
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = "c:\\portExclusions.txt";
 
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             //TODO: The program does not try and catch this, so we also dont...  value WILL BE NULL since we never set it!
@@ -103,13 +99,12 @@ namespace nanoFrameworkDeployer.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = "c:\\portExclusions1.txt"; // invalid on purpose!
 
             //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
@@ -123,13 +118,12 @@ namespace nanoFrameworkDeployer.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var component = new Program(fileSystem);
-            List<string> excludedPorts = null;
+            _ = new Program(fileSystem);
             var exclusionFilePath = ""; // empty on purpose!
 
             //TODO: The program does not try and catch this, so we also dont... So it WILL FAIL.
             // Act
-            excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
 
             // Assert
