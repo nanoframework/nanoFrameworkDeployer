@@ -24,7 +24,7 @@ namespace nanoFrameworkDeployer
         const int RETURN_CODE_ERROR = 1;
 
         private static CommandlineOptions _options;
-        private static readonly ConsoleOutputHelper _message = new ConsoleOutputHelper();
+        private static readonly ConsoleOutputHelper _message = new();
         private static int _returnvalue = RETURN_CODE_SUCCESS;
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
@@ -317,7 +317,7 @@ namespace nanoFrameworkDeployer
             _message.Verbose("Merging PE assembilies to create single deployment blob...");
             // Keep track of total file binary size
             long deploymentBlobSizeInBytes = 0;
-            List<byte[]> deploymentBlob = new List<byte[]>();
+            List<byte[]> deploymentBlob = new();
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {

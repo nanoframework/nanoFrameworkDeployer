@@ -22,7 +22,7 @@ namespace nanoFrameworkDeployer.Tests
              {
                  { @"c:\pedir\mypefile.pe", new MockFileData("Testing is meh.") },
              });
-            var component = new Program(fileSystem);
+            _ = new Program(fileSystem);
            
             // Act
             var result = Program.DirectoryIsValid("c:\\pedir\\");
@@ -33,8 +33,6 @@ namespace nanoFrameworkDeployer.Tests
         }
 
         // TODO: we are only checking one of many scenarios here, add some more, like invalid paths and alignment etc.
-        // But need to get this one working first!
-#if RunBrokenTest
         [TestMethod]
         public void CheckCreateDeploymentBlob()
         {
@@ -44,23 +42,22 @@ namespace nanoFrameworkDeployer.Tests
                  { @"c:\pedir\mypefile.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) },
                  { @"c:\pedir\mypefile2.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) }
              });
-            var expectedResult = new List<byte[]>(); //{ //TODO: why List<byte[][] >
-            //    new byte[] { 0x12, 0x34, 0x56, 0xd2 }, // for some reason, this has a null 
-            //    new byte[] { 0x12, 0x34, 0x56, 0xd2 }  // for some reason, this has a null 
-            //};
-            expectedResult.Add(new byte[] { 0x12, 0x34, 0x56, 0xd2 });
-            expectedResult.Add(new byte[] { 0x12, 0x34, 0x56, 0xd2 });
-            var component = new Program(fileSystem);
+            var expectedResult = new List<byte[]>
+            {
+                new byte[] { 0x12, 0x34, 0x56, 0xd2 },
+                new byte[] { 0x12, 0x34, 0x56, 0xd2 }
+            };
+            _ = new Program(fileSystem);
 
             // Act
             var result = Program.CreateBinDeploymentBlob(new string[] { "c:\\pedir\\mypefile.pe", "c:\\pedir\\mypefile2.pe" });
 
 
             // Assert
-            //TODO: should be AreEqual
-            CollectionAssert.AreEquivalent(expectedResult, result);
+            //TODO: could be Sequence Equal: https://stackoverflow.com/questions/3232744/easiest-way-to-compare-arrays-in-c-sharp
+            CollectionAssert.AreEquivalent(expectedResult[0], result[0]);
+            CollectionAssert.AreEquivalent(expectedResult[1], result[1]);
         }
-#endif
 
     }
 }
