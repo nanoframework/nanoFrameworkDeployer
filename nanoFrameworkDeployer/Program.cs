@@ -24,7 +24,6 @@ namespace nanoFrameworkDeployer
         const int RETURN_CODE_ERROR = 1;
 
         private static CommandlineOptions _options;
-        private static readonly ConsoleOutputHelper _message = new();
         private static int _returnvalue = RETURN_CODE_SUCCESS;
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
@@ -71,7 +70,7 @@ namespace nanoFrameworkDeployer
 
             if ((_options != null && _options.Verbose == true) || Debugger.IsAttached)
             {
-                _message.Verbose($"Program exited with return code: {_returnvalue}");
+                ConsoleOutputHelper.Verbose($"Program exited with return code: {_returnvalue}");
 
                 if (Debugger.IsAttached) // for checking output before console closes
                 {
@@ -101,9 +100,9 @@ namespace nanoFrameworkDeployer
         {
             foreach (var error in errors)
             {
-                _message.Error($"Found command parse error: {error}");
+                ConsoleOutputHelper.Error($"Found command parse error: {error}");
             }
-            _message.Verbose($"Perhaps provide an argument?!");
+            ConsoleOutputHelper.Verbose($"Perhaps provide an argument?!");
 
             _returnvalue = RETURN_CODE_ERROR;
         }
@@ -129,7 +128,7 @@ namespace nanoFrameworkDeployer
             peFiles = fileSystem.Directory.GetFiles(workingDirectory, "*.pe");
             if (peFiles.Length == 0)
             {
-                _message.Error("ERROR: The target directory does not contain any PE files.");
+                ConsoleOutputHelper.Error("ERROR: The target directory does not contain any PE files.");
                 _returnvalue = RETURN_CODE_ERROR;
                 return;
             }
@@ -157,11 +156,11 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("ERROR: Exclusion file doesn't exist. Continuing as this error is not critical.");
+                    ConsoleOutputHelper.Error("ERROR: Exclusion file doesn't exist. Continuing as this error is not critical.");
                 }
             }
 
-            _message.Verbose("Finding valid serial ports");
+            ConsoleOutputHelper.Verbose("Finding valid serial ports");
 
             int retryCount = 0;
             // Only 3 tries for a specified port
@@ -187,13 +186,13 @@ namespace nanoFrameworkDeployer
                 _device = _serialDebugClient.NanoFrameworkDevices[0];
             }
 
-            _message.Output($"Deploying to: {_device.Description}");
+            ConsoleOutputHelper.Output($"Deploying to: {_device.Description}");
 
             // check if debugger engine exists
             if (_device.DebugEngine == null)
             {
                 _device.CreateDebugEngine();
-                _message.Verbose($"Debug engine created.");
+                ConsoleOutputHelper.Verbose($"Debug engine created.");
             }
 
             ConnectDebugEngine(ref retryCount, ref numberOfRetries);
@@ -203,7 +202,7 @@ namespace nanoFrameworkDeployer
             EraseDevice(ref retryCount, ref numberOfRetries);
 
 
-            _message.Verbose($"Added {peFiles.Length} assemblies to deploy.");
+            ConsoleOutputHelper.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
             DeployAssembiliesToDevice(peFiles);
         }
@@ -217,20 +216,20 @@ namespace nanoFrameworkDeployer
                 Thread.Sleep(1);
             }
 
-            _message.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
+            ConsoleOutputHelper.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
 
             if (_serialDebugClient.NanoFrameworkDevices.Count == 0)
             {
                 if (retryCount > numberOfRetries)
                 {
-                    _message.Error("ERROR: too many retries");
+                    ConsoleOutputHelper.Error("ERROR: too many retries");
                     _returnvalue = RETURN_CODE_ERROR;
                     return false;
                 }
                 else
                 {
                     retryCount++;
-                    _message.Verbose($"Finding devices, attempt {retryCount}");
+                    ConsoleOutputHelper.Verbose($"Finding devices, attempt {retryCount}");
                     _serialDebugClient.ReScanDevices();
                     //goto retryConnection;
                     ConnectToDevice(ref retryCount, ref numberOfRetries);
@@ -244,14 +243,14 @@ namespace nanoFrameworkDeployer
             //TODO: use a while loop
         //retryErase:
             // erase the device
-            _message.Output($"Erase deployment block storage. Attempt: {retryCount}/{numberOfRetries}.");
+            ConsoleOutputHelper.Output($"Erase deployment block storage. Attempt: {retryCount}/{numberOfRetries}.");
 
             var eraseResult = _device.Erase(
                     EraseOptions.Deployment,
                     null,
                     null);
 
-            _message.Verbose($"Erase result is: {eraseResult}.");
+            ConsoleOutputHelper.Verbose($"Erase result is: {eraseResult}.");
             if (!eraseResult)
             {
                 if (retryCount < numberOfRetries)
@@ -265,7 +264,7 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("ERROR: Could not erase, too many retries");
+                    ConsoleOutputHelper.Error("ERROR: Could not erase, too many retries");
                     return false;
                 }
             }
@@ -277,7 +276,7 @@ namespace nanoFrameworkDeployer
             //TODO: use a while loop!
         //retryDebug:
             bool connectResult = _device.DebugEngine.Connect(5000, true, true);
-            _message.Output($"Device connection result is: {connectResult}. Attempt {retryCount}/{numberOfRetries}");
+            ConsoleOutputHelper.Output($"Device connection result is: {connectResult}. Attempt {retryCount}/{numberOfRetries}");
 
             if (!connectResult)
             {
@@ -291,7 +290,7 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    _message.Error("ERROR: too many retries");
+                    ConsoleOutputHelper.Error("ERROR: too many retries");
                     return false;
                 }
             }
@@ -314,10 +313,10 @@ namespace nanoFrameworkDeployer
 
         internal static List<byte[]> CreateBinDeploymentBlob(string[] peFiles)
         {
-            _message.Verbose("Merging PE assembilies to create single deployment blob...");
+            ConsoleOutputHelper.Verbose("Merging PE assembilies to create single deployment blob...");
             // Keep track of total file binary size
             long deploymentBlobSizeInBytes = 0;
-            List<byte[]> deploymentBlob = new();
+            List<byte[]> deploymentBlob = new List<byte[]>();
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {
@@ -326,7 +325,7 @@ namespace nanoFrameworkDeployer
                 {
                     // we add 3 bytes, and then make sure it is aligned to 4 (for alignment).
                     long bytesToRead = (fs.Length + 3) / 4 * 4;
-                    _message.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
+                    ConsoleOutputHelper.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
                     byte[] peFileBuffer = new byte[bytesToRead];
 
                     fs.Read(peFileBuffer, 0, (int)fs.Length);
@@ -337,7 +336,7 @@ namespace nanoFrameworkDeployer
                 }
             }
 
-            _message.Output($"Merged {peFiles.Length:N0} assemblies for deployment... Total size in bytes is {deploymentBlobSizeInBytes}.");
+            ConsoleOutputHelper.Output($"Merged {peFiles.Length:N0} assemblies for deployment... Total size in bytes is {deploymentBlobSizeInBytes}.");
 
             return deploymentBlob;
         }
@@ -347,7 +346,7 @@ namespace nanoFrameworkDeployer
             //TODO: we should also be validating the string...
             //if(!Uri.IsWellFormedUriString(path, UriKind.RelativeOrAbsolute))
             //{
-            //    _message.Error("ERROR: The target directory path was not valid.");
+            //    ConsoleOutputHelper.Error("ERROR: The target directory path was not valid.");
             //    _returnvalue = RETURN_CODE_ERROR;
             //    return false;
             //}
@@ -358,7 +357,7 @@ namespace nanoFrameworkDeployer
             }
             else
             {
-                _message.Error("ERROR: The target directory does not exist.");
+                ConsoleOutputHelper.Error("ERROR: The target directory does not exist.");
                 _returnvalue = RETURN_CODE_ERROR;
                 return false;
             }
@@ -371,7 +370,7 @@ namespace nanoFrameworkDeployer
             // need to keep a copy of the deployment blob for the second attempt (if needed)
             var assemblyCopy = new List<byte[]>(assemblies);
 
-            var deploymentLogger = new Progress<string>((m) => _message.Output(m));
+            var deploymentLogger = new Progress<string>((m) => ConsoleOutputHelper.Output(m));
             // Seems to be needed for slow devices
             Thread.Sleep(200);
             if (!_device.DebugEngine.DeploymentExecute(
@@ -381,12 +380,12 @@ namespace nanoFrameworkDeployer
                 null,
                 deploymentLogger))
             {
-                _message.Error("ERROR: Write failed.");
+                ConsoleOutputHelper.Error("ERROR: Write failed.");
                 _returnvalue = RETURN_CODE_ERROR;
             }
             else
             {
-                _message.Output("Write successful");
+                ConsoleOutputHelper.Output("Write successful");
             }
         }
     }

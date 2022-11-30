@@ -9,14 +9,14 @@ namespace nanoFrameworkDeployer.Helpers
     /// <summary>
     /// Helper methods to write messages to the console.
     /// </summary>
-    public class ConsoleOutputHelper
+    public static class ConsoleOutputHelper
     {
 
         /// <summary>
         /// Helper method for verbose messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        public void Output(string message)
+        public static void Output(string message)
         {
             Console.WriteLine(message);
         }
@@ -25,7 +25,7 @@ namespace nanoFrameworkDeployer.Helpers
         /// Helper method for verbose messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        public void Verbose(string message)
+        public static void Verbose(string message)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(message);
@@ -37,7 +37,7 @@ namespace nanoFrameworkDeployer.Helpers
         /// Helper method for warning messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        public void Warning(string message)
+        public static void Warning(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(message);
@@ -48,7 +48,7 @@ namespace nanoFrameworkDeployer.Helpers
         /// Helper method for error messages.
         /// </summary>
         /// <param name="message">Message to show in verbose mode.</param>
-        public void Error(string message)
+        public static void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);

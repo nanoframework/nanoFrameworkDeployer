@@ -12,6 +12,8 @@ namespace nanoFrameworkDeployer.Tests
     [TestClass]
     public class ConsoleOutputHelperTests
     {
+        //TODO: to make these tests useful, we need to be able to check font colours.
+
         [TestMethod]
         public void CheckOutputMessageValid()
         {
@@ -21,8 +23,7 @@ namespace nanoFrameworkDeployer.Tests
 
             // Act
             var testOutputStr = "Hello Output";
-            ConsoleOutputHelper message = new ConsoleOutputHelper();
-            message.Output(testOutputStr);
+            ConsoleOutputHelper.Output(testOutputStr);
 
             // Assert
             var sb = writer.GetStringBuilder();
@@ -39,8 +40,7 @@ namespace nanoFrameworkDeployer.Tests
 
             // Act
             var testOutputStr = "Hello Output";
-            ConsoleOutputHelper message = new ConsoleOutputHelper();
-            message.Verbose(testOutputStr);
+            ConsoleOutputHelper.Verbose(testOutputStr);
 
             // Assert
             var sb = writer.GetStringBuilder();
@@ -56,8 +56,7 @@ namespace nanoFrameworkDeployer.Tests
 
             // Act
             var testOutputStr = "Hello Output";
-            ConsoleOutputHelper message = new ConsoleOutputHelper();
-            message.Warning(testOutputStr);
+            ConsoleOutputHelper.Warning(testOutputStr);
 
             // Assert
             var sb = writer.GetStringBuilder();
@@ -73,8 +72,7 @@ namespace nanoFrameworkDeployer.Tests
 
             // Act
             var testOutputStr = "Hello Output";
-            ConsoleOutputHelper message = new ConsoleOutputHelper();
-            message.Error(testOutputStr);
+            ConsoleOutputHelper.Error(testOutputStr);
 
             // Assert
             var sb = writer.GetStringBuilder();
