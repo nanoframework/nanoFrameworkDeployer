@@ -57,6 +57,11 @@ namespace nanoFrameworkDeployer
         {
         }
 
+        ~Program()
+        {
+            ObjectDispose();
+        }
+
         /// <summary>
         /// Main entry point
         /// </summary>
@@ -89,6 +94,7 @@ namespace nanoFrameworkDeployer
             // Force clean
             // TODO: should be dispose?!
             _serialDebugClient?.StopDeviceWatchers();
+            _serialDebugClient = null;
             _device?.Disconnect(true);
             _device = null;
         }
@@ -324,7 +330,7 @@ namespace nanoFrameworkDeployer
                 // append the PE file to the deployment bundle
                 using (FileSystemStream fs = fileSystem.File.Open(peFile, FileMode.Open, FileAccess.Read))
                 {
-                    // we add 3 bytes, and then make sure it is aligned to 4 (for alignment).
+                    // we add 3 bytes, and then make sure it is aligned to 4 (so it is in alignment).
                     long bytesToRead = (fs.Length + 3) / 4 * 4;
                     ConsoleOutputHelper.Verbose($"Adding {peFile} v0 ({bytesToRead} bytes) to deployment bundle");
                     byte[] peFileBuffer = new byte[bytesToRead];
