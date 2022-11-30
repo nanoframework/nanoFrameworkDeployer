@@ -35,7 +35,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// Usual filesystem operations start with `fileSystem` rather than just calling them directly.
         /// </remarks>
-        internal static IFileSystem fileSystem;
+        private static IFileSystem fileSystem;
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace nanoFrameworkDeployer
         /// <summary>
         /// Required for tests
         /// </summary>
-        internal Program()
+        protected Program()
         {
         }
 
