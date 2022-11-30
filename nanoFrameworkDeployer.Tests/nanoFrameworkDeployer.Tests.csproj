@@ -2,16 +2,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;net6.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-
+    <!-- There is no need to include this in a nuget, as it is a test project-->
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
+    <!-- we currently only target the lowest framework as the CI cannot deal with it (needs matrix) -->
+    <TargetFramework>net472</TargetFramework>
+    <!-- Restore the exact packages as listed in the lock file -->
+    <RestoreLockedMode>true</RestoreLockedMode>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <!-- Restore the exact packages as listed in the lock file -->
-    <!--<RestoreLockedMode>true</RestoreLockedMode>-->
+    <TargetFrameworks>net472;net48;net6</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
