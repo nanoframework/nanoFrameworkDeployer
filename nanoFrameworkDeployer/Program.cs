@@ -34,8 +34,9 @@ namespace nanoFrameworkDeployer
         /// </summary>
         /// <remarks>
         /// Usual filesystem operations start with `fileSystem` rather than just calling them directly.
+        /// The default calls `new FileSystem()` to load as per normal.
         /// </remarks>
-        private static IFileSystem fileSystem;
+        private static IFileSystem fileSystem = new FileSystem();
 
 
         /// <summary>
@@ -61,9 +62,8 @@ namespace nanoFrameworkDeployer
         /// </summary>
         /// <param name="args"></param>
         /// <returns>return code</returns>
-        internal static int Main(string[] args)
+        protected static int Main(string[] args)
         {
-            fileSystem = new FileSystem();
 
             Parser.Default.ParseArguments<CommandlineOptions>(args)
                 .WithParsed(RunOptionLogic)
