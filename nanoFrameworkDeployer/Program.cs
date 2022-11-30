@@ -35,7 +35,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// Usual filesystem operations start with `fileSystem` rather than just calling them directly.
         /// </remarks>
-        internal static IFileSystem fileSystem = new FileSystem();
+        internal static IFileSystem fileSystem;
 
 
         /// <summary>
@@ -63,6 +63,7 @@ namespace nanoFrameworkDeployer
         /// <returns>return code</returns>
         internal static int Main(string[] args)
         {
+            fileSystem = new FileSystem();
 
             Parser.Default.ParseArguments<CommandlineOptions>(args)
                 .WithParsed(RunOptionLogic)
@@ -316,7 +317,7 @@ namespace nanoFrameworkDeployer
             ConsoleOutputHelper.Verbose("Merging PE assembilies to create single deployment blob...");
             // Keep track of total file binary size
             long deploymentBlobSizeInBytes = 0;
-            List<byte[]> deploymentBlob = new List<byte[]>();
+            List<byte[]> deploymentBlob = new();
             // now we will add all pe files to create a deployable file
             foreach (var peFile in peFiles)
             {
