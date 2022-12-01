@@ -16,7 +16,7 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
   </PropertyGroup>
   <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net6</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->

@@ -28,11 +28,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6'">
-    <PackAsTool>true</PackAsTool>    
+    <PackAsTool>true</PackAsTool>
+    <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net7'">
     <PackAsTool>true</PackAsTool>
+    <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
