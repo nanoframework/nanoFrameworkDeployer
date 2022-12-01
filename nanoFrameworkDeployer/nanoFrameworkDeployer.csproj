@@ -28,8 +28,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6'">
-    <PackAsTool>true</PackAsTool>
+    <OutputType>Exe</OutputType>
     <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifiers>win-x64;linux-x64;linux-arm</RuntimeIdentifiers>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net7'">
