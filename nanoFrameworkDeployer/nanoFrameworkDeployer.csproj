@@ -31,8 +31,6 @@
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <!-- TODO: add linux-x64;linux-arm-->
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-    <PublishReadyToRun>true</PublishReadyToRun>
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
