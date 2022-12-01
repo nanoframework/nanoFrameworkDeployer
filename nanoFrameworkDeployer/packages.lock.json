@@ -62,6 +62,12 @@
         "resolved": "6.0.0",
         "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
       },
+      "Teronis.MSBuild.Packaging.ProjectBuildInPackage": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "mTAUIvyVFzFI8MtfW+OpC2FTXTbi4RD9v4iOnjCgCgdgmSYjOgyBRGwNoxy7nJ4K1iJFky7/pDXI2t4vsu+dGw=="
+      },
       "TestableIO.System.IO.Abstractions": {
         "type": "Direct",
         "requested": "[17.2.26, )",
@@ -228,6 +234,12 @@
         "resolved": "6.0.0",
         "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
       },
+      "Teronis.MSBuild.Packaging.ProjectBuildInPackage": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "mTAUIvyVFzFI8MtfW+OpC2FTXTbi4RD9v4iOnjCgCgdgmSYjOgyBRGwNoxy7nJ4K1iJFky7/pDXI2t4vsu+dGw=="
+      },
       "TestableIO.System.IO.Abstractions": {
         "type": "Direct",
         "requested": "[17.2.26, )",
@@ -393,6 +405,12 @@
         "requested": "[6.0.0, )",
         "resolved": "6.0.0",
         "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
+      },
+      "Teronis.MSBuild.Packaging.ProjectBuildInPackage": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "mTAUIvyVFzFI8MtfW+OpC2FTXTbi4RD9v4iOnjCgCgdgmSYjOgyBRGwNoxy7nJ4K1iJFky7/pDXI2t4vsu+dGw=="
       },
       "TestableIO.System.IO.Abstractions": {
         "type": "Direct",
