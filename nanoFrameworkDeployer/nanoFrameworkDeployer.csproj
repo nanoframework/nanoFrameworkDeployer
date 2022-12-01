@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
-    <TargetFramework>net6</TargetFramework>
+    <TargetFrameworks>net472;net48;net6</TargetFrameworks>
     <!-- Restore the exact packages as listed in the lock file -->
     <RestoreLockedMode>true</RestoreLockedMode>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>

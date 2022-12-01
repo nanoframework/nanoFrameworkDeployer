@@ -12,11 +12,11 @@
     <!-- we currently only target the lowest framework as the CI cannot deal with it (needs matrix) -->
     <TargetFramework>net472</TargetFramework>
     <!-- Restore the exact packages as listed in the lock file -->
-    <!--<RestoreLockedMode>true</RestoreLockedMode>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+    <RestoreLockedMode>true</RestoreLockedMode>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
-    <TargetFrameworks>net6</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->
