@@ -51,7 +51,7 @@ namespace nanoFrameworkDeployer.Tests
                 return output;
             });
         }
-
+#if RunLocalIntegrationTests
         [TestMethod]
         public void RunApplication_NoArguments_ReturnsError_ShouldRunHelp()
         {
@@ -123,7 +123,6 @@ namespace nanoFrameworkDeployer.Tests
 
         // These cannot return sucessfully unless there is something to deploy to.
         // TODO: Think about a simulator, or fakes...
-#if RunLocalIntegrationTests
         [TestMethod]
         public void RunApplication_PeDirArgument_NoOtherArgProvided_ReturnsSuccess()
         {
