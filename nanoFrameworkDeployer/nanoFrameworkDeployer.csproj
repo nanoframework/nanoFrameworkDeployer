@@ -22,7 +22,7 @@
     <LangVersion>latest</LangVersion>
     <!--<PackAsTool>true</PackAsTool> only available after .net 5-->
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
     <RuntimeIdentifiers>any</RuntimeIdentifiers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -30,7 +30,6 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6'">
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <!-- TODO: add linux-x64;linux-arm-->
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
