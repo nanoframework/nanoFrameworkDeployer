@@ -6,6 +6,7 @@ trigger:
     include:
       - main
       - develop
+      - develop-*
       - release-*
   paths:
     exclude:
@@ -186,20 +187,6 @@ jobs:
       git config --global user.email "nanoframework@outlook.com"
       git config --global user.name "nfbot"
     displayName: Setup git identity
-
-  # - task: Cache@2
-  #   displayName: Check dotnet SDK Cache
-  #   inputs:
-  #     key: 'dotnet | $(Agent.OS) | $(dotnet)'
-  #     restoreKeys: |
-  #       dotnet | $(Agent.OS) | $(dotnet)
-  #     path: $(Agent.ToolsDirectory)/dotnet
-
-  # - task: UseDotNet@2
-  #   displayName: Install .NET SDK
-  #   inputs:
-  #     packageType: sdk
-  #     version: 6.x
 
   - task: Cache@2
     displayName: Check NuGet packages Cache
