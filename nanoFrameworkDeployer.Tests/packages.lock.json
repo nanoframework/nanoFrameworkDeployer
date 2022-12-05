@@ -4,30 +4,30 @@
     ".NETFramework,Version=v4.7.2": {
       "coverlet.collector": {
         "type": "Direct",
-        "requested": "[3.1.2, )",
-        "resolved": "3.1.2",
-        "contentHash": "wuLDIDKD5XMt0A7lE31JPenT7QQwZPFkP5rRpdJeblyXZ9MGLI8rYjvm5fvAKln+2/X+4IxxQDxBtwdrqKNLZw=="
+        "requested": "[3.2.0, )",
+        "resolved": "3.2.0",
+        "contentHash": "xjY8xBigSeWIYs4I7DgUHqSNoGqnHi7Fv7/7RZD02rvZyG3hlsjnQKiVKVWKgr9kRKgmV+dEfu8KScvysiC0Wg=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
-        "requested": "[17.1.0, )",
-        "resolved": "17.1.0",
-        "contentHash": "MVKvOsHIfrZrvg+8aqOF5dknO/qWrR1sWZjMPQ1N42MKMlL/zQL30FQFZxPeWfmVKWUWAOmAHYsqB5OerTKziw==",
+        "requested": "[17.4.0, )",
+        "resolved": "17.4.0",
+        "contentHash": "VtNZQ83ntG2aEUjy1gq6B4HNdn96se6FmdY/03At8WiqDReGrApm6OB2fNiSHz9D6IIEtWtNZ2FSH0RJDVXl/w==",
         "dependencies": {
-          "Microsoft.CodeCoverage": "17.1.0"
+          "Microsoft.CodeCoverage": "17.4.0"
         }
       },
       "MSTest.TestAdapter": {
         "type": "Direct",
-        "requested": "[2.2.8, )",
-        "resolved": "2.2.8",
-        "contentHash": "BzxcfLaOZ25g8usreCBwFvpzH9LcR56pSkMbERO718cTQyAChXBYVuNIU3uK9stCcUWdXxIYl4WloiIu/C/PMQ=="
+        "requested": "[2.2.10, )",
+        "resolved": "2.2.10",
+        "contentHash": "KOc7XVNM0Q5GrTAx4RhxTgwdt9O5gOqSzmLpUMyl9ywa6vvUNFVQ9nCjtEE7qDQW54MZdc82e287PzZDc7yQtA=="
       },
       "MSTest.TestFramework": {
         "type": "Direct",
-        "requested": "[2.2.8, )",
-        "resolved": "2.2.8",
-        "contentHash": "phUoHuGTuw9T5yekxPHLLLq8jE56yufmh2yPlJq1IfkT4a3tYZ2htkeTlnQmzmJP3hI5xYhlqwiHcy3JqVt/OA=="
+        "requested": "[2.2.10, )",
+        "resolved": "2.2.10",
+        "contentHash": "JZRVXKq19uRhkj8MuzsU8zJhPV2JV3ZToFPAIg+BU53L1L9mNDfm9jXerdRfbrE4HBcf2M54Ij80zPOdlha3+Q=="
       },
       "System.IO.Abstractions.TestingHelpers": {
         "type": "Direct",
@@ -53,8 +53,8 @@
       },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
-        "resolved": "17.1.0",
-        "contentHash": "0N/ZJ71ncCxQWhgtkEYKOgu2oMHa8h1tsOUbhmIKXF8UwtSUCe4vHAsJ3DVcNWRwNfQzSTy263ZE+QF6MdIhhQ=="
+        "resolved": "17.4.0",
+        "contentHash": "2oZbSVTC2nAvQ2DnbXLlXS+c25ZyZdWeNd+znWwAxwGaPh9dwQ5NBsYyqQB7sKmJKIUdkKGmN3rzFzjVC81Dtg=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
@@ -183,30 +183,30 @@
     ".NETFramework,Version=v4.8": {
       "coverlet.collector": {
         "type": "Direct",
-        "requested": "[3.1.2, )",
-        "resolved": "3.1.2",
-        "contentHash": "wuLDIDKD5XMt0A7lE31JPenT7QQwZPFkP5rRpdJeblyXZ9MGLI8rYjvm5fvAKln+2/X+4IxxQDxBtwdrqKNLZw=="
+        "requested": "[3.2.0, )",
+        "resolved": "3.2.0",
+        "contentHash": "xjY8xBigSeWIYs4I7DgUHqSNoGqnHi7Fv7/7RZD02rvZyG3hlsjnQKiVKVWKgr9kRKgmV+dEfu8KScvysiC0Wg=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
-        "requested": "[17.1.0, )",
-        "resolved": "17.1.0",
-        "contentHash": "MVKvOsHIfrZrvg+8aqOF5dknO/qWrR1sWZjMPQ1N42MKMlL/zQL30FQFZxPeWfmVKWUWAOmAHYsqB5OerTKziw==",
+        "requested": "[17.4.0, )",
+        "resolved": "17.4.0",
+        "contentHash": "VtNZQ83ntG2aEUjy1gq6B4HNdn96se6FmdY/03At8WiqDReGrApm6OB2fNiSHz9D6IIEtWtNZ2FSH0RJDVXl/w==",
         "dependencies": {
-          "Microsoft.CodeCoverage": "17.1.0"
+          "Microsoft.CodeCoverage": "17.4.0"
         }
       },
       "MSTest.TestAdapter": {
         "type": "Direct",
-        "requested": "[2.2.8, )",
-        "resolved": "2.2.8",
-        "contentHash": "BzxcfLaOZ25g8usreCBwFvpzH9LcR56pSkMbERO718cTQyAChXBYVuNIU3uK9stCcUWdXxIYl4WloiIu/C/PMQ=="
+        "requested": "[2.2.10, )",
+        "resolved": "2.2.10",
+        "contentHash": "KOc7XVNM0Q5GrTAx4RhxTgwdt9O5gOqSzmLpUMyl9ywa6vvUNFVQ9nCjtEE7qDQW54MZdc82e287PzZDc7yQtA=="
       },
       "MSTest.TestFramework": {
         "type": "Direct",
-        "requested": "[2.2.8, )",
-        "resolved": "2.2.8",
-        "contentHash": "phUoHuGTuw9T5yekxPHLLLq8jE56yufmh2yPlJq1IfkT4a3tYZ2htkeTlnQmzmJP3hI5xYhlqwiHcy3JqVt/OA=="
+        "requested": "[2.2.10, )",
+        "resolved": "2.2.10",
+        "contentHash": "JZRVXKq19uRhkj8MuzsU8zJhPV2JV3ZToFPAIg+BU53L1L9mNDfm9jXerdRfbrE4HBcf2M54Ij80zPOdlha3+Q=="
       },
       "System.IO.Abstractions.TestingHelpers": {
         "type": "Direct",
@@ -232,8 +232,8 @@
       },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
-        "resolved": "17.1.0",
-        "contentHash": "0N/ZJ71ncCxQWhgtkEYKOgu2oMHa8h1tsOUbhmIKXF8UwtSUCe4vHAsJ3DVcNWRwNfQzSTy263ZE+QF6MdIhhQ=="
+        "resolved": "17.4.0",
+        "contentHash": "2oZbSVTC2nAvQ2DnbXLlXS+c25ZyZdWeNd+znWwAxwGaPh9dwQ5NBsYyqQB7sKmJKIUdkKGmN3rzFzjVC81Dtg=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",

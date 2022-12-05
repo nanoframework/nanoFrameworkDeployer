@@ -139,7 +139,7 @@ namespace nanoFrameworkDeployer.Tests
             // Assert
             Assert.AreEqual(expectedOutput, output);
         }
-#endif
 
     }
+#endif
 }
