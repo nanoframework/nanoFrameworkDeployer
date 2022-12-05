@@ -300,16 +300,16 @@ jobs:
       )
 
   # only publish sonar if a PR
-   - task: SonarCloudPublish@1
-     displayName: 'Publish static analysis from SonarCloud'
-     condition: >-
-       and(
-         succeeded(),
-         ne(variables['System.PullRequest.PullRequestId'], '')
-       )
-     inputs:
-       pollingTimeoutSec: '300'
-       UnitTestResultsPath: '$(Build.SourcesDirectory)/TestResults'
+  - task: SonarCloudPublish@1
+    displayName: 'Publish static analysis from SonarCloud'
+    condition: >-
+      and(
+        succeeded(),
+        ne(variables['System.PullRequest.PullRequestId'], '')
+      )
+    inputs:
+      pollingTimeoutSec: '300'
+      UnitTestResultsPath: '$(Build.SourcesDirectory)\TestResults'
 
 ####################################################
 
