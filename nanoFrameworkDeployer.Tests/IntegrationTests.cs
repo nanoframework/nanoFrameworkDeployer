@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace nanoFrameworkDeployer.Tests
 {
-
+#if DEBUG //TODO: find a better argument... e.g. RunLocalIntegrationTests
     [TestClass]
     public class IntegrationTests
     {
@@ -51,7 +51,7 @@ namespace nanoFrameworkDeployer.Tests
                 return output;
             });
         }
-#if RunLocalIntegrationTests
+
         [TestMethod]
         public void RunApplication_NoArguments_ReturnsError_ShouldRunHelp()
         {
