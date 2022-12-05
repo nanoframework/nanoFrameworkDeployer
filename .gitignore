@@ -260,3 +260,6 @@ paket-files/
 .vscode
 # VS Code
 .vscode/
+
+# Fody - auto-generated XML schema
+FodyWeavers.xsd
