@@ -24,7 +24,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.26" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="18.0.1" />
   </ItemGroup>
 
   <ItemGroup>

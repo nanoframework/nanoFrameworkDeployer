@@ -152,6 +152,8 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
+# The package can be ignored if it has been changed into a zip.
+*.nupkg.zip
 # The packages folder can be ignored because of Package Restore
 **/packages/*
 # except build/, which is used as an MSBuild target.
