@@ -25,6 +25,8 @@
     <Platforms>AnyCPU</Platforms>
     <RuntimeIdentifiers>any</RuntimeIdentifiers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- net6 is not yet compatible with the underlying libs!. -->
+    <TargetFrameworks>net472;net48</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6'">
@@ -39,24 +41,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
-    <!-- net6 is not yet compatible with the underlying libs?!. -->
-    <!-- TODO: given that, we need https://github.com/Fody/Costura -->
-    <TargetFrameworks>net472;net48</TargetFrameworks>
     <!-- Restore the exact packages as listed in the lock file -->
     <RestoreLockedMode>true</RestoreLockedMode>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(VSCodeExtensionBuild)' == 'true'">
-    <TargetFrameworks>net472;net48</TargetFrameworks>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <TargetFrameworks>net472;net48</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TF_BUILD)' != 'true' and '$(ContinuousIntegrationBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true' and '$(VSCodeExtensionBuild)' != 'true'">
-    <!-- Used for local test of pack, probably a better way-->
-    <TargetFrameworks>net472;net48</TargetFrameworks>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -86,7 +77,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- This is to allow the .NET Framework references to be machine-indepenedent so builds can happen without installing prerequisites -->
     <PackageReference Include="Costura.Fody" Version="5.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

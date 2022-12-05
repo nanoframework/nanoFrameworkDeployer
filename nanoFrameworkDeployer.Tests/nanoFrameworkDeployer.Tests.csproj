@@ -6,22 +6,17 @@
     <Nullable>disable</Nullable>
     <!-- There is no need to include this in a nuget, as it is a test project-->
     <IsPackable>false</IsPackable>
+    <TargetFrameworks>net472;net48</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">
-    <!-- we currently only target the highest framework as the CI cannot deal with it (needs matrix) -->
-    <TargetFramework>net472;net48</TargetFramework>
     <!-- Restore the exact packages as listed in the lock file -->
     <RestoreLockedMode>true</RestoreLockedMode>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition="$(VSCodeExtensionBuild) == 'true'">
-    <TargetFrameworks>net472;net48</TargetFrameworks>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Generate the lock file -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <TargetFrameworks>net472;net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
