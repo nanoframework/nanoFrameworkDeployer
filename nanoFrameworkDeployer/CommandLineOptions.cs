@@ -20,6 +20,9 @@ namespace nanoFrameworkDeployer
         /// <summary>
         /// Gets or sets a value indicating whether verbose information is shown in the output.
         /// </summary>
+        /// <remarks>
+        /// The default is false, unless the project is in Debug.
+        /// </remarks>
         [Option('v', "verbose", Required = false, HelpText = "Show verbose messages.")]
         public bool Verbose { get; set; }
 
@@ -38,12 +41,18 @@ namespace nanoFrameworkDeployer
         /// <summary>
         /// Gets or sets the rebooting behavior after flash. True to reboot the device.
         /// </summary>
+        /// <remarks>
+        /// The default is false.
+        /// </remarks>
         [Option('r', "reboot", Required = false, HelpText = "Reboot the device after flash.")]
-        public bool RebootAfterFlash{ get; set; }
+        public bool RebootAfterFlash{ get; set; } = false;
 
         /// <summary>
         /// Gets or sets the rebooting behavior after flash. True to reboot the device.
         /// </summary>
+        /// <remarks>
+        /// The default is false.
+        /// </remarks>
         [Option('b', "bin", Required = false, HelpText = "Creates a deployment binary file only. This is not attempting to deploy.")]
         public bool BinaryFileOnly { get; set; }
     }
