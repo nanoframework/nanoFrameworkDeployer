@@ -94,6 +94,7 @@ namespace nanoFrameworkDeployer
             // Force clean
             // TODO: should be dispose?!
             _serialDebugClient?.StopDeviceWatchers();
+            _serialDebugClient?.DisposeDevice(_options.ComPort);
             _serialDebugClient = null;
             _device?.Disconnect(true);
             _device = null;
@@ -154,12 +155,28 @@ namespace nanoFrameworkDeployer
                 return;
             }
 
+            ConsoleOutputHelper.Verbose("Known System serial ports include:");
+
+            // Display each port name to the console.
+            foreach (string port in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                ConsoleOutputHelper.Verbose(port);
+            }
+
             // Now we will check if there is any exclude file, open it and get the ports
             if (!string.IsNullOrEmpty(_options.PortException))
             {
                 if (fileSystem.File.Exists(_options.PortException))
                 {
                     excludedPorts = AddSerialPortExclusions(_options.PortException);
+
+                    ConsoleOutputHelper.Verbose("Excluded System serial ports are:");
+
+                    // Display each port name to the console.
+                    foreach (string port in excludedPorts)
+                    {
+                        ConsoleOutputHelper.Verbose(port);
+                    }
                 }
                 else
                 {
@@ -167,7 +184,8 @@ namespace nanoFrameworkDeployer
                 }
             }
 
-            ConsoleOutputHelper.Output("Finding valid serial ports...");
+
+            ConsoleOutputHelper.Verbose("Finding valid serial ports...");
 
             int attemptCount = 1;
             // Only 3 tries for a specified port
@@ -216,18 +234,16 @@ namespace nanoFrameworkDeployer
 
         internal static bool ConnectToDevice(ref int attemptCount, ref int numberOfRetries)
         {
-            //TODO: use a while loop
-        //retryConnection:
+            ConsoleOutputHelper.Output($"Finding devices, attempt: {attemptCount} of {numberOfRetries}");
+
             while (!_serialDebugClient.IsDevicesEnumerationComplete)
             {
                 Thread.Sleep(1);
             }
 
-            ConsoleOutputHelper.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
-
             if (_serialDebugClient.NanoFrameworkDevices.Count == 0)
             {
-                if (attemptCount > numberOfRetries)
+                if (attemptCount >= numberOfRetries)
                 {
                     ConsoleOutputHelper.Error("ERROR: too many retries");
                     _returnvalue = RETURN_CODE_ERROR;
@@ -235,14 +251,19 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    attemptCount++;
-                    ConsoleOutputHelper.Verbose($"Finding devices, attempt {attemptCount}");
                     _serialDebugClient.ReScanDevices();
-                    //goto retryConnection;
-                    ConnectToDevice(ref attemptCount, ref numberOfRetries);
+                    
+                    attemptCount++;
+                    ConnectToDevice(ref attemptCount, ref numberOfRetries); //TODO: use a while loop
                 }
             }
-            return true;
+            else
+            {
+                ConsoleOutputHelper.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
+                return true;
+            }
+            return false;
+            
         }
 
         internal static bool EraseDevice(ref int attemptCount, ref int numberOfRetries)
@@ -250,7 +271,7 @@ namespace nanoFrameworkDeployer
             //TODO: use a while loop
         //retryErase:
             // erase the device
-            ConsoleOutputHelper.Output($"Erase deployment block storage. Attempt: {attemptCount}/{numberOfRetries}.");
+            ConsoleOutputHelper.Output($"Erase deployment block storage. Attempt: {attemptCount} of {numberOfRetries}.");
 
             var eraseResult = _device.Erase(
                     EraseOptions.Deployment,
@@ -281,9 +302,10 @@ namespace nanoFrameworkDeployer
         internal static bool ConnectDebugEngine(ref int attemptCount, ref int numberOfRetries)
         {
             //TODO: use a while loop!
-        //retryDebug:
+            //retryDebug:
+            ConsoleOutputHelper.Output($"Connecting to debug engine. Attempt: {attemptCount} of {numberOfRetries}");
             bool connectResult = _device.DebugEngine.Connect(5000, true, true);
-            ConsoleOutputHelper.Output($"Device connection result is: {connectResult}. Attempt {attemptCount}/{numberOfRetries}");
+            ConsoleOutputHelper.Output($"Device connection result is: {connectResult}.");
 
             if (!connectResult)
             {
