@@ -36,7 +36,7 @@ jobs:
 ##############################
 - job: Check_Build_Options
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'ubuntu-latest'
 
   steps:
   
@@ -203,21 +203,6 @@ jobs:
         eq(variables['UPDATE_DEPENDENTS'], 'true')
     displayName: Set CI build Version
 
-  #- task: DotNetCoreCLI@2
-  #  displayName: Restore NuGet packages
-  #  condition: >-
-  #    and(
-  #      succeeded(),
-  #      eq(variables['UPDATE_DEPENDENTS'], 'false')
-  #    )
-  #  inputs:
-  #    command: restore
-  #    restoreArguments: ' --locked-mode --force-evaluate '
-  #    verbosityRestore: minimal
-  #    projects: '$(toolname).sln'
-  #    feedsToUse: config
-  #    nugetConfigPath: NuGet.Config
-
   # only setup sonar if a PR
   - task: SonarCloudPrepare@1
     condition: >-
@@ -297,35 +282,7 @@ jobs:
         ne(variables['System.PullRequest.PullRequestId'], '')
       )
 
-  # only publish sonar if a PR
-  - task: SonarCloudPublish@1
-    displayName: 'Publish static analysis from SonarCloud'
-    condition: >-
-      and(
-        succeeded(),
-        ne(variables['System.PullRequest.PullRequestId'], '')
-      )
-    inputs:
-      pollingTimeoutSec: '300'
-      UnitTestResultsPath: '$(Build.SourcesDirectory)\TestResults'
-
 ####################################################
-
-  # pack artifacts
-  # Pack the solution with the --no-build argument.
-  # You may need to pass additional parameters here, such as /p:PackageVersion="$(PackageVersion)".
-  - task: DotNetCoreCLI@2
-    condition: >-
-      and(
-        succeeded(),
-        eq(variables['UPDATE_DEPENDENTS'], 'false')
-      )
-    displayName: 'Pack nuget'
-    inputs:
-      command: custom
-      projects: '$(toolname).sln'
-      custom: pack
-      arguments: '--configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/$(toolname)" --no-build --verbosity normal'
 
   - task: PowerShell@2
     condition: >-
@@ -393,19 +350,36 @@ jobs:
           Write-Host "Release draft: TRUE"
         }
 
-  - task: CopyFiles@1
+  #- task: CopyFiles@1
+  #  condition: >-
+  #    and(
+  #      succeeded(),
+  #      eq(variables['UPDATE_DEPENDENTS'], 'false')
+  #    )
+  #  displayName: Collecting deployable artifacts
+  #  inputs:
+  #    sourceFolder: $(Agent.BuildDirectory)
+  #    Contents: |
+  #      **\*.nupkg
+  #    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  #    flattenFolders: true
+
+    # pack artifacts
+  # Pack the solution with the --no-build argument.
+  # You may need to pass additional parameters here, such as /p:PackageVersion="$(PackageVersion)".
+
+  - task: DotNetCoreCLI@2
     condition: >-
       and(
         succeeded(),
         eq(variables['UPDATE_DEPENDENTS'], 'false')
       )
-    displayName: Collecting deployable artifacts
+    displayName: 'Pack nuget'
     inputs:
-      sourceFolder: $(Agent.BuildDirectory)
-      Contents: |
-        **\*.nupkg
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      flattenFolders: true
+      command: custom
+      projects: '$(toolname).sln'
+      custom: pack
+      arguments: '--configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/$(toolname)" --no-build --verbosity normal'
 
   - task: DotNetCoreCLI@2
     displayName: Install SignTool tool
@@ -548,7 +522,7 @@ jobs:
     )
 
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'ubuntu-latest'
 
   steps:
   - checkout: self
