@@ -45,7 +45,7 @@ namespace nanoFrameworkDeployer
         /// <remarks>
         /// This is required for running mock filesystem tests.
         /// </remarks>
-        internal Program(IFileSystem mockFileSystem) //TODO: handle args.
+        internal Program(IFileSystem mockFileSystem)
         {
             fileSystem = mockFileSystem;
         }
@@ -91,12 +91,11 @@ namespace nanoFrameworkDeployer
 
         private static void ObjectDispose()
         {
-            // Force clean
-            // TODO: should be dispose?!
+            // Force cleanup
             _serialDebugClient?.StopDeviceWatchers();
+            _device?.Disconnect(true);
             _serialDebugClient?.DisposeDevice(_options.ComPort);
             _serialDebugClient = null;
-            _device?.Disconnect(true);
             _device = null;
         }
 
@@ -191,7 +190,7 @@ namespace nanoFrameworkDeployer
             int attemptCount = 1;
             // Only 3 tries for a specified port
             numberOfRetries = string.IsNullOrEmpty(_options.ComPort) ? 10 : 3;
-            //TODO: we may have created an empty list of strings for excluded ports... Is it a problem?!
+
             _serialDebugClient = PortBase.CreateInstanceForSerial(true, excludedPorts);
 
             if (!ConnectToDevice(ref attemptCount, ref numberOfRetries))
@@ -269,8 +268,6 @@ namespace nanoFrameworkDeployer
 
         internal static bool EraseDevice(ref int attemptCount, ref int numberOfRetries)
         {
-            //TODO: use a while loop
-        //retryErase:
             // erase the device
             ConsoleOutputHelper.Output($"Erase deployment block storage. Attempt: {attemptCount} of {numberOfRetries}.");
 
@@ -287,8 +284,7 @@ namespace nanoFrameworkDeployer
                     // Give it a bit of time
                     Thread.Sleep(400);
                     attemptCount++;
-                    //goto retryErase;
-                    EraseDevice(ref attemptCount, ref numberOfRetries);
+                    EraseDevice(ref attemptCount, ref numberOfRetries); //TODO: use a while loop
 
                 }
                 else
@@ -302,8 +298,6 @@ namespace nanoFrameworkDeployer
 
         internal static bool ConnectDebugEngine(ref int attemptCount, ref int numberOfRetries)
         {
-            //TODO: use a while loop!
-            //retryDebug:
             ConsoleOutputHelper.Output($"Connecting to debug engine. Attempt: {attemptCount} of {numberOfRetries}");
             bool connectResult = _device.DebugEngine.Connect(5000, true, true);
             ConsoleOutputHelper.Output($"Device connection result is: {connectResult}.");
@@ -315,8 +309,7 @@ namespace nanoFrameworkDeployer
                     // Give it a bit of time
                     Thread.Sleep(100);
                     attemptCount++;
-                    //goto retryDebug;
-                    ConnectDebugEngine(ref attemptCount, ref numberOfRetries);
+                    ConnectDebugEngine(ref attemptCount, ref numberOfRetries); //TODO: use a while loop!
                 }
                 else
                 {
@@ -329,8 +322,7 @@ namespace nanoFrameworkDeployer
 
         internal static List<string> AddSerialPortExclusions(string portExceptionFilePath)
         {
-            //TODO: check file exists?!
-            //TODO: check file is formatted correctly?!
+            //FIXME: check file is formatted correctly?! delimiters might not be line breaks!
             var ports = fileSystem.File.ReadAllLines(portExceptionFilePath);
             if (ports.Length > 0)
             {
@@ -373,7 +365,7 @@ namespace nanoFrameworkDeployer
 
         internal static bool DirectoryIsValid(string path)
         {
-            //TODO: we should also be validating the string...
+            //FIXME: we should also be validating the string...
             //if(!Uri.IsWellFormedUriString(path, UriKind.RelativeOrAbsolute))
             //{
             //    ConsoleOutputHelper.Error("ERROR: The target directory path was not valid.");
@@ -410,12 +402,11 @@ namespace nanoFrameworkDeployer
                 null,
                 deploymentLogger))
             {
-                ConsoleOutputHelper.Error("ERROR: Write failed.");
+                ConsoleOutputHelper.Error("ERROR: Deployment failed.");
                 _returnvalue = RETURN_CODE_ERROR;
             }
-            else
+            else //TODO: dont think this is needed as already shown by progress!
             {
-                //TODO: dont think this is needed as already shown by progress!
                 ConsoleOutputHelper.Verbose("Deployment successful");
             }
         }

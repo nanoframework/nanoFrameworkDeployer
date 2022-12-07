@@ -35,6 +35,9 @@ namespace nanoFrameworkDeployer
         /// <summary>
         /// Gets or sets the COM port exception file. Ports to ignore for the scanning.
         /// </summary>
+        /// <remarks>
+        /// It is assumed that the file is line delimited.
+        /// </remarks>
         [Option('e', "exception", Required = false, HelpText = "COM Port exception file.")]
         public string PortException { get; set; }
 

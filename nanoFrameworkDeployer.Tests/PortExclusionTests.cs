@@ -30,10 +30,11 @@ namespace nanoFrameworkDeployer.Tests
 
             // Assert
             Assert.AreEqual("COMXX", excludedPorts.First());
+            Assert.AreEqual(1, excludedPorts.Count);
         }
 
         [TestMethod]
-        public void CheckPortExclusionWhenFileExistsAndIsValidMultiplePorts()
+        public void CheckPortExclusionWhenFileExistsAndIsValidMultiplePorts_UsingLineDelimter()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -50,7 +51,30 @@ namespace nanoFrameworkDeployer.Tests
             // Assert
             // need to be a sting array to pass!
             Assert.AreEqual("COMXX" + Environment.NewLine + "COMYY", portlist);
+            Assert.AreEqual(2, excludedPorts.Count);
         }
+
+        //TODO: requires a fix as the program does not check delimeters!
+        //[TestMethod]
+        //public void CheckPortExclusionWhenFileExistsAndIsValidMultiplePorts_UsingSemiColonDelimter()
+        //{
+        //    // Arrange
+        //    var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        //     {
+        //         { @"c:\portExclusions.txt", new MockFileData("COMXX;COMYY") },
+        //     });
+        //    _ = new Program(fileSystem);
+        //    var exclusionFilePath = "c:\\portExclusions.txt";
+
+        //    // Act
+        //    List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+
+        //    var portlist = string.Join(";", excludedPorts);
+        //    // Assert
+        //    // need to be a sting array to pass!
+        //    Assert.AreEqual($"COMXX;COMYY", portlist);
+        //    Assert.AreEqual(2, excludedPorts.Count);
+        //}
 
         [TestMethod]
         public void CheckPortExclusionWhenFileExistsAndIsInvalid()
