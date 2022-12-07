@@ -57,6 +57,34 @@ namespace nanoFrameworkDeployer.Tests
             //TODO: could be Sequence Equal: https://stackoverflow.com/questions/3232744/easiest-way-to-compare-arrays-in-c-sharp
             CollectionAssert.AreEquivalent(expectedResult[0], result[0]);
             CollectionAssert.AreEquivalent(expectedResult[1], result[1]);
+            Assert.AreEqual(expectedResult.Count, result.Count);
+        }
+
+        [TestMethod]
+        public void CheckCreateDeploymentBlob_unaligned()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\pedir\mypefile.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56, 0xd2 }) },
+                 { @"c:\pedir\mypefile2.pe", new MockFileData(new byte[] { 0x12, 0x34, 0x56 }) }
+             });
+            var expectedResult = new List<byte[]>
+            {
+                new byte[] { 0x12, 0x34, 0x56, 0xd2 },
+                new byte[] { 0x12, 0x34, 0x56, 0x00 }
+            };
+            _ = new Program(fileSystem);
+
+            // Act
+            var result = Program.CreateBinDeploymentBlob(new string[] { "c:\\pedir\\mypefile.pe", "c:\\pedir\\mypefile2.pe" });
+
+
+            // Assert
+            //TODO: could be Sequence Equal: https://stackoverflow.com/questions/3232744/easiest-way-to-compare-arrays-in-c-sharp
+            CollectionAssert.AreEquivalent(expectedResult[0], result[0]);
+            CollectionAssert.AreEquivalent(expectedResult[1], result[1]);
+            Assert.AreEqual(expectedResult.Count, result.Count);
         }
 
     }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace nanoFrameworkDeployer.Tests
 {
-#if DEBUG //TODO: find a better argument... e.g. RunLocalIntegrationTests
     [TestClass]
     public class IntegrationTests
     {
@@ -121,25 +120,95 @@ namespace nanoFrameworkDeployer.Tests
             Assert.AreEqual(expectedOutput, output);
         }
 
-        // These cannot return sucessfully unless there is something to deploy to.
-        // TODO: Think about a simulator, or fakes...
         [TestMethod]
-        public void RunApplication_PeDirArgument_NoOtherArgProvided_ReturnsSuccess()
+        public void RunApplication_PeDirArgumentInvalid_NoOtherArgProvided_ReturnsError()
         {
             // Arrange
-            var process = StartApplication("-v");
+            var process = StartApplication("-d c:\\notknown\\pedir\\");
 
             // Act
             var outputTask = WaitForResponse(process);
             outputTask.Wait();
             var output = outputTask.Result;
 
-            var expectedOutput = "Found command parse error: CommandLine.MissingRequiredOptionError";
+            var expectedOutput = "ERROR: The target directory does not exist.";
 
             // Assert
             Assert.AreEqual(expectedOutput, output);
         }
 
-    }
+        [TestMethod]
+        public void RunApplication_PeDirArgumentInvalid_andBinaryOutput_ReturnsError()
+        {
+            // Arrange
+            var process = StartApplication("-d c:\\notknown\\pedir\\ -b");
+
+            // Act
+            var outputTask = WaitForResponse(process);
+            outputTask.Wait();
+            var output = outputTask.Result;
+
+            var expectedOutput = "ERROR: The target directory does not exist.";
+
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+#if DEBUG //TODO: find a better argument... e.g. RunLocalIntegrationTests
+        // These cannot return sucessfully unless there is something to deploy to.
+        // TODO: Think about a simulator, or fakes...
+
+        //[TestMethod]
+        //public void RunApplication_PeDirArgumentValid_BinaryOutput_ReturnsSuccess()
+        //{
+        //    // Arrange
+        //    var process = StartApplication("-d c:\\known\\pedir\\ -b");
+
+        //    // Act
+        //    var outputTask = WaitForResponse(process);
+        //    outputTask.Wait();
+        //    var output = outputTask.Result;
+
+        //    var expectedOutput = "ERROR: The target directory does not exist.";
+
+        //    // Assert
+        //    Assert.AreEqual(expectedOutput, output);
+        //}
+
+        //[TestMethod]
+        //public void RunApplication_ValidePeDirProvided_InvalidCommPortArgument_ReturnsError()
+        //{
+        //    // Arrange
+        //    var process = StartApplication("-d c:\\known\\pedir\\ -c COMx");
+
+        //    // Act
+        //    var outputTask = WaitForResponse(process);
+        //    outputTask.Wait();
+        //    var output = outputTask.Result;
+
+        //    var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
+
+        //    // Assert
+        //    Assert.AreEqual(expectedOutput, output);
+        //}
+
+        //[TestMethod]
+        //public void RunApplication_ValidePeDirProvided_ValidCommPortArgumentNotFound_ReturnsError()
+        //{
+        //    // Arrange
+        //    var process = StartApplication("-d c:\\known\\pedir\\ -c COM30");
+
+        //    // Act
+        //    var outputTask = WaitForResponse(process);
+        //    outputTask.Wait();
+        //    var output = outputTask.Result;
+
+        //    var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
+
+        //    // Assert
+        //    Assert.AreEqual(expectedOutput, output);
+        //}
+
 #endif
+    }
 }

@@ -157,6 +157,7 @@ namespace nanoFrameworkDeployer
 
             ConsoleOutputHelper.Verbose("Known System serial ports include:");
 
+            //TODO: possibily match and/or discard entries when excluding or trying...
             // Display each port name to the console.
             foreach (string port in System.IO.Ports.SerialPort.GetPortNames())
             {
@@ -245,7 +246,7 @@ namespace nanoFrameworkDeployer
             {
                 if (attemptCount >= numberOfRetries)
                 {
-                    ConsoleOutputHelper.Error("ERROR: too many retries");
+                    ConsoleOutputHelper.Error("ERROR: Could not connect to device. Too many retries.");
                     _returnvalue = RETURN_CODE_ERROR;
                     return false;
                 }
@@ -292,7 +293,7 @@ namespace nanoFrameworkDeployer
                 }
                 else
                 {
-                    ConsoleOutputHelper.Error("ERROR: Could not erase, too many retries");
+                    ConsoleOutputHelper.Error("ERROR: Could not erase, too many retries.");
                     return false;
                 }
             }
