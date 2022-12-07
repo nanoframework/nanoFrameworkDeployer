@@ -136,27 +136,6 @@
           "System.Runtime.CompilerServices.Unsafe": "4.5.3"
         }
       }
-    },
-    ".NETFramework,Version=v4.7.2/win": {
-      "System.IO.Ports": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dRyGI7fUESar5ZLIpiBOaaNLW7YyOBGftjj5Of+xcduC/Rjl7RjhEnWDvvNBmHuF3d0tdXoqdVI/yrVA8f00XA=="
-      }
-    },
-    ".NETFramework,Version=v4.7.2/win-x64": {
-      "System.IO.Ports": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dRyGI7fUESar5ZLIpiBOaaNLW7YyOBGftjj5Of+xcduC/Rjl7RjhEnWDvvNBmHuF3d0tdXoqdVI/yrVA8f00XA=="
-      }
-    },
-    ".NETFramework,Version=v4.7.2/win-x86": {
-      "System.IO.Ports": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dRyGI7fUESar5ZLIpiBOaaNLW7YyOBGftjj5Of+xcduC/Rjl7RjhEnWDvvNBmHuF3d0tdXoqdVI/yrVA8f00XA=="
-      }
     }
   }
 }
