@@ -12,7 +12,7 @@ using System.IO.Abstractions.TestingHelpers;
 namespace nanoFrameworkDeployer.Tests
 {
     [TestClass]
-    public class UnitTests
+    public class DeploymentFileTests
     {
         [TestMethod]
         public void CheckDirectoryContainsPeFiles()
@@ -24,6 +24,24 @@ namespace nanoFrameworkDeployer.Tests
              });
             _ = new Program(fileSystem);
            
+            // Act
+            var result = Program.DirectoryIsValid("c:\\pedir\\");
+
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void PeFilesDirectoryContainsInvalidPeFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\pedir\mypefile.pe", new MockFileData("Testing is meh.") },
+             });
+            _ = new Program(fileSystem);
+
             // Act
             var result = Program.DirectoryIsValid("c:\\pedir\\");
 
