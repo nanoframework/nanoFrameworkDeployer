@@ -98,7 +98,7 @@ steps:
       eq(variables['isTag'], 'false'),
       eq(variables['UPDATE_DEPENDENTS'], 'false')
     )
-  displayName: Set Could Version
+  displayName: Set Cloud Version
 
 - powershell: |
 
@@ -117,7 +117,7 @@ steps:
     git config --global core.autocrlf true
     git -c http.extraheader="AUTHORIZATION: $auth" fetch --progress origin
     
-    git checkout develop
+    git checkout main
 
     nbgv prepare-release
  
