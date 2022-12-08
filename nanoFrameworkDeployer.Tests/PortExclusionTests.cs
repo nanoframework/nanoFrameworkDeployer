@@ -54,27 +54,29 @@ namespace nanoFrameworkDeployer.Tests
             Assert.AreEqual(2, excludedPorts.Count);
         }
 
-        //TODO: requires a fix as the program does not check delimeters!
-        //[TestMethod]
-        //public void CheckPortExclusionWhenFileExistsAndIsValidMultiplePorts_UsingSemiColonDelimter()
-        //{
-        //    // Arrange
-        //    var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        //     {
-        //         { @"c:\portExclusions.txt", new MockFileData("COMXX;COMYY") },
-        //     });
-        //    _ = new Program(fileSystem);
-        //    var exclusionFilePath = "c:\\portExclusions.txt";
+#if RunBrokenTest
+        //FIXME: requires a fix as the program does not check delimeters!
+        [TestMethod]
+        public void CheckPortExclusionWhenFileExistsAndIsValidMultiplePorts_UsingSemiColonDelimter()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+             {
+                 { @"c:\portExclusions.txt", new MockFileData("COMXX;COMYY") },
+             });
+            _ = new Program(fileSystem);
+            var exclusionFilePath = "c:\\portExclusions.txt";
 
-        //    // Act
-        //    List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
+            // Act
+            List<string> excludedPorts = Program.AddSerialPortExclusions(exclusionFilePath);
 
-        //    var portlist = string.Join(";", excludedPorts);
-        //    // Assert
-        //    // need to be a sting array to pass!
-        //    Assert.AreEqual($"COMXX;COMYY", portlist);
-        //    Assert.AreEqual(2, excludedPorts.Count);
-        //}
+            var portlist = string.Join(";", excludedPorts);
+            // Assert
+            // need to be a sting array to pass!
+            Assert.AreEqual($"COMXX;COMYY", portlist);
+            Assert.AreEqual(2, excludedPorts.Count);
+        }
+#endif
 
         [TestMethod]
         public void CheckPortExclusionWhenFileExistsAndIsInvalid()

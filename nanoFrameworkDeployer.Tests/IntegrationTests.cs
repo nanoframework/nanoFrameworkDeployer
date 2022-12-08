@@ -154,60 +154,60 @@ namespace nanoFrameworkDeployer.Tests
             Assert.AreEqual(expectedOutput, output);
         }
 
-#if DEBUG //TODO: find a better argument... e.g. RunLocalIntegrationTests
+#if DEBUG && DEVICE_ATTACHED //TODO: find a better argument... as it is hard to call DEVICE_ATTACHED
         // These cannot return sucessfully unless there is something to deploy to.
         // TODO: Think about a simulator, or fakes...
 
-        //[TestMethod]
-        //public void RunApplication_PeDirArgumentValid_BinaryOutput_ReturnsSuccess()
-        //{
-        //    // Arrange
-        //    var process = StartApplication("-d c:\\known\\pedir\\ -b");
+        [TestMethod]
+        public void RunApplication_PeDirArgumentValid_BinaryOutput_ReturnsSuccess()
+        {
+            // Arrange
+            var process = StartApplication("-d c:\\known\\pedir\\ -b");
 
-        //    // Act
-        //    var outputTask = WaitForResponse(process);
-        //    outputTask.Wait();
-        //    var output = outputTask.Result;
+            // Act
+            var outputTask = WaitForResponse(process);
+            outputTask.Wait();
+            var output = outputTask.Result;
 
-        //    var expectedOutput = "ERROR: The target directory does not exist.";
+            var expectedOutput = "ERROR: The target directory does not exist.";
 
-        //    // Assert
-        //    Assert.AreEqual(expectedOutput, output);
-        //}
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
-        //[TestMethod]
-        //public void RunApplication_ValidePeDirProvided_InvalidCommPortArgument_ReturnsError()
-        //{
-        //    // Arrange
-        //    var process = StartApplication("-d c:\\known\\pedir\\ -c COMx");
+        [TestMethod]
+        public void RunApplication_ValidePeDirProvided_InvalidCommPortArgument_ReturnsError()
+        {
+            // Arrange
+            var process = StartApplication("-d c:\\known\\pedir\\ -c COMx");
 
-        //    // Act
-        //    var outputTask = WaitForResponse(process);
-        //    outputTask.Wait();
-        //    var output = outputTask.Result;
+            // Act
+            var outputTask = WaitForResponse(process);
+            outputTask.Wait();
+            var output = outputTask.Result;
 
-        //    var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
+            var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
 
-        //    // Assert
-        //    Assert.AreEqual(expectedOutput, output);
-        //}
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
-        //[TestMethod]
-        //public void RunApplication_ValidePeDirProvided_ValidCommPortArgumentNotFound_ReturnsError()
-        //{
-        //    // Arrange
-        //    var process = StartApplication("-d c:\\known\\pedir\\ -c COM30");
+        [TestMethod]
+        public void RunApplication_ValidePeDirProvided_ValidCommPortArgumentNotFound_ReturnsError()
+        {
+            // Arrange
+            var process = StartApplication("-d c:\\known\\pedir\\ -c COM30");
 
-        //    // Act
-        //    var outputTask = WaitForResponse(process);
-        //    outputTask.Wait();
-        //    var output = outputTask.Result;
+            // Act
+            var outputTask = WaitForResponse(process);
+            outputTask.Wait();
+            var output = outputTask.Result;
 
-        //    var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
+            var expectedOutput = "ERROR: Could not connect to device. Too many retries.";
 
-        //    // Assert
-        //    Assert.AreEqual(expectedOutput, output);
-        //}
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
 #endif
     }
