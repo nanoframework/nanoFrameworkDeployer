@@ -1,10 +1,10 @@
-name: Fix package lock
+name: Check for dependabot update
 
 on: [pull_request]
 
 jobs:  
   restore:
-    name: Update NuGet Lock Files
+    name: Fix NuGet Lock Files
     if: contains(github.head_ref, 'dependabot') && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
