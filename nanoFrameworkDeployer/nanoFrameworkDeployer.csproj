@@ -91,8 +91,8 @@
     <PackageReference Include="nanoFramework.Tools.Debugger.Net" Version="2.4.3" />
     <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="18.0.1" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="18.0.1" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="19.0.1" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="19.0.1" />
     <PackageReference Include="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -74,17 +74,17 @@
       },
       "TestableIO.System.IO.Abstractions": {
         "type": "Direct",
-        "requested": "[18.0.1, )",
-        "resolved": "18.0.1",
-        "contentHash": "nacJfL4mGObg8Ttn3ZCJZ2u9z8ivG43xgUJvQQLKCmDnle4m49NYNOLk8cqB4iPdSqVhnUSy+qcIryWgDHCqeg=="
+        "requested": "[19.0.1, )",
+        "resolved": "19.0.1",
+        "contentHash": "PGlynyB/3wzKOLY/kOBC6XvaOSyMJ1sG0yXp7toWjGUXmCm4n1ySIlpZLCtVezKtqNVQIyTzGX0ASUZIuquLrg=="
       },
       "TestableIO.System.IO.Abstractions.Wrappers": {
         "type": "Direct",
-        "requested": "[18.0.1, )",
-        "resolved": "18.0.1",
-        "contentHash": "3vGUMEHgL7l1Jyvv0WdDzCrwV6xKRhI2xVgWHQDbfVsye/ZBflhWFyVrCanPHzm0r0WSl0ug8DuaKwmelHlLCw==",
+        "requested": "[19.0.1, )",
+        "resolved": "19.0.1",
+        "contentHash": "ayFxzptLadWGxDqCqNL37maXFGNXlB5H4bD07Pl+sgDWMxVgFiu8EZ64dMAWOoLBuApxkrST1UN3dwNDrPnwmA==",
         "dependencies": {
-          "TestableIO.System.IO.Abstractions": "18.0.1"
+          "TestableIO.System.IO.Abstractions": "19.0.1"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -590,17 +590,17 @@
       },
       "TestableIO.System.IO.Abstractions": {
         "type": "Direct",
-        "requested": "[18.0.1, )",
-        "resolved": "18.0.1",
-        "contentHash": "nacJfL4mGObg8Ttn3ZCJZ2u9z8ivG43xgUJvQQLKCmDnle4m49NYNOLk8cqB4iPdSqVhnUSy+qcIryWgDHCqeg=="
+        "requested": "[19.0.1, )",
+        "resolved": "19.0.1",
+        "contentHash": "PGlynyB/3wzKOLY/kOBC6XvaOSyMJ1sG0yXp7toWjGUXmCm4n1ySIlpZLCtVezKtqNVQIyTzGX0ASUZIuquLrg=="
       },
       "TestableIO.System.IO.Abstractions.Wrappers": {
         "type": "Direct",
-        "requested": "[18.0.1, )",
-        "resolved": "18.0.1",
-        "contentHash": "3vGUMEHgL7l1Jyvv0WdDzCrwV6xKRhI2xVgWHQDbfVsye/ZBflhWFyVrCanPHzm0r0WSl0ug8DuaKwmelHlLCw==",
+        "requested": "[19.0.1, )",
+        "resolved": "19.0.1",
+        "contentHash": "ayFxzptLadWGxDqCqNL37maXFGNXlB5H4bD07Pl+sgDWMxVgFiu8EZ64dMAWOoLBuApxkrST1UN3dwNDrPnwmA==",
         "dependencies": {
-          "TestableIO.System.IO.Abstractions": "18.0.1"
+          "TestableIO.System.IO.Abstractions": "19.0.1"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
