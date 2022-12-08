@@ -1,3 +1,4 @@
+on: push
   restore:
     name: Update NuGet Lock Files
     if: contains(github.head_ref, 'dependabot') && github.event_name == 'pull_request'
