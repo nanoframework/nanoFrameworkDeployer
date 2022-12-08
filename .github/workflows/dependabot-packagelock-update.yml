@@ -1,0 +1,26 @@
+  restore:
+    name: Update NuGet Lock Files
+    if: contains(github.head_ref, 'dependabot') && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-dotnet@v1.9.0
+        with:
+          dotnet-version: 6.0.x
+
+      - run: dotnet restore --force-evaluate
+      - id: diff
+        continue-on-error: true
+        run: |
+          git add -N .
+          git diff --name-only --exit-code
+      - if: steps.diff.outcome == 'failure'
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add .
+          git commit -m "chore(deps): update NuGet lock file"
+          git push
