@@ -74,7 +74,7 @@ namespace nanoFrameworkDeployer
                 .WithParsed(RunOptionLogic)
                 .WithNotParsed(HandleParseErrors);
 
-            if ((_options != null && _options.Verbose == true) || Debugger.IsAttached)
+            if ( Debugger.IsAttached || (_options != null && _options.Verbose == true))
             {
                 ConsoleOutputHelper.Verbose($"Program exited with return code: {_returnvalue}");
 
@@ -254,7 +254,7 @@ namespace nanoFrameworkDeployer
                     _serialDebugClient.ReScanDevices();
                     
                     attemptCount++;
-                    ConnectToDevice(ref attemptCount, ref numberOfRetries); //TODO: use a while loop
+                    ConnectToDevice(ref attemptCount, ref numberOfRetries);
                 }
             }
             else
@@ -284,7 +284,7 @@ namespace nanoFrameworkDeployer
                     // Give it a bit of time
                     Thread.Sleep(400);
                     attemptCount++;
-                    EraseDevice(ref attemptCount, ref numberOfRetries); //TODO: use a while loop
+                    EraseDevice(ref attemptCount, ref numberOfRetries);
 
                 }
                 else
@@ -309,7 +309,7 @@ namespace nanoFrameworkDeployer
                     // Give it a bit of time
                     Thread.Sleep(100);
                     attemptCount++;
-                    ConnectDebugEngine(ref attemptCount, ref numberOfRetries); //TODO: use a while loop!
+                    ConnectDebugEngine(ref attemptCount, ref numberOfRetries);
                 }
                 else
                 {
@@ -405,7 +405,7 @@ namespace nanoFrameworkDeployer
                 ConsoleOutputHelper.Error("ERROR: Deployment failed.");
                 _returnvalue = RETURN_CODE_ERROR;
             }
-            else //TODO: dont think this is needed as already shown by progress!
+            else
             {
                 ConsoleOutputHelper.Verbose("Deployment successful");
             }
