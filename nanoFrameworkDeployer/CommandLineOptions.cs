@@ -48,7 +48,7 @@ namespace nanoFrameworkDeployer
         /// The default is false.
         /// </remarks>
         [Option('r', "reboot", Required = false, HelpText = "Reboot the device after flash.")]
-        public bool RebootAfterFlash{ get; set; } = false;
+        public bool RebootAfterFlash{ get; set; }
 
         /// <summary>
         /// Gets or sets the rebooting behavior after flash. True to reboot the device.

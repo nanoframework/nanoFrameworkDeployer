@@ -20,11 +20,11 @@ namespace nanoFrameworkDeployer
     /// </summary>
     public class Program
     {
-        const int RETURN_CODE_SUCCESS = 0;
-        const int RETURN_CODE_ERROR = 1;
+        const int ReturnCodeSuccess = 0;
+        const int ReturnCodeError = 1;
 
         private static CommandlineOptions _options;
-        private static int _returnvalue = RETURN_CODE_SUCCESS;
+        private static int _returnvalue = ReturnCodeSuccess;
         private static NanoDeviceBase _device;
         private static PortBase _serialDebugClient;
 
@@ -37,7 +37,6 @@ namespace nanoFrameworkDeployer
         /// The default calls `new FileSystem()` to load as per normal.
         /// </remarks>
         private static IFileSystem fileSystem = new FileSystem();
-
 
         /// <summary>
         /// Create Program with the given fileSystem implementation.
@@ -111,7 +110,7 @@ namespace nanoFrameworkDeployer
             }
             ConsoleOutputHelper.Verbose($"Perhaps provide an argument?!");
 
-            _returnvalue = RETURN_CODE_ERROR;
+            _returnvalue = ReturnCodeError;
         }
 
         internal static void RunOptionLogic(CommandlineOptions opts)
@@ -136,7 +135,7 @@ namespace nanoFrameworkDeployer
             if (peFiles.Length == 0)
             {
                 ConsoleOutputHelper.Error("ERROR: The target directory does not contain any PE files.");
-                _returnvalue = RETURN_CODE_ERROR;
+                _returnvalue = ReturnCodeError;
                 return;
             }
 
@@ -156,7 +155,7 @@ namespace nanoFrameworkDeployer
 
             ConsoleOutputHelper.Verbose("Known System serial ports include:");
 
-            //TODO: possibily match and/or discard entries when excluding or trying...
+            // TODO: possibily match and/or discard entries when excluding or trying...
             // Display each port name to the console.
             foreach (string port in System.IO.Ports.SerialPort.GetPortNames())
             {
@@ -226,7 +225,6 @@ namespace nanoFrameworkDeployer
 
             EraseDevice(ref attemptCount, ref numberOfRetries);
 
-
             ConsoleOutputHelper.Verbose($"Added {peFiles.Length} assemblies to deploy.");
 
             DeployAssembiliesToDevice(peFiles);
@@ -246,7 +244,7 @@ namespace nanoFrameworkDeployer
                 if (attemptCount >= numberOfRetries)
                 {
                     ConsoleOutputHelper.Error("ERROR: Could not connect to device. Too many retries.");
-                    _returnvalue = RETURN_CODE_ERROR;
+                    _returnvalue = ReturnCodeError;
                     return false;
                 }
                 else
@@ -262,8 +260,8 @@ namespace nanoFrameworkDeployer
                 ConsoleOutputHelper.Output($"Found: {_serialDebugClient.NanoFrameworkDevices.Count} devices");
                 return true;
             }
+
             return false;
-            
         }
 
         internal static bool EraseDevice(ref int attemptCount, ref int numberOfRetries)
@@ -285,7 +283,6 @@ namespace nanoFrameworkDeployer
                     Thread.Sleep(400);
                     attemptCount++;
                     EraseDevice(ref attemptCount, ref numberOfRetries);
-
                 }
                 else
                 {
@@ -293,6 +290,7 @@ namespace nanoFrameworkDeployer
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -317,6 +315,7 @@ namespace nanoFrameworkDeployer
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -330,6 +329,7 @@ namespace nanoFrameworkDeployer
                 excludedPorts.AddRange(ports);
                 return excludedPorts;
             }
+
             return new List<string>();
         }
 
@@ -380,7 +380,7 @@ namespace nanoFrameworkDeployer
             else
             {
                 ConsoleOutputHelper.Error("ERROR: The target directory does not exist.");
-                _returnvalue = RETURN_CODE_ERROR;
+                _returnvalue = ReturnCodeError;
                 return false;
             }
         }
@@ -403,7 +403,7 @@ namespace nanoFrameworkDeployer
                 deploymentLogger))
             {
                 ConsoleOutputHelper.Error("ERROR: Deployment failed.");
-                _returnvalue = RETURN_CODE_ERROR;
+                _returnvalue = ReturnCodeError;
             }
             else
             {
