@@ -27,9 +27,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.5.109, )",
-        "resolved": "3.5.109",
-        "contentHash": "tKA1XJ5U2Ytk+u2/5sGNa04Pw6z9noYmqbpmHpjvbwJTtIalqsQjnwT4RQKSDTTIznHBbKxzv3HVh8QD28Qk+g=="
+        "requested": "[3.6.133, )",
+        "resolved": "3.6.133",
+        "contentHash": "VZWMd5YAeDxpjWjAP/X6bAxnRMiEf6tES/ITN0X5CHJgkWLLeHGmEALivmTAfYM6P+P/3Szy6VCITUAkqjcHVw=="
       },
       "NuGet.Build.Tasks.Pack": {
         "type": "Direct",
@@ -65,6 +65,7 @@
       }
     },
     ".NETFramework,Version=v4.7.2/win": {},
+    ".NETFramework,Version=v4.7.2/win-arm64": {},
     ".NETFramework,Version=v4.7.2/win-x64": {},
     ".NETFramework,Version=v4.7.2/win-x86": {}
   }
