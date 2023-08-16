@@ -33,9 +33,9 @@
       },
       "NuGet.Build.Tasks.Pack": {
         "type": "Direct",
-        "requested": "[6.3.0, )",
-        "resolved": "6.3.0",
-        "contentHash": "JGN8WHJr/PkVX7FNn7BR++72f6erxDaEFxiBU/Or9Av+Fu8grTeYYX5zkHbjpG4+aJnag6tI51XcbIkqsVabIw=="
+        "requested": "[6.7.0, )",
+        "resolved": "6.7.0",
+        "contentHash": "4xtbLbsgm9/l9Wz/GQXyL+ihIKqaFVb5nztW1vE5dGnTPbwSSkZ6IYLJiL1sP9oiYkFUtr8INGrhEKEQ7DVQxg=="
       },
       "Polly": {
         "type": "Direct",
@@ -65,6 +65,7 @@
       }
     },
     ".NETFramework,Version=v4.7.2/win": {},
+    ".NETFramework,Version=v4.7.2/win-arm64": {},
     ".NETFramework,Version=v4.7.2/win-x64": {},
     ".NETFramework,Version=v4.7.2/win-x86": {}
   }
