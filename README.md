@@ -2,6 +2,14 @@
 
 ![nanoFramework logo](https://raw.githubusercontent.com/nanoframework/Home/main/resources/logo/nanoFramework-repo-logo.png)
 
+</br>
+</br>
+
+## ⚠️ This tool is deprecated and no longer being maintained. The funcionalities are available in [nanoff](https://github.com/nanoframework/nanoFrameworkFirmwareFlasher).
+
+</br>
+</br>
+
 # Cross-platform .NET nanoFrameworkDeployer Console Application
 
 This repo provides a .NET Console Application that can deploy your .NET **nanoFramework** projects to a **nanoFramework** supported device connected via USB. While this is already possible through the **nanoFramework** extension in Visual Studio for Windows, this repository aims to add support for deploying your projects on non-Windows based devices such as macOS and Linux.

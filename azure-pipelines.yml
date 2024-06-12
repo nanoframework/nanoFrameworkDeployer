@@ -39,11 +39,17 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  DOTNET_NOLOGO: true
-  solution: 'nanoFrameworkDeployer.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  isTag: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
+  - group: sign-client-credentials
+  - name: DOTNET_NOLOGO
+    value: true  
+  - name: buildPlatform
+    value: 'Any CPU'  
+  - name: buildConfiguration
+    value: 'Release'
+  - name: solution
+    value: 'nanoFrameworkDeployer.sln'
+  - name: isTag
+    value: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/v')]
 
 steps:
 
@@ -133,7 +139,7 @@ steps:
   condition: eq( variables['StartReleaseCandidate'], true )
   displayName: NBGV prepare release
 
-- task: SonarCloudPrepare@1
+- task: SonarCloudPrepare@2
   condition: >-
     and(
       succeeded(),
@@ -181,7 +187,6 @@ steps:
   condition: >-
     and(
       succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
@@ -189,7 +194,7 @@ steps:
   inputs:
     command: custom
     custom: tool
-    arguments: install --tool-path . SignClient
+    arguments: install --tool-path . sign --version 0.9.1-beta.23530.1
 
 # update cloud build number (only possible if this is not a PR from a fork)
 - task: PowerShell@2
@@ -214,7 +219,7 @@ steps:
 #     platform: '$(buildPlatform)'
 #     configuration: '$(buildConfiguration)'
 
-- task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@2
   condition: >-
     and(
       succeeded(),
@@ -224,7 +229,7 @@ steps:
     )
   displayName: 'Run Code Analysis'
 
-- task: SonarCloudPublish@1
+- task: SonarCloudPublish@2
   condition: >-
     and(
       succeeded(),
@@ -252,24 +257,25 @@ steps:
       **\nanoFrameworkDeployer.exe
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
-  
+
 - pwsh: |
-    .\SignClient "Sign" `
-    --baseDirectory "$(Build.ArtifactStagingDirectory)" `
-    --input "**/*.nupkg" `
-    --config "$(Build.Repository.LocalPath)\config\SignClient.json" `
-    --filelist "$(Build.Repository.LocalPath)\config\filelist.txt" `
-    --user "$(SignClientUser)" `
-    --secret '$(SignClientSecret)' `
-    --name ".NET nanoFramework Deployer" `
-    --description ".NET nanoFramework Deployer" `
-    --descriptionUrl "https://github.com/$env:Build_Repository_Name"
+    .\sign code azure-key-vault `
+    "**/*.nupkg" `
+    --base-directory "$(Build.ArtifactStagingDirectory)" `
+    --file-list "$(Build.Repository.LocalPath)\config\filelist.txt" `
+    --description "$(nugetPackageName)" `
+    --description-url "https://github.com/$env:Build_Repository_Name" `
+    --azure-key-vault-tenant-id "$(SignTenantId)" `
+    --azure-key-vault-client-id "$(SignClientId)" `
+    --azure-key-vault-client-secret "$(SignClientSecret)" `
+    --azure-key-vault-certificate "$(SignKeyVaultCertificate)" `
+    --azure-key-vault-url "$(SignKeyVaultUrl)" `
+    --timestamp-url http://timestamp.digicert.com
   displayName: Sign packages
   continueOnError: true
   condition: >-
     and(
       succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
@@ -349,6 +355,7 @@ steps:
     action: create
     isDraft: false
     addChangeLog: true
+    changeLogType: issueBased
     changeLogLabels: |
       [
         { "label" : "Type: bug", "displayName" : "Bugs fixed", "state" : "closed" },
