@@ -33,9 +33,9 @@
       },
       "NuGet.Build.Tasks.Pack": {
         "type": "Direct",
-        "requested": "[6.3.0, )",
-        "resolved": "6.3.0",
-        "contentHash": "JGN8WHJr/PkVX7FNn7BR++72f6erxDaEFxiBU/Or9Av+Fu8grTeYYX5zkHbjpG4+aJnag6tI51XcbIkqsVabIw=="
+        "requested": "[6.10.0, )",
+        "resolved": "6.10.0",
+        "contentHash": "jq4u+lS3BdDILSoeiWEwuWmOyhkabqtXBua/91vfvc6Kad6unjMSBqXUb7e6MgcLZwfqDyQjxDbkxR9IiM4tZg=="
       },
       "Polly": {
         "type": "Direct",
