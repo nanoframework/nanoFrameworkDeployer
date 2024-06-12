@@ -139,7 +139,7 @@ steps:
   condition: eq( variables['StartReleaseCandidate'], true )
   displayName: NBGV prepare release
 
-- task: SonarCloudPrepare@1
+- task: SonarCloudPrepare@2
   condition: >-
     and(
       succeeded(),
@@ -187,7 +187,6 @@ steps:
   condition: >-
     and(
       succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
@@ -220,7 +219,7 @@ steps:
 #     platform: '$(buildPlatform)'
 #     configuration: '$(buildConfiguration)'
 
-- task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@2
   condition: >-
     and(
       succeeded(),
@@ -230,7 +229,7 @@ steps:
     )
   displayName: 'Run Code Analysis'
 
-- task: SonarCloudPublish@1
+- task: SonarCloudPublish@2
   condition: >-
     and(
       succeeded(),
@@ -277,7 +276,6 @@ steps:
   condition: >-
     and(
       succeeded(),
-      eq(variables['System.PullRequest.PullRequestId'], ''),
       ne(variables['StartReleaseCandidate'], true),
       eq(variables['isTag'], 'false'),
       ne(variables['UPDATE_DEPENDENTS'], 'true')
@@ -357,6 +355,7 @@ steps:
     action: create
     isDraft: false
     addChangeLog: true
+    changeLogType: issueBased
     changeLogLabels: |
       [
         { "label" : "Type: bug", "displayName" : "Bugs fixed", "state" : "closed" },
